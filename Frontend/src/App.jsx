@@ -5,6 +5,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import Footer from "./components/footer/Footer";
+import UserSidebar from "./components/sidebar/UserSidebar";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Auth />} />
+        <Route path="/sidebar" element={<UserSidebar />} />
       </Routes>
 
       <Footer />
