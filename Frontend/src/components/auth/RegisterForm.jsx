@@ -49,7 +49,7 @@ const RegisterForm = ({ setMode }) => {
         JSON.stringify({
           email: form.email,
           password: form.password,
-        }),
+        })
       );
 
       setMode("login");

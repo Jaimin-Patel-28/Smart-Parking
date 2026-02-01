@@ -1,10 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 
 const SidebarLogout = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    // In your MERN app, this would clear the JWT from localStorage
-    console.log("Terminating Anand Hub Session...");
+    // 🔐 JWT clear (actual logout in MERN)
+    localStorage.removeItem("token");
+
+    // optional cleanup
+    sessionStorage.removeItem("loginPrefill");
+
+    // redirect to auth (register screen by rule)
+    navigate("/auth", { replace: true });
   };
 
   return (
