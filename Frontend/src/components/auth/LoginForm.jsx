@@ -36,6 +36,7 @@ const LoginForm = () => {
 
       // RULE 3: login success → dashboard
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("isAuth", "true");
 
       // cleanup autofill data
       sessionStorage.removeItem("loginPrefill");

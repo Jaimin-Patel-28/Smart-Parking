@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    /* FIXED: Ensures slate-950 background covers the entire viewport */
+    @apply bg-slate-950 text-white antialiased overflow-x-hidden;
+    background-color: #020617; 
+  }
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
