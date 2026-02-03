@@ -11,64 +11,60 @@ import Favorites from "./dashboard/Favorites";
 import ProfileTips from "./dashboard/ProfileTips";
 import HelpSupport from "./dashboard/HelpSupport";
 
-
-const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
+const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-slate-950 overflow-x-hidden">
-      {/* 2. MAIN CONTENT: flex-1 ensures a flush UI against the sidebar */}
       <main className="flex-1 flex flex-col min-w-0 no-scrollbar">
-        {/* 3. STICKY HEADER: High Z-Index and responsive padding */}
-        <div className="sticky top-0 z-40 bg-slate-950/95 border-b border-white/5 px-4 md:px-8 lg:px-12 py-4">
+        {/* STICKY HEADER: Stays consistent across all layouts */}
+        <div className="sticky top-0 z-40 bg-slate-950/95 border-b border-white/5 px-6 py-4 lg:px-12">
           <DashboardHeader />
         </div>
 
-        {/* 4. CONTENT AREA: Responsive padding and dynamic gaps */}
-        <div className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-12">
-          {/* 5. RESPONSIVE GRID: 1 column on mobile, 12 columns on large screens */}
-          <div className="grid grid-cols-12 gap-6 md:gap-10 lg:gap-12 max-w-full">
-            {/* TOP STATS: Always full width, but grid inside SummaryCards will handle mobile stacking */}
-            <div className="col-span-12">
-              <SummaryCards />
-            </div>
-
-            {/* LEFT COLUMN: Operations (Full width on mobile/tablet, 8/12 on large screens) */}
-            <div className="col-span-12 lg:col-span-8 space-y-8 md:space-y-12">
-              <div className="bg-white/2 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-                <ActiveParkingStatus />
-              </div>
-
-              {/* GRID FOR NESTED CARDS: Stacks vertically on mobile */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-12">
-                <QuickActions />
-                <WalletSnapshot />
-              </div>
-
-              <div className="bg-white/2 border border-white/5 rounded-3xl p-1 shadow-lg">
-                <BookingOverview />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-12">
-                <UsageInsights />
-                <Favorites />
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: Activity Hub (Stacks below content on mobile/tablet) */}
-            <div className="col-span-12 lg:col-span-4">
-              <div className="lg:sticky lg:top-32">
-                {/* MERGED CONTAINER: Adjusts padding based on screen size */}
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 lg:p-10 shadow-2xl space-y-10 md:space-y-12">
-                  <Notifications />
-                  <hr className="border-white/5" />
-                  <ProfileTips />
-                  <hr className="border-white/5" />
-                  <HelpSupport />
-                </div>
-              </div>
-            </div>
+        {/* MAIN CONTENT AREA: Following your exact wireframe stack */}
+        <div className="p-6 lg:p-12 max-w-400 mx-auto w-full space-y-8 lg:space-y-10">
+          {/* 1. TOP STATS: Four cards in a row */}
+          <div className="w-full">
+            <SummaryCards />
           </div>
 
-          <footer className="mt-12 md:mt-20 py-10 border-t border-white/5 text-center opacity-30">
+          {/* 2. ACTIVE PARKING: Full width operational status */}
+          <div className="w-full bg-white/2 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+            <ActiveParkingStatus />
+          </div>
+
+          {/* 3. SPLIT ROW: Wallet (Left) & Favorites (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            <WalletSnapshot />
+            <Favorites />
+          </div>
+
+          {/* 4. BOOKING OVERVIEW: Full width data view */}
+          <div className="w-full bg-white/2 border border-white/5 rounded-3xl p-1 shadow-lg">
+            <BookingOverview />
+          </div>
+
+          {/* 5. SPLIT ROW: Quick Actions (Left) & Notifications (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            <QuickActions />
+            <Notifications />
+          </div>
+
+          {/* 6. PROFILE TIPS: Full width helpful insights */}
+          <div className="w-full">
+            <ProfileTips />
+          </div>
+
+          {/* 7. USAGE INSIGHTS: High-density data charts */}
+          <div className="w-full">
+            <UsageInsights />
+          </div>
+
+          {/* 8. HELP & SUPPORT: Footer actions */}
+          <div className="w-full">
+            <HelpSupport />
+          </div>
+
+          <footer className="mt-12 py-10 border-t border-white/5 text-center opacity-30">
             <p className="text-[9px] font-black uppercase tracking-[0.5em] text-slate-700">
               Powered by MERN • Anand Smart City • 2026
             </p>
