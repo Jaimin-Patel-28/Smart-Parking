@@ -44,7 +44,7 @@ const DataPrivacy = () => {
               <Download size={16} />
             </div>
           </div>
-          <p className="text-[10px] text-slate-500 font-bold leading-relaxed mb-6 max-w-[200px]">
+          <p className="text-[10px] text-slate-500 font-bold leading-relaxed mb-6 max-w-50">
             Download a portable copy of your booking history and settings.
           </p>
           <button className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[9px] font-black text-white uppercase tracking-widest transition-all active:scale-95 shadow-sm">

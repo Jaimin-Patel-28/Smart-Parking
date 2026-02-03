@@ -94,7 +94,7 @@ const ProfilePage = () => {
       {/* HEADER: Full Width */}
       <ProfileHeader />
 
-      <main className="max-w-[1600px] mx-auto p-6 lg:p-12 space-y-10 lg:space-y-12">
+      <main className="max-w-400 mx-auto p-6 lg:p-12 space-y-10 lg:space-y-12">
         {/* ROW 1: Personal Info (Full Width) */}
         <section className="w-full">
           <PersonalInfo />

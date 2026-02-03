@@ -46,7 +46,7 @@ function AccountSecurity() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden p-[1px]">
+            <div className="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden p-px">
               <div className="h-full w-[92%] bg-linear-to-r from-blue-600 to-indigo-400 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.4)]" />
             </div>
             <span className="text-xs font-black text-white">92%</span>

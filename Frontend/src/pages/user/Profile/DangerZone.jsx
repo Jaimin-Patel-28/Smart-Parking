@@ -10,7 +10,7 @@ import {
 const DangerZone = () => {
   return (
     /* FIXED: Using 'rounded-3xl' and increased padding for 110% zoom safety */
-    <section className="bg-rose-500/[0.02] border border-rose-500/10 rounded-3xl p-8 lg:p-10 shadow-2xl group transition-all duration-500 hover:bg-rose-500/[0.04] hover:border-rose-500/20">
+    <section className="bg-rose-500/2 border border-rose-500/10 rounded-3xl p-8 lg:p-10 shadow-2xl group transition-all duration-500 hover:bg-rose-500/4 hover:border-rose-500/20">
       {/* 1. HEADER: High-density security warning */}
       <div className="flex items-center justify-between mb-10 px-1">
         <div className="flex items-center gap-4">
@@ -57,7 +57,7 @@ const DangerZone = () => {
         </button>
 
         {/* Deletion Card */}
-        <button className="flex items-start gap-5 p-6 rounded-2xl bg-rose-500/[0.02] border border-rose-500/10 hover:bg-rose-600 hover:border-rose-500 transition-all text-left group/delete shadow-inner">
+        <button className="flex items-start gap-5 p-6 rounded-2xl bg-rose-500/2 border border-rose-500/10 hover:bg-rose-600 hover:border-rose-500 transition-all text-left group/delete shadow-inner">
           <div className="shrink-0 p-3 bg-rose-500/10 rounded-xl text-rose-500 group-hover/delete:bg-white/20 group-hover/delete:text-white transition-colors">
             <Trash2 size={20} />
           </div>
