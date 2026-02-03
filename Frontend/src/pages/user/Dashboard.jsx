@@ -15,11 +15,6 @@ import UserSidebar from "../../components/sidebar/UserSidebar";
 const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
   return (
     <div className="flex min-h-screen bg-slate-950 overflow-x-hidden">
-      {/* 1. ATTACHED SIDEBAR: Moves with the page to prevent double-scroll */}
-      <UserSidebar
-        isOpen={isSidebarOpen}
-        onToggle={() => setSidebarOpen(!isSidebarOpen)}
-      />
 
       {/* 2. MAIN CONTENT: Standard flex container for a flush, gapless UI */}
       <main className="flex-1 flex flex-col min-w-0 no-scrollbar">
@@ -39,7 +34,7 @@ const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
             {/* LEFT COLUMN: Operations (8/12) */}
             <div className="col-span-12 lg:col-span-8 space-y-10">
               {/* FIXED: Using 'rounded-3xl' for canonical compliance */}
-              <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+              <div className="bg-white/2 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
                 <ActiveParkingStatus />
               </div>
 
@@ -48,7 +43,7 @@ const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
                 <WalletSnapshot />
               </div>
 
-              <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-1 shadow-lg">
+              <div className="bg-white/2 border border-white/5 rounded-3xl p-1 shadow-lg">
                 <BookingOverview />
               </div>
 

@@ -1,53 +1,103 @@
 import React from "react";
-import { Search, PlusCircle, CalendarDays, Wallet, ArrowRight } from "lucide-react";
+import {
+  Search,
+  PlusCircle,
+  CalendarDays,
+  Wallet,
+  ArrowRight,
+  Zap,
+} from "lucide-react";
 
 const QuickActions = () => {
   const actions = [
-    { icon: Search, label: "Find Parking", desc: "Locate nearby nodes", color: "text-blue-400", bg: "bg-blue-500/10" },
-    { icon: PlusCircle, label: "Book Slot", desc: "Instant reservation", color: "text-cyan-400", bg: "bg-cyan-500/10" },
-    { icon: CalendarDays, label: "My Bookings", desc: "Manage sessions", color: "text-purple-400", bg: "bg-purple-500/10" },
-    { icon: Wallet, label: "Add Money", desc: "Top up credits", color: "text-emerald-400", bg: "bg-emerald-500/10" },
+    {
+      icon: Search,
+      label: "Find Parking",
+      desc: "Locate nearby nodes",
+      color: "text-blue-400",
+      bg: "bg-blue-500/10",
+    },
+    {
+      icon: PlusCircle,
+      label: "Book Slot",
+      desc: "Instant reservation",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Bookings",
+      desc: "Manage sessions",
+      color: "text-purple-400",
+      bg: "bg-purple-500/10",
+    },
+    {
+      icon: Wallet,
+      label: "Add Money",
+      desc: "Top up credits",
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+    },
   ];
 
   return (
-    <section className="p-6 h-full flex flex-col">
-      {/* SECTION HEADER */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-sm font-black text-white uppercase tracking-[0.2em]">
-          Quick Actions
-        </h2>
-        <div className="flex gap-1">
-          <div className="w-1 h-1 rounded-full bg-slate-700"></div>
-          <div className="w-1 h-1 rounded-full bg-slate-700"></div>
+    /* FIXED: Using 'rounded-3xl' and increased padding 'p-8 lg:p-10' for spacing */
+    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl h-full flex flex-col group transition-all duration-500 hover:border-blue-500/20">
+      {/* 1. SECTION HEADER: Increased margin-bottom (mb-8) and enhanced branding */}
+      <div className="flex items-center justify-between mb-10 px-1">
+        <div className="flex items-center gap-3">
+          <div className="shrink-0 p-3 bg-blue-500/10 rounded-xl text-blue-400">
+            <Zap size={20} className="fill-blue-400/20" />
+          </div>
+          <div>
+            <h2 className="text-xl font-black text-white uppercase tracking-[0.3em]">
+              Quick Actions
+            </h2>
+            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+              Instant Operations
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-1.5 opacity-30 group-hover:opacity-100 transition-opacity">
+          <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
         </div>
       </div>
 
-      {/* ACTIONS GRID */}
-      <div className="grid grid-cols-2 gap-3 flex-1">
+      {/* 2. ACTIONS GRID: Increased gap (gap-5) for 'Small & Perfect' layout */}
+      <div className="grid grid-cols-2 gap-5 flex-1">
         {actions.map((action, index) => (
-          <button 
-            key={index} 
-            className="group flex flex-col items-start p-4 rounded-3xl bg-slate-950/40 border border-white/5 hover:border-white/10 hover:bg-white/5 transition-all text-left relative overflow-hidden active:scale-95"
+          <button
+            key={index}
+            className="group/btn flex flex-col items-start p-6 rounded-3xl bg-slate-950/60 border border-white/5 hover:border-blue-500/30 hover:bg-slate-950 transition-all text-left relative overflow-hidden active:scale-95 shadow-inner"
           >
-            {/* Background Glow Effect */}
-            <div className={`absolute -right-4 -bottom-4 w-12 h-12 blur-2xl opacity-0 group-hover:opacity-20 transition-opacity ${action.color.replace('text', 'bg')}`} />
+            {/* Background Glow Effect: Optimized for performance */}
+            <div
+              className={`absolute -right-8 -bottom-8 w-20 h-20 blur-3xl opacity-0 group-hover/btn:opacity-10 transition-opacity ${action.color.replace("text", "bg")}`}
+            />
 
-            {/* Icon Container - Uses Canonical shrink-0 */}
-            <div className={`shrink-0 p-2.5 rounded-2xl ${action.bg} ${action.color} mb-3 transition-transform group-hover:scale-110`}>
-              <action.icon size={18} />
+            {/* Icon Container: Using 'shrink-0' to resolve canonical warning */}
+            <div
+              className={`shrink-0 p-3 rounded-2xl ${action.bg} ${action.color} mb-5 transition-all duration-300 group-hover/btn:scale-110 shadow-sm`}
+            >
+              <action.icon size={22} />
             </div>
 
-            {/* Labels */}
-            <div className="mt-auto">
-              <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1">
+            {/* Labels: Enhanced typography for 110% zoom */}
+            <div className="mt-auto relative z-10">
+              <h4 className="text-[12px] font-black text-white uppercase tracking-wider mb-2">
                 {action.label}
               </h4>
-              <p className="text-[9px] text-slate-500 font-medium leading-tight">
+              <p className="text-[10px] text-slate-500 font-bold leading-tight tracking-tight group-hover/btn:text-slate-400 transition-colors">
                 {action.desc}
               </p>
             </div>
 
-            <ArrowRight size={12} className="absolute top-4 right-4 text-slate-800 group-hover:text-white transition-colors" />
+            {/* Subtle Action Indicator */}
+            <ArrowRight
+              size={14}
+              className="absolute top-6 right-6 text-slate-800 group-hover/btn:text-blue-400 group-hover/btn:translate-x-1 transition-all"
+            />
           </button>
         ))}
       </div>
