@@ -98,20 +98,29 @@ const ActiveParkingStatus = () => {
         </div>
 
         {/* Countdown Card: Cleaned up spacing */}
-        <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-6 flex flex-col justify-center shadow-inner">
-          <div className="flex items-center gap-2 text-amber-500 mb-2">
-            <Timer size={16} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+        <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-5 flex flex-col justify-center shadow-inner min-w-30">
+          <div className="flex items-center gap-2 text-amber-500 mb-2 px-1">
+            {/* FIXED: Smaller icon for better clearance */}
+            <Timer size={14} className="shrink-0" />
+            <span className="text-[8px] font-black uppercase tracking-[0.2em] whitespace-nowrap">
               Remaining
             </span>
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-black text-white tracking-tighter">
+
+          <div className="flex items-baseline gap-1 px-1">
+            {/* FIXED: Reduced font size from 3xl to 2xl to prevent overflow */}
+            <span className="text-2xl font-black text-white tracking-tighter leading-none">
               02:45
             </span>
-            <span className="text-[11px] font-black text-slate-600 tracking-widest">
-              HRS
+            {/* FIXED: Smaller HRS label aligned with baseline */}
+            <span className="text-[9px] font-black text-slate-600 tracking-widest uppercase">
+              hrs
             </span>
+          </div>
+
+          {/* Optional: Add a subtle progress ring or bar if space allows */}
+          <div className="mt-3 h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+            <div className="h-full w-[45%] bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
           </div>
         </div>
       </div>

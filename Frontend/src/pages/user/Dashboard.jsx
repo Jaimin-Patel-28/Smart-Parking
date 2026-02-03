@@ -10,35 +10,35 @@ import UsageInsights from "./dashboard/UsageInsights";
 import Favorites from "./dashboard/Favorites";
 import ProfileTips from "./dashboard/ProfileTips";
 import HelpSupport from "./dashboard/HelpSupport";
-import UserSidebar from "../../components/sidebar/UserSidebar";
+
 
 const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
   return (
     <div className="flex min-h-screen bg-slate-950 overflow-x-hidden">
-
-      {/* 2. MAIN CONTENT: Standard flex container for a flush, gapless UI */}
+      {/* 2. MAIN CONTENT: flex-1 ensures a flush UI against the sidebar */}
       <main className="flex-1 flex flex-col min-w-0 no-scrollbar">
-        {/* 3. STICKY HEADER: Added solid 'bg-slate-950' and 'z-40' to prevent overlap */}
-        <div className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-sm border-b border-white/5 px-6 py-5 lg:px-10">
+        {/* 3. STICKY HEADER: High Z-Index and responsive padding */}
+        <div className="sticky top-0 z-40 bg-slate-950/95 border-b border-white/5 px-4 md:px-8 lg:px-12 py-4">
           <DashboardHeader />
         </div>
 
-        {/* 4. CONTENT AREA: Unified padding and spacing */}
-        <div className="p-6 lg:p-10 space-y-10">
-          <div className="grid grid-cols-12 gap-8 max-w-full">
-            {/* TOP STATS */}
+        {/* 4. CONTENT AREA: Responsive padding and dynamic gaps */}
+        <div className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-12">
+          {/* 5. RESPONSIVE GRID: 1 column on mobile, 12 columns on large screens */}
+          <div className="grid grid-cols-12 gap-6 md:gap-10 lg:gap-12 max-w-full">
+            {/* TOP STATS: Always full width, but grid inside SummaryCards will handle mobile stacking */}
             <div className="col-span-12">
               <SummaryCards />
             </div>
 
-            {/* LEFT COLUMN: Operations (8/12) */}
-            <div className="col-span-12 lg:col-span-8 space-y-10">
-              {/* FIXED: Using 'rounded-3xl' for canonical compliance */}
+            {/* LEFT COLUMN: Operations (Full width on mobile/tablet, 8/12 on large screens) */}
+            <div className="col-span-12 lg:col-span-8 space-y-8 md:space-y-12">
               <div className="bg-white/2 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
                 <ActiveParkingStatus />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* GRID FOR NESTED CARDS: Stacks vertically on mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-12">
                 <QuickActions />
                 <WalletSnapshot />
               </div>
@@ -47,17 +47,17 @@ const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
                 <BookingOverview />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-12">
                 <UsageInsights />
                 <Favorites />
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Merged Activity Hub (4/12) */}
+            {/* RIGHT COLUMN: Activity Hub (Stacks below content on mobile/tablet) */}
             <div className="col-span-12 lg:col-span-4">
-              <div className="sticky top-32 space-y-8">
-                {/* MERGED CONTAINER: Notifications, Tips, and Support in one high-performance card */}
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl space-y-10">
+              <div className="lg:sticky lg:top-32">
+                {/* MERGED CONTAINER: Adjusts padding based on screen size */}
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 lg:p-10 shadow-2xl space-y-10 md:space-y-12">
                   <Notifications />
                   <hr className="border-white/5" />
                   <ProfileTips />
@@ -68,8 +68,8 @@ const Dashboard = ({ isSidebarOpen, setSidebarOpen }) => {
             </div>
           </div>
 
-          <footer className="mt-20 py-10 border-t border-white/5 text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-700">
+          <footer className="mt-12 md:mt-20 py-10 border-t border-white/5 text-center opacity-30">
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-slate-700">
               Powered by MERN • Anand Smart City • 2026
             </p>
           </footer>

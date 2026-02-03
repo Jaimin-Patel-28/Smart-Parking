@@ -1,22 +1,34 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import { User, CheckCircle2, ShieldCheck } from "lucide-react";
 
-const SidebarProfile = () => {
+const SidebarProfile = ({ isOpen = true }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col gap-4">
-      {/* 1. BRANDING (Simplified for Sidebar) */}
-      <div className="flex items-center gap-2 px-2">
+      {/* 1. BRANDING */}
+      <div
+        className="flex items-center gap-2 px-2 cursor-pointer"
+        onClick={() => navigate("/dashboard")}
+      >
         <div className="bg-blue-600 p-1.5 rounded-lg">
           <ShieldCheck size={16} className="text-white" />
         </div>
-        <h3 className="text-lg font-black text-white tracking-tighter uppercase italic">
-          SmartPark
-        </h3>
+
+        {isOpen && (
+          <h3 className="text-lg font-black text-white tracking-tighter uppercase italic">
+            SmartPark
+          </h3>
+        )}
       </div>
 
-      {/* 2. USER INFO CARD */}
-      <div className="flex items-center gap-3 bg-white/5 border border-white/5 p-2 rounded-2xl hover:bg-white/10 transition-all cursor-pointer">
-        {/* AVATAR WITH STATUS INDICATOR */}
+      {/* 2. USER INFO CARD (CLICKABLE → PROFILE PAGE) */}
+      <div
+        onClick={() => navigate("/dashboard/profile")}
+        className="flex items-center gap-3 bg-white/5 border border-white/5 p-2 rounded-2xl
+                   hover:bg-white/10 transition-all cursor-pointer"
+      >
+        {/* AVATAR */}
         <div className="relative">
           <div className="w-10 h-10 rounded-xl bg-linear-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
             <User size={20} />
@@ -26,18 +38,20 @@ const SidebarProfile = () => {
           </div>
         </div>
 
-        {/* DETAILS */}
-        <div className="flex flex-col">
-          <p className="text-xs font-black text-white tracking-tight">
-            Jaimin Patel
-          </p>
-          <div className="flex items-center gap-1 mt-0.5">
-            <CheckCircle2 size={10} className="text-cyan-400" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-cyan-400/80">
-              Verified User
-            </span>
+        {/* DETAILS (hide when collapsed) */}
+        {isOpen && (
+          <div className="flex flex-col">
+            <p className="text-xs font-black text-white tracking-tight">
+              Jaimin Patel
+            </p>
+            <div className="flex items-center gap-1 mt-0.5">
+              <CheckCircle2 size={10} className="text-cyan-400" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-cyan-400/80">
+                Verified User
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

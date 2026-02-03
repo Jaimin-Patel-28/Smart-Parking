@@ -10,6 +10,7 @@ import Auth from "../pages/Auth";
 
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../pages/user/Dashboard";
+import ProfilePage from "../pages/user/ProfilePage";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<UserLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
     </Routes>
