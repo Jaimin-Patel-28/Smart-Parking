@@ -11,7 +11,7 @@ const PageHeader = () => {
       </div>
 
       {/* 2. MAIN CONTAINER: Responsive padding for widescreen impact */}
-      <div className="relative max-w-[1600px] mx-auto px-6 md:px-12 pt-24 md:pt-32">
+      <div className="relative max-w-400 mx-auto px-6 md:px-12 pt-24 md:pt-32">
         <div className="flex flex-col md:flex-row items-end justify-between gap-8 md:gap-10">
           {/* HEADER CONTENT: High-density typography */}
           <div className="space-y-4 pb-2">

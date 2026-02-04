@@ -12,7 +12,7 @@ import {
 
 const BookingDetailsView = () => {
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-[2rem] p-8 lg:p-10 shadow-2xl relative overflow-hidden group">
+    <section className="bg-slate-900/40 border border-white/5 rounded-4xl p-8 lg:p-10 shadow-2xl relative overflow-hidden group">
       {/* 1. SECTION HEADER: Cinematic metadata */}
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-4">

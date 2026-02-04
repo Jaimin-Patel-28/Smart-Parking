@@ -10,7 +10,7 @@ import {
 
 const FiltersSearch = () => {
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-[2rem] p-8 lg:p-10 shadow-2xl backdrop-blur-xl h-full flex flex-col justify-between gap-6">
+    <section className="bg-slate-900/40 border border-white/5 rounded-4xl p-8 lg:p-10 shadow-2xl backdrop-blur-xl h-full flex flex-col justify-between gap-6">
       {/* 1. SEARCH BAR: Full width at top */}
       <div className="relative group w-full">
         <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400">
@@ -30,12 +30,12 @@ const FiltersSearch = () => {
           <div className="flex items-center gap-3">
             <input
               type="date"
-              className="bg-transparent text-[10px] font-black text-white uppercase focus:outline-none [color-scheme:dark]"
+              className="bg-transparent text-[10px] font-black text-white uppercase focus:outline-none scheme:dark"
             />
             <span className="text-slate-700 text-xs">—</span>
             <input
               type="date"
-              className="bg-transparent text-[10px] font-black text-white uppercase focus:outline-none [color-scheme:dark]"
+              className="bg-transparent text-[10px] font-black text-white uppercase focus:outline-none scheme:dark"
             />
           </div>
         </div>

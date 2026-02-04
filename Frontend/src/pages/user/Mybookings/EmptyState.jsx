@@ -14,7 +14,7 @@ const EmptyState = () => {
       {/* 1. VISUAL ANCHOR: Animated background and icon */}
       <div className="relative mb-10">
         <div className="absolute inset-0 bg-blue-500/20 blur-[60px] rounded-full scale-150 animate-pulse" />
-        <div className="relative z-10 w-24 h-24 bg-slate-950 border border-white/10 rounded-[2rem] flex items-center justify-center text-blue-400 shadow-2xl group-hover:rotate-12 transition-transform duration-700">
+        <div className="relative z-10 w-24 h-24 bg-slate-950 border border-white/10 rounded-4xl flex items-center justify-center text-blue-400 shadow-2xl group-hover:rotate-12 transition-transform duration-700">
           <Navigation size={40} className="fill-blue-400/10" />
         </div>
         <div className="absolute -top-2 -right-2 w-8 h-8 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center justify-center text-amber-400 animate-bounce">

@@ -49,7 +49,7 @@ const ActiveBookings = () => {
 };
 
 const ActiveBookingCard = ({ location, slot, date, time, remaining }) => (
-  <div className="group relative bg-slate-950/60 border border-blue-500/20 rounded-[2rem] p-8 transition-all duration-500 hover:border-blue-500/50 shadow-2xl shadow-blue-900/10 overflow-hidden">
+  <div className="group relative bg-slate-950/60 border border-blue-500/20 rounded-4xl p-8 transition-all duration-500 hover:border-blue-500/50 shadow-2xl shadow-blue-900/10 overflow-hidden">
     {/* Background Decorative Glow */}
     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] -z-10 group-hover:bg-blue-500/10 transition-all duration-700" />
 
