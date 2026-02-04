@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
+import { Navigate } from "react-router-dom";
 
 const ActiveParkingStatus = () => {
   return (
@@ -136,7 +137,7 @@ const ActiveParkingStatus = () => {
 
         <div className="flex gap-4">
           <button className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-xl shadow-blue-600/20 active:scale-95">
-            Extend Session
+            Modify Session
           </button>
         </div>
       </div>

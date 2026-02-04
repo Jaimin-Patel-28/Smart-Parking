@@ -11,6 +11,8 @@ import Auth from "../pages/Auth";
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../pages/user/Dashboard";
 import ProfilePage from "../pages/user/ProfilePage";
+import MyBookingsPage from "../pages/user/MyBookingsPage";
+import FindParking from "../pages/user/FindParking";
 
 const AppRoutes = () => {
   return (
@@ -28,6 +30,8 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<UserLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="bookings" element={<MyBookingsPage/>}/>
+          <Route path="find-parking" element={<FindParking/>}/>
         </Route>
       </Route>
     </Routes>
