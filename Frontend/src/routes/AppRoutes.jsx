@@ -13,6 +13,7 @@ import Dashboard from "../pages/user/Dashboard";
 import ProfilePage from "../pages/user/ProfilePage";
 import MyBookingsPage from "../pages/user/MyBookingsPage";
 import FindParking from "../pages/user/FindParking";
+import WalletHub from "../pages/user/WalletHub";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +33,7 @@ const AppRoutes = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="bookings" element={<MyBookingsPage/>}/>
           <Route path="find-parking" element={<FindParking/>}/>
+          <Route path="wallet" element={<WalletHub/>}/>
         </Route>
       </Route>
     </Routes>
