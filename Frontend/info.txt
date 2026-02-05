@@ -1,145 +1,49 @@
-public penal:
+Working Flow
 
-    Navbar:
-        - Home:
-            1. hero
-            2. Trust Indicators / Quick Stats
-            3. Problem → Solution Section 
-            4. How SmartPark Works
-            5. Key Features Section
-            6. Why Choose SmartPark?
-            7. Target Users / Use Cases
-            8. App Preview / Dashboard Preview
-            9. Testimonials / Feedback
-            10. Final CTA Section
-        - Aboutus
-            1️⃣ Who We Are (Intro Section)
+    Person -> Explore website(public panel) -> Complete authentication(register/login) -> Redirect on User panel -> Userpanel
 
-                Short, powerful intro. No long story.
+    Userpanel
+        1. Dashboard
+        2. Find parking
+        3. My bookings
+        4. Wallet hub
+        5. Profile setting
+        6. Notifications
+        7. Help center
+        8. Sign out
 
-                Example idea:
-                    SmartPark is a modern smart parking management platform designed to simplify parking using technology, automation, and real-time insights.
+        1. Dashboard:
 
-                💡 Focus on:
+            1. Active session card : (click on "Modify session" -> Mybooking page (active session card and user can modify their session)) (Dashboard -> Mybooking)
 
-                    Problem you solve
-                    Tech-driven solution
-                    Smart & future-ready tone
+            2. Quick action card : 
+                i. Find parking : Dashboard(Quick action click on find parking -> find parking page)
+                ii. Book slot : Dashboard(Quick action click on book slot -> favorite -> slot selection(find parking page) -> payment -> dashboard)
+                iii. My bookings : Dashboard (Quick action click on My bookings -> my bookings page)
+                iv. Add money : Dashboard(Quick actions click on add money -> wallet hub)
 
-2️⃣ Our Mission 🚀
+            3. Favorite card : case-1 - (if user user quick book first time -> find parking (Search location -> select date, time, vehicle, slot) -> execution node -> payment gateway -> payment complete -> dashboard) case-2 - (if user used already quick book -> their favorite parking -> slot bokking -> payment gateway -> payment complete -> Dashboard)
 
-What is your goal?
+            4. Recent booking : when user use button : (view all history -> my bookings -> booking history) when user use to show detail(for eg: anand central mall "click on '>'" -> details page)
 
-Example points:
+            5. Profile boosters : 
+                i. complete profile -> profile setting page -> edit profile(personal details) -> save changes -> Dashboard
+                ii. add vehicle details -> profile setting page -> edit profile(registerd garage) -> save changes -> Dashboard
+                iii. enable alerts -> profile setting page -> alert node -> changes on require alerts -> toast(ae you sure for make changes [yes, no]) -> Dashboard
 
-Reduce parking congestion
 
-Save users’ time
+        2. Find parking:
 
-Digitize traditional parking systems
+            1. search location -> parking locations -> click view details -> show full details (loaction details card) -> reserve or not. 
+            
+                case-1 : if reserve continue the process -> fill date and time -> select vehicle -> slot selection -> price summery -> execution node. 3 probabilities are there 
+                    1. confirm booking -> payment -> validation node (shows parking slot secure at etc slot number)
+                    2. change slot -> back to slot selection 
+                    3. cancel all -> find parking page (main page where show header footer and main section)
 
-Make cities smarter
+                case-2 : if not reserve -> parking locations card(because they explore more parkings in area)
 
-👉 Keep it 1–2 lines only (very important).
+            2. Validation node : 2 buttons (i. go to my bookings and ii. veiw node details)
 
-3️⃣ Our Vision 🌍
-
-Where are you going in the future?
-
-Example:
-
-Smart cities integration
-
-Cashless & paperless parking
-
-AI-based slot prediction
-
-Scalable across cities & malls
-
-4️⃣ Why SmartPark? (USP Section) ⭐
-
-This is MOST IMPORTANT.
-
-Use cards / icons:
-
-⏱️ Real-time parking availability
-
-📱 Easy booking & digital tickets
-
-💳 Secure digital wallet
-
-🔒 Verified users & vehicles
-
-📊 Smart analytics for admins
-
-💡 This convinces users why to choose you.
-
-5️⃣ How It Works 🔄
-
-Simple 3–4 steps (users love this):
-
-Search parking location
-
-Select slot & time
-
-Book & pay digitally
-
-Park stress-free
-
-👉 Add subtle animations here.
-
-6️⃣ Technology We Use ⚙️
-
-Shows professionalism (especially for internships/interviews).
-
-Example stack:
-
-React + Vite
-
-CSS / Tailwind
-
-Node.js (future)
-
-API-based architecture
-
-Secure local storage / DB
-
-7️⃣ Who Is It For? 🎯
-
-Target audience clarity:
-
-Daily commuters
-
-Shopping malls
-
-Offices & IT parks
-
-Event parking
-
-Smart city authorities
-
-8️⃣ Our Values 💙
-
-Short & classy:
-
-Transparency
-
-Security
-
-Innovation
-
-User-first design
-
-Reliability
-
-9️⃣ Call to Action (CTA)
-
-End strong.
-
-Examples:
-
-“Start Parking Smart Today”
-“Join the Smart Parking Revolution”
-Button → Register / Explore Parking
-        - Contactus 
-        - Login
+                1. Go to my bookings -> my bookings page 
+                2. View node details -> detail node 

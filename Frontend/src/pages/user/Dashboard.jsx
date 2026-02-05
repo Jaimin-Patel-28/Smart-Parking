@@ -34,7 +34,7 @@ const Dashboard = () => {
 
           {/* 3. SPLIT ROW: Wallet (Left) & Favorites (Right) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
-            <WalletSnapshot />
+            <QuickActions />
             <Favorites />
           </div>
 
@@ -45,7 +45,7 @@ const Dashboard = () => {
 
           {/* 5. SPLIT ROW: Quick Actions (Left) & Notifications (Right) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
-            <QuickActions />
+            <WalletSnapshot />
             <Notifications />
           </div>
 
