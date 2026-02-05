@@ -1,15 +1,18 @@
 const LocationSearch = () => {
   return (
-    <section className="bg-white p-5 rounded-xl shadow">
-      <h2 className="font-semibold">Search Location</h2>
-      <input
-        type="text"
-        placeholder="Enter city or area"
-        className="w-full border p-3 rounded-lg mt-3"
-      />
-      <button className="text-blue-600 text-sm mt-2">
-        Use Current Location
-      </button>
+    <section>
+      <h2>Search Location</h2>
+
+      <input placeholder="Search by location name" />
+      <select>
+        <option>Select City / Area</option>
+      </select>
+
+      <button>Use Current Location</button>
+
+      <div>
+        <p>Recent Searches</p>
+      </div>
     </section>
   );
 };

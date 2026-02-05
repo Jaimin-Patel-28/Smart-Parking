@@ -1,9 +1,14 @@
 const PriceSummary = () => {
   return (
-    <section className="bg-white p-5 rounded-xl shadow">
-      <h2 className="font-semibold">Price Summary</h2>
-      <p>Total Duration: 2 Hours</p>
-      <p className="font-bold">Total Price: ₹120</p>
+    <section>
+      <h2>Price Summary</h2>
+
+      <p>Selected Location</p>
+      <p>Slot Number</p>
+      <p>Date & Time</p>
+      <p>Total Duration</p>
+      <p>Price Calculation</p>
+      <p>Wallet Balance Check</p>
     </section>
   );
 };
