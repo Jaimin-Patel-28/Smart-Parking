@@ -6,25 +6,23 @@ const FooterNewsletter = () => {
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    // Since you are working on the MERN stack, you'll eventually
-    // connect this to your Express/MongoDB backend here.
     console.log("Subscribing email:", email);
     setEmail("");
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-8 px-2">
       {/* TEXT CONTENT */}
       <div className="flex-1 text-center lg:text-left">
-        <div className="flex items-center justify-center lg:justify-start gap-2 mb-2">
-          <Sparkles size={18} className="text-cyan-400" />
-          <h4 className="text-white font-bold text-lg tracking-tight">
+        <div className="flex items-center justify-center lg:justify-start gap-2 mb-3">
+          <Sparkles size={20} className="text-cyan-400 animate-pulse" />
+          <h4 className="text-white font-black text-xl tracking-tight uppercase">
             Stay in the Loop
           </h4>
         </div>
-        <p className="text-slate-400 text-sm max-w-sm">
-          Get real-time parking updates, smart city tips, and exclusive offers
-          delivered straight to your inbox.
+        <p className="text-slate-400 text-sm md:text-base max-w-sm mx-auto lg:mx-0 leading-relaxed">
+          Get real-time parking updates and smart city tips delivered straight
+          to your inbox.
         </p>
       </div>
 
@@ -33,30 +31,31 @@ const FooterNewsletter = () => {
         onSubmit={handleSubscribe}
         className="flex-1 w-full max-w-md relative group"
       >
-        <div className="flex items-center p-1.5 bg-slate-900 border border-slate-700 rounded-2xl focus-within:border-cyan-400/50 transition-all duration-300 shadow-inner">
+        {/* Responsive Container: Stacked on mobile, row on md+ */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center p-2 bg-slate-900 border border-slate-800 rounded-4xl focus-within:border-cyan-400/50 transition-all duration-500 shadow-2xl gap-3 sm:gap-0">
           <input
             type="email"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="grow bg-transparent border-none outline-none px-4 text-slate-200 text-sm placeholder:text-slate-600"
+            className="grow bg-transparent border-none outline-none px-6 py-4 sm:py-0 text-slate-200 text-base placeholder:text-slate-600 w-full"
           />
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold rounded-xl transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] active:scale-95"
+            className="flex items-center justify-center gap-3 px-8 py-4 sm:py-3 bg-cyan-400 hover:bg-white text-slate-950 font-black uppercase text-xs tracking-widest rounded-3xl transition-all duration-300 group-hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] active:scale-95 whitespace-nowrap"
           >
             <span>Subscribe</span>
             <Send
               size={16}
-              className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform"
+              className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
             />
           </button>
         </div>
 
-        {/* Subtle helper text */}
-        <p className="absolute -bottom-6 left-2 text-[10px] text-slate-600 font-medium italic">
-          We value your privacy. No spam, ever.
+        {/* Privacy Note */}
+        <p className="mt-4 text-center sm:text-left text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+          🔒 Secure • No Spam • Unsubscribe Anytime
         </p>
       </form>
     </div>
