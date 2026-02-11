@@ -74,9 +74,9 @@ const HowItWorks = () => {
 
         <div className="relative">
           {/* THE PROGRESS PATH (Desktop Only) */}
-          <div className="hidden lg:block absolute top-12 left-[12%] right-[12%] h-[1px] bg-slate-800">
+          <div className="hidden lg:block absolute top-12 left-[12%] right-[12%] h-px bg-slate-800">
             <div
-              className="absolute h-full bg-linear-to-r from-cyan-500 via-blue-500 to-cyan-500 transition-all duration-[2500ms] ease-in-out shadow-[0_0_15px_rgba(34,211,238,0.4)]"
+              className="absolute h-full bg-linear-to-r from-cyan-500 via-blue-500 to-cyan-500 transition-all duration-2500 ease-in-out shadow-[0_0_15px_rgba(34,211,238,0.4)]"
               style={{ width: isVisible ? "100%" : "0%" }}
             ></div>
           </div>
@@ -100,7 +100,7 @@ const HowItWorks = () => {
                     <div className="absolute inset-0 rounded-3xl bg-cyan-400/20 animate-ping opacity-0 group-hover:opacity-100"></div>
 
                     {/* The Icon Box - overflow-visible is key here */}
-                    <div className="w-24 h-24 rounded-[2rem] bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:border-cyan-400 group-hover:-rotate-6 transition-all duration-500 relative z-20 shadow-2xl">
+                    <div className="w-24 h-24 rounded-4xl bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:border-cyan-400 group-hover:-rotate-6 transition-all duration-500 relative z-20 shadow-2xl">
                       <Icon
                         size={38}
                         className="text-white group-hover:text-cyan-400 transition-colors"
@@ -117,7 +117,7 @@ const HowItWorks = () => {
                     <h3 className="text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-[260px] mx-auto group-hover:text-slate-300">
+                    <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-65 mx-auto group-hover:text-slate-300">
                       {item.description}
                     </p>
                   </div>
@@ -125,7 +125,7 @@ const HowItWorks = () => {
                   {/* Mobile Divider (Sequential Growth) */}
                   {index !== steps.length - 1 && (
                     <div
-                      className={`lg:hidden w-[2px] h-12 bg-linear-to-b from-cyan-500 to-transparent mt-8 transition-all duration-1000 origin-top`}
+                      className={`lg:hidden w-0.5 h-12 bg-linear-to-b from-cyan-500 to-transparent mt-8 transition-all duration-1000 origin-top`}
                       style={{
                         transitionDelay: `${index * 300 + 150}ms`,
                         transform: isVisible ? "scaleY(1)" : "scaleY(0)",

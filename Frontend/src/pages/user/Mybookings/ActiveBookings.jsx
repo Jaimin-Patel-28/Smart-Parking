@@ -10,6 +10,7 @@ import {
   XCircle,
 } from "lucide-react";
 
+
 const ActiveBookings = () => {
   return (
     <section className="p-8 lg:p-10 space-y-10">

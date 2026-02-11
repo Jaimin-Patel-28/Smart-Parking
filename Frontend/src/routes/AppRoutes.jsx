@@ -14,6 +14,7 @@ import ProfilePage from "../pages/user/ProfilePage";
 import MyBookingsPage from "../pages/user/MyBookingsPage";
 import FindParking from "../pages/user/FindParking";
 import WalletHub from "../pages/user/WalletHub";
+import ActiveBookings from "../pages/user/Mybookings/ActiveBookings";
 
 const AppRoutes = () => {
   return (
@@ -27,13 +28,21 @@ const AppRoutes = () => {
       </Route>
 
       {/* 🔐 USER PANEL */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<UserLayout />}>
+      <Route path="/user" element={<ProtectedRoute />}>
+        <Route element={<UserLayout />}>
+          {/* 👇 THIS IS IMPORTANT */}
           <Route index element={<Dashboard />} />
+
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="bookings" element={<MyBookingsPage/>}/>
-          <Route path="find-parking" element={<FindParking/>}/>
-          <Route path="wallet" element={<WalletHub/>}/>
+
+          <Route path="bookings">
+            <Route index element={<MyBookingsPage />} />
+            <Route path="edit-session" element={<ActiveBookings />} />
+          </Route>
+
+          <Route path="find-parking" element={<FindParking />} />
+          <Route path="wallet" element={<WalletHub />} />
         </Route>
       </Route>
     </Routes>

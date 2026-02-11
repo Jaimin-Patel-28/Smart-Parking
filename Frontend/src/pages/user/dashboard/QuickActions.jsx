@@ -7,8 +7,12 @@ import {
   ArrowRight,
   Zap,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const QuickActions = () => {
+
+  const navigate = useNavigate();
+
   const actions = [
     {
       icon: Search,
@@ -16,6 +20,7 @@ const QuickActions = () => {
       desc: "Locate nearby nodes",
       color: "text-blue-400",
       bg: "bg-blue-500/10",
+      route: "/user/find-parking"
     },
     {
       icon: PlusCircle,
@@ -23,6 +28,7 @@ const QuickActions = () => {
       desc: "Instant reservation",
       color: "text-cyan-400",
       bg: "bg-cyan-500/10",
+      route: "/user/find-parking"
     },
     {
       icon: CalendarDays,
@@ -30,6 +36,7 @@ const QuickActions = () => {
       desc: "Manage sessions",
       color: "text-purple-400",
       bg: "bg-purple-500/10",
+      route: "/user/bookings"
     },
     {
       icon: Wallet,
@@ -37,6 +44,7 @@ const QuickActions = () => {
       desc: "Top up credits",
       color: "text-emerald-400",
       bg: "bg-emerald-500/10",
+      route: "/user/wallet"
     },
   ];
 
@@ -69,6 +77,7 @@ const QuickActions = () => {
         {actions.map((action, index) => (
           <button
             key={index}
+            onClick={()=>navigate(action.route)}
             className="group/btn flex flex-col items-start p-6 rounded-3xl bg-slate-950/60 border border-white/5 hover:border-blue-500/30 hover:bg-slate-950 transition-all text-left relative overflow-hidden active:scale-95 shadow-inner"
           >
             {/* Background Glow Effect: Optimized for performance */}

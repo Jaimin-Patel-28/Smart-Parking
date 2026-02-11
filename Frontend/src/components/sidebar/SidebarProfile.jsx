@@ -9,7 +9,7 @@ const SidebarProfile = ({ isOpen = true }) => {
       {/* 1. BRANDING */}
       <div
         className="flex items-center gap-2 px-2 cursor-pointer"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/userlayout/dashboard")}
       >
         <div className="bg-blue-600 p-1.5 rounded-lg">
           <ShieldCheck size={16} className="text-white" />
@@ -24,7 +24,7 @@ const SidebarProfile = ({ isOpen = true }) => {
 
       {/* 2. USER INFO CARD (CLICKABLE → PROFILE PAGE) */}
       <div
-        onClick={() => navigate("/dashboard/profile")}
+        onClick={() => navigate("/user/profile")}
         className="flex items-center gap-3 bg-white/5 border border-white/5 p-2 rounded-2xl
                    hover:bg-white/10 transition-all cursor-pointer"
       >

@@ -8,9 +8,12 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ActiveParkingStatus = () => {
+
+  const navigate = useNavigate();
+
   return (
     <section className="relative overflow-hidden bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl group transition-all duration-500 hover:border-blue-500/20">
       {/* Decorative Glow */}
@@ -136,7 +139,10 @@ const ActiveParkingStatus = () => {
         </div>
 
         <div className="flex gap-4">
-          <button className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-xl shadow-blue-600/20 active:scale-95">
+          <button
+            onClick={() => navigate(`/user/bookings/edit-session`)}
+            className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-xl shadow-blue-600/20 active:scale-95"
+          >
             Modify Session
           </button>
         </div>

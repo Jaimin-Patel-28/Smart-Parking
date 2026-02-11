@@ -8,7 +8,18 @@ import {
   Zap,
 } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
 const BookingActions = () => {
+
+    const navigate = useNavigate();
+
+    const handleConfirmBooking = async () =>{
+      // await createBooking();
+
+      navigate("/dashboard/bookings");
+    }
+
   return (
     <section className="bg-slate-900/60 border border-white/5 rounded-[2.5rem] p-8 lg:p-10 shadow-2xl backdrop-blur-2xl group transition-all duration-500 relative overflow-hidden">
       {/* 1. HEADER: Small & Perfect operational labeling */}
@@ -36,7 +47,9 @@ const BookingActions = () => {
 
       <div className="space-y-4 relative z-10">
         {/* 2. PRIMARY ACTION: High-impact Confirm */}
-        <button className="w-full group/main relative overflow-hidden flex items-center justify-between p-6 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl shadow-xl shadow-blue-600/20 transition-all active:scale-95">
+        <button 
+        onClick={handleConfirmBooking}
+        className="w-full group/main relative overflow-hidden flex items-center justify-between p-6 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl shadow-xl shadow-blue-600/20 transition-all active:scale-95">
           <div className="flex items-center gap-4">
             <CheckCircle2
               size={24}

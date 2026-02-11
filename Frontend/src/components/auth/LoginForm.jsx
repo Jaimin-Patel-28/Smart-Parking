@@ -41,7 +41,7 @@ const LoginForm = () => {
       // cleanup autofill data
       sessionStorage.removeItem("loginPrefill");
 
-      navigate("/dashboard");
+      navigate("/user/dashboard", { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password");
     } finally {
