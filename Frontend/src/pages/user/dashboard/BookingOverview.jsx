@@ -10,7 +10,12 @@ import {
   History,
 } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
 const BookingOverview = () => {
+
+  const navigate = useNavigate();
+
   const bookings = [
     {
       id: 1,
@@ -68,7 +73,9 @@ const BookingOverview = () => {
             </p>
           </div>
         </div>
-        <button className="hidden sm:block px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-white hover:bg-blue-600/10 transition-all">
+        <button 
+        onClick={()=>navigate('/user/bookings/history')}
+        className="hidden sm:block px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-white hover:bg-blue-600/10 transition-all">
           View All History
         </button>
       </div>

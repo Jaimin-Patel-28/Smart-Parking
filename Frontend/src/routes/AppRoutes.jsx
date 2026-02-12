@@ -1,13 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 
+//layouts
 import PublicLayout from "../layouts/PublicLayout";
 import UserLayout from "../layouts/UserLayout";
 
+//public
 import Home from "../pages/Home";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import Auth from "../pages/Auth";
 
+//user
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../pages/user/Dashboard";
 import ProfilePage from "../pages/user/ProfilePage";
@@ -15,6 +18,9 @@ import MyBookingsPage from "../pages/user/MyBookingsPage";
 import FindParking from "../pages/user/FindParking";
 import WalletHub from "../pages/user/WalletHub";
 import ActiveBookings from "../pages/user/Mybookings/ActiveBookings";
+import Notifications from "../pages/user/Notifications";
+import BookingHistory from "../pages/user/Mybookings/BookingHistory";
+
 
 const AppRoutes = () => {
   return (
@@ -39,10 +45,20 @@ const AppRoutes = () => {
           <Route path="bookings">
             <Route index element={<MyBookingsPage />} />
             <Route path="edit-session" element={<ActiveBookings />} />
+            <Route path="history" element={<BookingHistory />} />
           </Route>
 
-          <Route path="find-parking" element={<FindParking />} />
-          <Route path="wallet" element={<WalletHub />} />
+          <Route path="find-parking">
+            <Route index element={<FindParking/>}/>
+          </Route>
+
+          <Route path="wallet">
+            <Route index element={<WalletHub/>}/>
+          </Route>
+
+          <Route path="notifications">
+            <Route index element={<Notifications/>}/>
+          </Route>
         </Route>
       </Route>
     </Routes>

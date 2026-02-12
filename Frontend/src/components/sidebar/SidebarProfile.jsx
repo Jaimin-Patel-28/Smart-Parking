@@ -9,7 +9,7 @@ const SidebarProfile = ({ isOpen = true }) => {
       {/* 1. BRANDING */}
       <div
         className="flex items-center gap-2 px-2 cursor-pointer"
-        onClick={() => navigate("/userlayout/dashboard")}
+        onClick={() => navigate("/user/dashboard")}
       >
         <div className="bg-blue-600 p-1.5 rounded-lg">
           <ShieldCheck size={16} className="text-white" />

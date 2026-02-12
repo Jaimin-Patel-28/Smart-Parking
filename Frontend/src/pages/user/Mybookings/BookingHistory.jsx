@@ -10,7 +10,12 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
 const BookingHistory = () => {
+
+  const navigate = useNavigate();
+
   return (
     <section className="p-8 lg:p-10 space-y-10">
       {/* 1. SECTION HEADER: "Small & Perfect" labeling */}
@@ -31,6 +36,12 @@ const BookingHistory = () => {
         <div className="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase tracking-widest">
           Archive Node v1.0
         </div>
+
+        <button 
+        onClick={()=>navigate('/user/bookings/history')}
+        className="hidden sm:block px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-white hover:bg-blue-600/10 transition-all">
+          View All History
+        </button>
       </div>
 
       {/* 2. HISTORY LIST: High-density horizontal table-style cards */}
