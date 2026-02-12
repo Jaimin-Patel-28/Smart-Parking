@@ -6,37 +6,36 @@ const SidebarPrimary = ({ isOpen }) => {
     {
       icon: LayoutDashboard,
       label: "Dashboard",
-      to: ".", // ✅ index route
-      end: true, // ✅ exact match
-      color: "text-blue-400",
+      to: ".",
+      end: true,
     },
     {
       icon: Car,
       label: "Find Parking",
-      to: "find-parking", // ✅ relative
-      color: "text-cyan-400",
+      to: "find-parking",
     },
     {
       icon: CalendarRange,
       label: "My Bookings",
-      to: "bookings", // ✅ relative
-      color: "text-purple-400",
+      to: "bookings",
     },
     {
       icon: Wallet,
       label: "Wallet Hub",
-      to: "wallet", // ✅ relative
-      color: "text-emerald-400",
+      to: "wallet",
     },
   ];
 
   return (
-    <nav className="px-2">
-      <p className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">
-        Core Operations
+    <nav className="px-3">
+      {/* SECTION HEADING: Subtle and Editorial */}
+      <p
+        className={`px-4 text-[10px] font-black uppercase tracking-[0.2em] text-[#222222]/30 mb-4 ${!isOpen && "text-center px-0"}`}
+      >
+        {isOpen ? "Core Operations" : "Core"}
       </p>
 
-      <ul className="space-y-1">
+      <ul className="space-y-2">
         {primaryLinks.map((link, index) => {
           const Icon = link.icon;
 
@@ -46,33 +45,32 @@ const SidebarPrimary = ({ isOpen }) => {
                 to={link.to}
                 end={link.end}
                 className={({ isActive }) =>
-                  `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group
+                  `w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group
                   ${
                     isActive
-                      ? "bg-blue-600/10 text-white border border-blue-500/20"
-                      : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
-                  }`
+                      ? "bg-[#222222] text-[#FAF3E1] shadow-lg shadow-[#222222]/10"
+                      : "text-[#222222]/40 hover:bg-white hover:text-[#222222] border-2 border-transparent hover:border-[#222222]/5"
+                  }
+                  ${!isOpen && "justify-center px-0"}`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <Icon
-                      size={18}
-                      className={`${link.color} ${
-                        isActive
-                          ? "opacity-100"
-                          : "opacity-60 group-hover:opacity-100"
-                      } transition-opacity`}
+                      size={20}
+                      strokeWidth={isActive ? 2.5 : 2}
+                      className="transition-transform duration-300 group-hover:scale-110"
                     />
 
                     {isOpen && (
-                      <span className="text-xs font-bold tracking-tight">
+                      <span className="text-[11px] font-black uppercase tracking-widest">
                         {link.label}
                       </span>
                     )}
 
-                    {isActive && (
-                      <div className="ml-auto w-1 h-4 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                    {/* ACTIVE INDICATOR: Humanized Orange Dot */}
+                    {isActive && isOpen && (
+                      <div className="ml-auto w-1.5 h-1.5 bg-[#FA8112] rounded-full shadow-sm" />
                     )}
                   </>
                 )}

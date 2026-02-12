@@ -1,51 +1,62 @@
 import React from "react";
 import { User, Bell } from "lucide-react";
 
-const SidebarSecondary = () => {
+const SidebarSecondary = ({ isOpen }) => {
   const accountLinks = [
-    { 
-      icon: User, 
-      label: "Profile Settings", 
-      color: "text-blue-400",
-      badge: null 
+    {
+      icon: User,
+      label: "Profile Settings",
+      badge: null,
     },
-    { 
-      icon: Bell, 
-      label: "Notifications", 
-      color: "text-orange-400",
-      badge: "3" // This would eventually come from your MongoDB/Socket.io state
+    {
+      icon: Bell,
+      label: "Notifications",
+      badge: "3", // Logic preserved for MongoDB/Socket.io state
     },
   ];
 
   return (
-    <nav className="px-2">
-      <p className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">
-        Account Management
+    <nav className="px-3">
+      {/* SECTION HEADING: Subtle and Editorial */}
+      <p
+        className={`px-4 text-[10px] font-black uppercase tracking-[0.2em] text-[#222222]/30 mb-4 ${!isOpen && "text-center px-0"}`}
+      >
+        {isOpen ? "Account Management" : "Account"}
       </p>
 
-      <ul className="space-y-1">
-        {accountLinks.map((link, index) => (
-          <li key={index}>
-            <button className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-              <div className="flex items-center gap-3">
-                <link.icon 
-                  size={18} 
-                  className={`${link.color} opacity-70 group-hover:opacity-100 transition-opacity`} 
-                />
-                <span className="text-xs font-semibold tracking-tight">
-                  {link.label}
-                </span>
-              </div>
-              
-              {/* NOTIFICATION BADGE */}
-              {link.badge && (
-                <span className="bg-orange-500 text-slate-950 text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-lg shadow-orange-500/20">
-                  {link.badge}
-                </span>
-              )}
-            </button>
-          </li>
-        ))}
+      <ul className="space-y-2">
+        {accountLinks.map((link, index) => {
+          const Icon = link.icon;
+          return (
+            <li key={index}>
+              <button
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group
+                text-[#222222]/40 hover:bg-white hover:text-[#222222] border-2 border-transparent hover:border-[#222222]/5
+                ${!isOpen && "justify-center px-0"}`}
+              >
+                <div className="flex items-center gap-4">
+                  <Icon
+                    size={20}
+                    strokeWidth={2.5}
+                    className="group-hover:text-[#FA8112] transition-colors"
+                  />
+                  {isOpen && (
+                    <span className="text-[11px] font-black uppercase tracking-widest">
+                      {link.label}
+                    </span>
+                  )}
+                </div>
+
+                {/* NOTIFICATION BADGE: High-contrast signature style */}
+                {isOpen && link.badge && (
+                  <span className="bg-[#FA8112] text-[#FAF3E1] text-[9px] font-black px-2 py-0.5 rounded-lg shadow-md shadow-[#FA8112]/20">
+                    {link.badge}
+                  </span>
+                )}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

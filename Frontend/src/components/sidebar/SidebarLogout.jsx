@@ -2,33 +2,39 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 
-const SidebarLogout = () => {
+const SidebarLogout = ({ isOpen }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 🔐 JWT clear (actual logout in MERN)
+    // Logic Preserved: JWT clear for actual MERN logout
     localStorage.removeItem("token");
 
-    // optional cleanup
+    // Logic Preserved: Optional cleanup
     sessionStorage.removeItem("loginPrefill");
 
-    // redirect to auth (register screen by rule)
+    // Logic Preserved: Redirect to auth
     navigate("/auth", { replace: true });
   };
 
   return (
-    <div className="px-2">
+    <div className="px-3">
       <button
         onClick={handleLogout}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all group border border-transparent hover:border-rose-500/20"
+        className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group
+          text-[#222222]/40 hover:bg-[#FA8112] hover:text-[#FAF3E1] border-2 border-transparent
+          ${!isOpen && "justify-center px-0"}`}
       >
         <LogOut
-          size={18}
-          className="opacity-60 group-hover:opacity-100 transition-opacity"
+          size={20}
+          strokeWidth={3}
+          className="group-hover:-translate-x-1 transition-transform duration-300"
         />
-        <span className="text-xs font-black uppercase tracking-widest">
-          Sign Out
-        </span>
+
+        {isOpen && (
+          <span className="text-[11px] font-black uppercase tracking-[0.2em]">
+            Sign Out
+          </span>
+        )}
       </button>
     </div>
   );
