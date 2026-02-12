@@ -8,7 +8,6 @@ const ContactCards = () => {
       desc: "Response within 24 hours",
       icon: Mail,
       action: "mailto:support@smartpark.com",
-      color: "text-cyan-400",
     },
     {
       title: "Phone & WhatsApp",
@@ -16,15 +15,13 @@ const ContactCards = () => {
       desc: "Direct support line",
       icon: Phone,
       action: "tel:+919876543210",
-      color: "text-emerald-400",
     },
     {
-      title: "Main Headquarters",
+      title: "Headquarters",
       value: "Anand, Gujarat",
-      desc: "Smart City Network Hub",
+      desc: "Smart City Hub",
       icon: MapPin,
       action: "#map",
-      color: "text-blue-400",
     },
     {
       title: "Operational Hours",
@@ -32,46 +29,41 @@ const ContactCards = () => {
       desc: "Monday to Saturday",
       icon: Clock,
       action: null,
-      color: "text-purple-400",
     },
   ];
 
   return (
-    <div className="container mx-auto px-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="container mx-auto px-6 md:px-12 lg:px-24">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {contactData.map((item, index) => {
           const Icon = item.icon;
           return (
-            <div 
+            <div
               key={index}
-              className="group relative p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:border-cyan-400/30 hover:bg-slate-800/60 transition-all duration-300 backdrop-blur-sm"
+              className="group relative p-10 rounded-[2.5rem] bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 shadow-sm hover:shadow-2xl hover:-translate-y-2"
             >
-              {/* Icon Container */}
-              <div className={`w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className={`w-6 h-6 ${item.color}`} />
+              <div className="w-14 h-14 rounded-2xl bg-[#F5E7C6] flex items-center justify-center mb-8 group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] transition-all duration-500 shadow-sm">
+                <Icon className="w-7 h-7 stroke-[2px]" />
               </div>
-
-              {/* Text Content */}
-              <h3 className="text-white font-bold text-lg mb-2 flex items-center gap-2">
+              <h3 className="text-[#222222] font-black text-xl mb-3 flex items-center gap-2 tracking-tight">
                 {item.title}
                 {item.action && (
-                  <ExternalLink size={14} className="opacity-0 group-hover:opacity-50 transition-opacity" />
+                  <ExternalLink
+                    size={14}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-[#FA8112]"
+                  />
                 )}
               </h3>
-              
-              <p className="text-cyan-400 font-semibold text-sm mb-1">
+              <p className="text-[#FA8112] font-black text-sm mb-2 wrap-break-words">
                 {item.value}
               </p>
-              
-              <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">
+              <p className="text-[#222222]/40 text-[10px] uppercase tracking-[0.2em] font-black">
                 {item.desc}
               </p>
-
-              {/* Clickable Overlay for Links */}
               {item.action && (
-                <a 
-                  href={item.action} 
-                  className="absolute inset-0 z-10" 
+                <a
+                  href={item.action}
+                  className="absolute inset-0 z-10"
                   aria-label={item.title}
                 />
               )}

@@ -2,37 +2,49 @@ import { ArrowRight, Map } from "lucide-react";
 
 const FinalCTA = () => {
   return (
-    <section className="bg-slate-900 py-24 px-6">
-      <div className="container mx-auto max-w-5xl">
-        {/* The Glow Card */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-linear-to-br from-cyan-600 to-blue-700 p-8 md:p-16 text-center shadow-2xl shadow-cyan-500/20">
-          {/* Decorative Circles */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl"></div>
+    <section className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24">
+      <div className="container mx-auto max-w-6xl">
+        {/* THE SIGNATURE CARD: 
+            Using Charcoal (#222222) as the base to make the Orange (#FA8112) pop.
+            Added a 'natural paper' texture for that humanized, non-digital look.
+        */}
+        <div className="relative overflow-hidden rounded-[3.5rem] bg-[#222222] p-10 md:p-20 text-center shadow-[0_40px_100px_-15px_rgba(34,34,34,0.3)]">
+          {/* Subtle Texture Overlay */}
+          <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
+          {/* Decorative Elements: Using Beige (#F5E7C6) for soft, organic depth */}
+          <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#F5E7C6]/10 rounded-full blur-[100px]"></div>
+          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#FA8112]/10 rounded-full blur-[100px]"></div>
+
+          <div className="relative z-10 max-w-3xl mx-auto">
+            {/* Header: High Contrast with Serif Accent */}
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-[#FAF3E1] mb-8 tracking-tighter leading-[0.9]">
               Ready to Park <br className="hidden md:block" />
-              <span className="text-slate-900/40">Smarter?</span>
+              <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+                Smarter?
+              </span>
             </h2>
 
-            <p className="text-cyan-50 text-lg md:text-xl mb-10 font-medium opacity-90">
+            <p className="text-[#FAF3E1]/70 text-xl md:text-2xl mb-12 font-medium max-w-2xl mx-auto leading-relaxed">
               Join thousands of drivers who have already eliminated the stress
               of finding a parking spot. Start your journey with SmartPark
               today.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="w-full sm:w-auto px-10 py-4 bg-white text-blue-700 font-bold rounded-2xl hover:bg-slate-100 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group shadow-xl">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              {/* Primary Button: Vibrant Orange */}
+              <button className="w-full sm:w-auto px-12 py-5 bg-[#FA8112] text-[#FAF3E1] font-black text-lg rounded-2xl hover:bg-[#FAF3E1] hover:text-[#222222] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group shadow-xl shadow-[#FA8112]/20">
                 Register Now
                 <ArrowRight
-                  size={20}
+                  size={22}
+                  strokeWidth={3}
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </button>
 
-              <button className="w-full sm:w-auto px-10 py-4 bg-blue-800/30 text-white font-bold rounded-2xl border border-white/20 hover:bg-blue-800/50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 backdrop-blur-sm">
-                <Map size={20} />
+              {/* Secondary Button: Clean Outlined */}
+              <button className="w-full sm:w-auto px-12 py-5 bg-transparent text-[#FAF3E1] font-black text-lg rounded-2xl border-2 border-[#FAF3E1]/20 hover:border-[#FAF3E1] hover:bg-[#FAF3E1]/5 transition-all duration-300 flex items-center justify-center gap-3">
+                <Map size={22} strokeWidth={2.5} />
                 Explore Parking
               </button>
             </div>

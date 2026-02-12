@@ -15,36 +15,48 @@ const About = () => {
   }, []);
 
   return (
-    <main className="bg-slate-950 min-h-screen">
-      {/* 1. Introduction & Branding */}
+    <main className="min-h-screen bg-[#FAF3E1] font-sans text-[#222222] antialiased selection:bg-[#FA8112] selection:text-[#FAF3E1]">
+      {/* 1. Introduction & Branding: Simple, airy hero */}
       <AboutHero />
 
-      {/* 2. Core Purpose (Mission & Vision) */}
-      <section className="py-20 bg-linear-to-b from-slate-950 to-slate-900">
-        <MissionVision />
+      {/* 2. Core Purpose (Mission & Vision): Using the warmer Beige background */}
+      <section className="py-20 md:py-32 bg-[#F5E7C6]">
+        <div className="container mx-auto px-6 md:px-12">
+          <MissionVision />
+        </div>
       </section>
 
-      {/* 3. Competitive Advantage */}
-      <WhySmartPark />
-
-      {/* 4. Process & Execution */}
-      <section className="py-20 bg-slate-900/50">
-        <HowItWorksAbout />
+      {/* 3. Competitive Advantage: Clean Cream section */}
+      <section className="py-20 md:py-32">
+        <WhySmartPark />
       </section>
 
-      {/* 5. MERN Stack Showcase (Great for your Viva!) */}
-      <Technology />
+      {/* 4. Process & Execution: Subtle border to define the section */}
+      <section className="py-20 md:py-32 border-y border-[#222222]/5 bg-[#F5E7C6]/30">
+        <div className="container mx-auto px-6">
+          <HowItWorksAbout />
+        </div>
+      </section>
 
-      {/* 6. User Personas */}
-      <TargetAudience />
+      {/* 5. MERN Stack Showcase: Vital for your internship viva! */}
+      <section className="py-20 md:py-32">
+        <Technology />
+      </section>
 
-      {/* 7. Corporate Values */}
-      <section className="py-20 border-t border-slate-900">
+      {/* 6. User Personas: Clean grid layout */}
+      <section className="py-20 md:py-32 bg-[#F5E7C6]">
+        <TargetAudience />
+      </section>
+
+      {/* 7. Corporate Values: Minimalist approach */}
+      <section className="py-20 md:py-32 border-t border-[#222222]/5">
         <Values />
       </section>
 
-      {/* 8. Final Call to Action */}
-      <AboutCTA />
+      {/* 8. Final Call to Action: Bold Orange signature block */}
+      <section className="pb-24">
+        <AboutCTA />
+      </section>
     </main>
   );
 };

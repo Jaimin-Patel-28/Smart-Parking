@@ -5,6 +5,7 @@ import {
   ShoppingBag,
   Ticket,
   Building,
+  ArrowUpRight,
 } from "lucide-react";
 
 const UseCases = () => {
@@ -28,7 +29,7 @@ const UseCases = () => {
       title: "Shopping Malls",
       desc: "Reduce weekend congestion with organized digital slot allocation.",
       icon: ShoppingBag,
-      img: "https://images.unsplash.com/photo-1575729312527-1bdecaae271e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      img: "https://images.unsplash.com/photo-1575729312527-1bdecaae271e?q=80&w=687",
     },
     {
       title: "Event Parking",
@@ -58,72 +59,66 @@ const UseCases = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-slate-950 py-24 px-6 relative overflow-hidden"
+      className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24"
     >
-      {/* Background radial glow for extra "depth" */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none"></div>
-
-      <div className="container mx-auto max-w-7xl relative z-10">
+      <div className="container mx-auto max-w-screen-2xl">
+        {/* HEADER: Notion-style Editorial Layout */}
         <div
-          className={`text-center mb-20 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          className={`mb-20 transition-all duration-1000 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Who Is It <span className="text-cyan-400">For?</span>
+          <h2 className="text-5xl md:text-7xl font-black text-[#222222] tracking-tighter mb-6 leading-none">
+            Built for <br />
+            <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+              every scenario.
+            </span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            SmartPark is designed to scale across various urban environments,
-            providing tailored solutions for every sector.
+          <p className="text-[#222222]/60 text-xl max-w-2xl font-medium leading-relaxed">
+            A flexible platform designed to scale across urban environments and
+            specialized sectors.
           </p>
         </div>
 
+        {/* GRID: Hand-coded "Card" feel with high-contrast borders */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {users.map((item, index) => {
             const Icon = item.icon;
             return (
               <div
                 key={index}
-                className="group relative rounded-[2.5rem] p-px bg-slate-800 transition-all duration-700 overflow-hidden min-h-87.5"
-                style={{
-                  transitionDelay: isVisible ? `${index * 150}ms` : "0ms",
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? "translateY(0)" : "translateY(30px)",
-                }}
+                className={`group relative overflow-hidden rounded-[2.5rem] border-2 border-[#222222]/5 bg-white transition-all duration-500 hover:border-[#222222] hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)] ${
+                  isVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-12"
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
               >
-                {/* 1. IMAGE LAYER: High visibility on hover */}
-                <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-50 transition-opacity duration-700 ease-in-out">
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    className="w-full h-full object-cover scale-125 group-hover:scale-100 transition-transform duration-[1.5s]"
-                  />
-                  {/* Subtle dark tint to maintain contrast */}
-                  <div className="absolute inset-0 bg-slate-950/40 transition-colors group-hover:bg-slate-950/20"></div>
-                </div>
+                <div className="flex flex-col h-full">
+                  {/* Image Container: Black and White to Color Transition */}
+                  <div className="relative aspect-16/11 overflow-hidden border-b-2 border-[#222222]/5 group-hover:border-[#222222]">
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-full h-full object-cover grayscale brightness-110 contrast-75 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105 group-hover:brightness-100 group-hover:contrast-100"
+                    />
+                    {/* The "Hand-drawn" Arrow Icon */}
+                    <div className="absolute top-6 right-6 h-12 w-12 rounded-2xl bg-[#222222] flex items-center justify-center text-[#FAF3E1] opacity-0 translate-x-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0">
+                      <ArrowUpRight size={22} strokeWidth={3} />
+                    </div>
+                  </div>
 
-                {/* 2. CONTENT LAYER: Transparency changes on hover to reveal image */}
-                <div
-                  className="relative z-10 h-full p-10 flex flex-col justify-between 
-                      bg-slate-900/90 group-hover:bg-slate-900/30 
-                      rounded-[2.4rem] border border-slate-800/50 
-                      group-hover:border-cyan-500/40 transition-all backdrop-blur-sm"
-                >
-                  <div className="relative">
-                    {/* Icon with hover glow */}
-                    <div
-                      className="w-16 h-16 rounded-2xl bg-cyan-400/10 flex items-center justify-center mb-8 
-                                  group-hover:bg-cyan-400 group-hover:rotate-12 group-hover:scale-110 
-                                  transition-all duration-500 shadow-lg group-hover:shadow-cyan-400/20"
-                    >
-                      <Icon className="w-8 h-8 text-cyan-400 group-hover:text-slate-950 transition-colors" />
+                  {/* Content: Clean, High-Contrast Typography */}
+                  <div className="p-10">
+                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F5E7C6] text-[#222222] mb-8 group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] transition-colors duration-500 border border-[#222222]/5">
+                      <Icon size={28} strokeWidth={1.5} />
                     </div>
 
-                    <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors tracking-tight">
+                    <h3 className="text-2xl font-black text-[#222222] mb-4 tracking-tight">
                       {item.title}
                     </h3>
 
-                    <p className="text-slate-400 text-base leading-relaxed group-hover:text-white transition-colors duration-300">
+                    <p className="text-[#222222]/60 font-medium leading-relaxed text-base">
                       {item.desc}
                     </p>
                   </div>

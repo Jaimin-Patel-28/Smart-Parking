@@ -6,89 +6,86 @@ const Technology = () => {
       name: "React + Vite",
       desc: "High-performance frontend library for a fast, reactive user interface.",
       icon: Atom,
-      color: "text-cyan-400",
       category: "Frontend",
     },
     {
       name: "Tailwind CSS",
-      desc: "Utility-first styling for a modern, responsive, and warning-free UI.",
+      desc: "Utility-first styling for a modern, responsive, and clean UI.",
       icon: Zap,
-      color: "text-sky-400",
       category: "Styling",
     },
     {
       name: "Node.js & Express",
       desc: "Scalable backend architecture to handle real-time booking logic.",
       icon: Server,
-      color: "text-emerald-400",
       category: "Backend",
     },
     {
       name: "MongoDB",
       desc: "NoSQL database for flexible storage of parking slots and user data.",
       icon: Database,
-      color: "text-green-500",
       category: "Database",
     },
     {
       name: "API Architecture",
       desc: "RESTful endpoints connecting the SmartPark frontend to cloud services.",
       icon: Layers,
-      color: "text-indigo-400",
       category: "Integration",
     },
     {
       name: "JWT & Bcrypt",
       desc: "Industry-standard security for user authentication and smart wallet safety.",
       icon: ShieldCheck,
-      color: "text-rose-400",
       category: "Security",
     },
   ];
 
   return (
-    <section className="py-24 px-6 bg-slate-950 relative overflow-hidden">
-      {/* Decorative Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-250 h-100 bg-cyan-500/5 blur-4xl rounded-full pointer-events-none"></div>
+    <section className="py-24 px-6 md:px-12 lg:px-24 bg-[#FAF3E1] relative overflow-hidden">
+      {/* 1. BACKGROUND TEXTURE: Subtle paper grain */}
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
-      <div className="container mx-auto max-w-6xl relative z-10">
-        {/* SECTION HEADER */}
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
-            The <span className="text-cyan-400">MERN</span> Infrastructure
+      <div className="container mx-auto max-w-screen-2xl relative z-10">
+        {/* SECTION HEADER: Clean & Authoritative */}
+        <div className="text-center mb-24 space-y-6">
+          <h2 className="text-5xl md:text-7xl font-black text-[#222222] tracking-tighter leading-none">
+            The{" "}
+            <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+              MERN
+            </span>{" "}
+            Infrastructure
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-[#222222]/60 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
             SmartPark is built on a robust, modern tech stack designed for
             scalability, security, and the real-time demands of the Anand Smart
             City network.
           </p>
         </div>
 
-        {/* TECH GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* TECH GRID: Clean cards with high-contrast borders */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {stack.map((tech, index) => {
             const Icon = tech.icon;
             return (
               <div
                 key={index}
-                className="group p-8 rounded-4xl bg-slate-900/50 border border-slate-800 hover:border-cyan-400/30 transition-all duration-500"
+                className="group p-10 rounded-[2.5rem] bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 shadow-sm hover:shadow-2xl hover:-translate-y-2"
               >
-                <div className="flex items-start justify-between mb-6">
-                  <div
-                    className={`p-4 rounded-2xl bg-slate-950 shadow-inner group-hover:scale-110 transition-transform duration-300 ${tech.color}`}
-                  >
-                    <Icon size={28} />
+                <div className="flex items-start justify-between mb-10">
+                  {/* ICON BOX: Signature Beige to Orange transition */}
+                  <div className="p-4 rounded-2xl bg-[#F5E7C6] text-[#222222] group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] transition-all duration-500 shadow-sm">
+                    <Icon size={28} strokeWidth={2} />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 bg-slate-950 px-3 py-1 rounded-full border border-slate-800">
+                  <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#FA8112] bg-[#FAF3E1] px-4 py-1.5 rounded-lg border border-[#222222]/5">
                     {tech.category}
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-2xl font-black text-[#222222] mb-4 tracking-tight group-hover:text-[#FA8112] transition-colors">
                   {tech.name}
                 </h3>
 
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <p className="text-[#222222]/50 text-base md:text-lg font-medium leading-relaxed">
                   {tech.desc}
                 </p>
               </div>
@@ -96,10 +93,10 @@ const Technology = () => {
           })}
         </div>
 
-        {/* VIVA READY TAG */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        {/* VIVA READY TAG: Simplified status bar */}
+        <div className="mt-20 text-center">
+          <div className="inline-flex items-center gap-4 px-6 py-3 rounded-xl bg-white border-2 border-[#222222] text-[#222222] text-[11px] font-black uppercase tracking-[0.3em] shadow-lg">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FA8112] animate-pulse"></span>
             Full-Stack Automation Enabled
           </div>
         </div>

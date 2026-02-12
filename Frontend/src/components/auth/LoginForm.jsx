@@ -6,7 +6,6 @@ import SecurityNotes from "./SecurityNotes";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-
   const saved = JSON.parse(sessionStorage.getItem("loginPrefill"));
 
   const [email, setEmail] = useState("");
@@ -14,7 +13,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // RULE 2: Autofill after register
+  // Logic Preserved: Autofill after register
   useEffect(() => {
     if (saved) {
       setEmail(saved.email || "");
@@ -34,11 +33,9 @@ const LoginForm = () => {
         password,
       });
 
-      // RULE 3: login success → dashboard
+      // Logic Preserved: Auth success handling
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("isAuth", "true");
-
-      // cleanup autofill data
       sessionStorage.removeItem("loginPrefill");
 
       navigate("/user/dashboard", { replace: true });
@@ -50,57 +47,64 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {/* EMAIL */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* EMAIL INPUT: Clean Paper Style */}
       <div className="relative group">
         <Mail
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400"
-          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#222222]/30 group-focus-within:text-[#FA8112] transition-colors"
+          size={20}
         />
         <input
           type="email"
           placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-slate-950/50 border border-slate-800 text-white rounded-xl py-3.5 pl-12 pr-4 focus:border-cyan-400/50 outline-none"
+          className="w-full bg-[#FAF3E1] border-2 border-transparent text-[#222222] font-bold rounded-2xl py-4 pl-12 pr-4 focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/20"
           required
         />
       </div>
 
-      {/* PASSWORD */}
+      {/* PASSWORD INPUT: High Contrast */}
       <div className="relative group">
         <Lock
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400"
-          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#222222]/30 group-focus-within:text-[#FA8112] transition-colors"
+          size={20}
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-slate-950/50 border border-slate-800 text-white rounded-xl py-3.5 pl-12 pr-4 focus:border-cyan-400/50 outline-none"
+          className="w-full bg-[#FAF3E1] border-2 border-transparent text-[#222222] font-bold rounded-2xl py-4 pl-12 pr-4 focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/20"
           required
         />
       </div>
 
-      {/* ERROR MESSAGE */}
-      {error && <p className="text-rose-400 text-sm">{error}</p>}
+      {/* ERROR MESSAGE: Subtle but clear */}
+      {error && (
+        <div className="px-4 py-2 bg-red-50 border-l-4 border-red-500 text-red-600 text-xs font-black uppercase tracking-widest">
+          {error}
+        </div>
+      )}
 
-      {/* SUBMIT */}
+      {/* SUBMIT BUTTON: Signature Action */}
       <button
         disabled={isLoading}
-        className="w-full bg-blue-600 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-500 transition-all disabled:opacity-50"
+        className="w-full bg-[#FA8112] text-[#FAF3E1] font-black py-5 rounded-2xl flex items-center justify-center gap-3 hover:bg-[#222222] transition-all active:scale-95 disabled:opacity-50 shadow-xl shadow-[#FA8112]/20 text-xs uppercase tracking-[0.2em]"
       >
         {isLoading ? (
           <Loader2 size={20} className="animate-spin" />
         ) : (
           <>
-            <LogIn size={20} /> Authorize & Enter
+            <LogIn size={20} strokeWidth={3} /> Authorize & Enter
           </>
         )}
       </button>
 
-      <SecurityNotes />
+      {/* Security Notes: Hand-drawn look */}
+      <div className="pt-4 border-t border-[#222222]/5">
+        <SecurityNotes />
+      </div>
     </form>
   );
 };

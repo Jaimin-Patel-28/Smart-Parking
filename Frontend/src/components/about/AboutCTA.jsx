@@ -3,59 +3,57 @@ import { Link } from "react-router-dom";
 
 const AboutCTA = () => {
   return (
-    <section className="py-24 px-6 relative overflow-hidden bg-slate-950">
-      {/* MODERN GRADIENT BLOB - Uses standard Tailwind spacing to avoid warnings */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-75 bg-cyan-500/10 blur-4xl rounded-full pointer-events-none"></div>
+    <section className="py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden bg-[#FAF3E1]">
+      <div className="container mx-auto max-w-6xl relative z-10">
+        <div className="p-12 md:p-24 rounded-[3.5rem] bg-[#222222] text-center shadow-[0_40px_100px_-15px_rgba(34,34,34,0.3)] relative overflow-hidden">
+          {/* Subtle Paper Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
-      <div className="container mx-auto max-w-5xl relative z-10">
-        <div className="p-10 md:p-20 rounded-4xl bg-slate-900/40 border border-slate-800 backdrop-blur-xl text-center shadow-2xl">
-          {/* MINI BADGE */}
-          <div className="flex justify-center mb-6">
-            <span className="flex items-center gap-2 px-4 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-cyan-400 text-[10px] font-black uppercase tracking-widest">
-              <Sparkles size={12} />
+          {/* MINI BADGE: Clean Beige Pill */}
+          <div className="flex justify-center mb-8 relative z-10">
+            <span className="flex items-center gap-3 px-6 py-2 rounded-xl bg-[#FAF3E1]/10 border border-[#FAF3E1]/20 text-[#FAF3E1] text-[11px] font-black uppercase tracking-[0.3em]">
+              <Sparkles size={14} className="text-[#FA8112]" />
               Future of Mobility
             </span>
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight leading-tight">
+          <h2 className="text-5xl md:text-8xl font-black text-[#FAF3E1] mb-8 tracking-tighter leading-[0.9] relative z-10">
             Join the Smart Parking <br />
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-500">
+            <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
               Revolution
             </span>
           </h2>
 
-          <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="text-[#FAF3E1]/60 text-xl md:text-2xl max-w-2xl mx-auto mb-16 font-medium leading-relaxed relative z-10">
             Be part of the digital transformation in Anand. Whether you're a
             driver or a parking owner, SmartPark is designed to make your daily
             commute faster and stress-free.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            {/* LINKED TO YOUR MERN AUTH FLOW */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
             <Link
               to="/register"
-              className="w-full sm:w-auto px-10 py-4 bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold rounded-2xl flex items-center justify-center gap-2 transition-all group active:scale-95 shadow-lg shadow-cyan-400/20"
+              className="w-full sm:w-auto px-12 py-5 bg-[#FA8112] text-[#FAF3E1] font-black text-lg rounded-2xl flex items-center justify-center gap-3 transition-all group hover:bg-[#FAF3E1] hover:text-[#222222] active:scale-95 shadow-xl shadow-[#FA8112]/20"
             >
-              <UserPlus size={20} />
+              <UserPlus size={22} strokeWidth={2.5} />
               Register Now
               <ArrowRight
-                size={18}
+                size={20}
                 className="group-hover:translate-x-1 transition-transform"
               />
             </Link>
 
-            {/* LINKED TO YOUR BOOKING COMPONENT */}
             <Link
               to="/parking"
-              className="w-full sm:w-auto px-10 py-4 bg-slate-950 border border-slate-800 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-900 transition-all active:scale-95"
+              className="w-full sm:w-auto px-12 py-5 bg-transparent border-2 border-[#FAF3E1]/20 text-[#FAF3E1] font-black text-lg rounded-2xl flex items-center justify-center gap-3 hover:border-[#FAF3E1] hover:bg-[#FAF3E1]/5 transition-all active:scale-95"
             >
-              <MapPinned size={20} />
+              <MapPinned size={22} strokeWidth={2.5} />
               Explore Parking
             </Link>
           </div>
 
           {/* LOCAL TRUST FOOTER */}
-          <p className="mt-12 text-slate-600 text-[11px] font-bold uppercase tracking-[0.4em]">
+          <p className="mt-16 text-[#FAF3E1]/20 text-[11px] font-black uppercase tracking-[0.4em] relative z-10">
             Optimizing Urban Space &bull; Gujarat &bull; 2026
           </p>
         </div>

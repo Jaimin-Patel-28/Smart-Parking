@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 const ContactForm = () => {
-  const [status, setStatus] = useState("idle"); // idle, submitting, success
+  const [status, setStatus] = useState("idle");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,117 +15,89 @@ const ContactForm = () => {
     message: "",
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("submitting");
-
-    // Simulating a MERN backend API call
-    setTimeout(() => {
-      console.log("MERN Backend received:", formData);
-      setStatus("success");
-      // Reset form after 3 seconds
-      setTimeout(() => setStatus("idle"), 3000);
-    }, 1500);
+    setTimeout(() => setStatus("success"), 1500);
   };
 
   if (status === "success") {
     return (
-      <div className="bg-slate-800/40 border border-emerald-500/30 p-12 rounded-[2.5rem] text-center space-y-4 backdrop-blur-sm">
-        <div className="flex justify-center">
-          <CheckCircle2 size={60} className="text-emerald-400 animate-bounce" />
-        </div>
-        <h3 className="text-2xl font-bold text-white">Message Sent!</h3>
-        <p className="text-slate-400">
-          Our support team in Anand will get back to you shortly.
+      <div className="bg-white border-2 border-[#222222] p-16 rounded-[3rem] text-center space-y-6 shadow-2xl">
+        <CheckCircle2
+          size={80}
+          className="text-[#FA8112] mx-auto animate-bounce"
+        />
+        <h3 className="text-4xl font-black text-[#222222] tracking-tighter">
+          Message Sent!
+        </h3>
+        <p className="text-[#222222]/60 font-medium text-lg">
+          Our team in Anand will get back to you shortly.
         </p>
+        <button
+          onClick={() => setStatus("idle")}
+          className="text-[#FA8112] font-black uppercase tracking-widest text-xs border-b-2 border-[#FA8112]"
+        >
+          Send Another
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-800/20 p-8 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl backdrop-blur-md">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="p-2.5 rounded-xl bg-cyan-400/10 text-cyan-400">
-          <MessageSquareText size={24} />
+    <div className="bg-white p-10 md:p-14 rounded-[3rem] border-2 border-[#222222]/5 shadow-sm hover:shadow-2xl transition-all duration-700">
+      <div className="flex items-center gap-4 mb-10">
+        <div className="p-3 rounded-2xl bg-[#F5E7C6] text-[#FA8112]">
+          <MessageSquareText size={28} />
         </div>
-        <h2 className="text-2xl font-bold text-white tracking-tight">
+        <h2 className="text-3xl font-black text-[#222222] tracking-tighter">
           Send Us a Message
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <input
             type="text"
             placeholder="Full Name"
             required
-            className="bg-slate-900/50 border border-slate-700 rounded-2xl px-5 py-4 text-white focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none transition-all"
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/30"
           />
           <input
             type="email"
             placeholder="Email Address"
             required
-            className="bg-slate-900/50 border border-slate-700 rounded-2xl px-5 py-4 text-white focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none transition-all"
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            className="bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/30"
           />
         </div>
-
         <div className="relative">
           <select
             required
-            className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl px-5 py-4 text-slate-400 focus:text-white focus:border-cyan-400 outline-none transition-all appearance-none"
-            onChange={(e) =>
-              setFormData({ ...formData, subject: e.target.value })
-            }
+            className="w-full bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all appearance-none"
           >
-            <option value="" className="bg-slate-900">
-              Select Subject
-            </option>
-            <option value="Inquiry" className="bg-slate-900">
-              General Inquiry
-            </option>
-            <option value="Booking" className="bg-slate-900">
-              Booking Issue
-            </option>
-            <option value="Wallet" className="bg-slate-900">
-              Wallet & Payment
-            </option>
-            <option value="Partner" className="bg-slate-900">
-              Partnership
-            </option>
+            <option value="">Select Subject</option>
+            <option value="Inquiry">General Inquiry</option>
+            <option value="Booking">Booking Issue</option>
+            <option value="Wallet">Wallet & Payment</option>
           </select>
-          <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600">
-            <AlertCircle size={18} />
-          </div>
+          <AlertCircle
+            size={18}
+            className="absolute right-6 top-1/2 -translate-y-1/2 text-[#222222]/20"
+          />
         </div>
-
         <textarea
-          placeholder="Describe your query in detail..."
+          placeholder="How can we help?"
           rows="4"
           required
-          className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl px-5 py-4 text-white focus:border-cyan-400 outline-none transition-all resize-none"
-          onChange={(e) =>
-            setFormData({ ...formData, message: e.target.value })
-          }
+          className="w-full bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all resize-none placeholder:text-[#222222]/30"
         />
-
         <button
           type="submit"
           disabled={status === "submitting"}
-          className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg ${
-            status === "submitting"
-              ? "bg-slate-700 text-slate-400 cursor-not-allowed"
-              : "bg-cyan-400 hover:bg-cyan-300 text-slate-900 shadow-cyan-500/20"
-          }`}
+          className="w-full py-5 bg-[#222222] text-[#FAF3E1] rounded-2xl font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 hover:bg-[#FA8112] transition-all active:scale-95 shadow-lg"
         >
           {status === "submitting" ? "Processing..." : "Submit Message"}
-          <Send
-            size={18}
-            className={status === "submitting" ? "animate-pulse" : ""}
-          />
+          <Send size={18} strokeWidth={3} />
         </button>
       </form>
     </div>

@@ -11,16 +11,24 @@ const Auth = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-slate-950 flex items-center justify-center overflow-hidden px-4 py-12">
-      {/* Background Neon Beams */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
-        <div className="absolute top-0 left-1/4 w-px h-full bg-linear-to-b from-cyan-400 via-cyan-400/20 to-transparent rotate-12 origin-top shadow-[0_0_15px_rgba(34,211,238,0.5)]"></div>
-        <div className="absolute top-0 right-1/4 w-px h-full bg-linear-to-b from-blue-400 via-blue-400/20 to-transparent -rotate-12 origin-top shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-      </div>
+    <div className="relative min-h-screen bg-[#FAF3E1] flex items-center justify-center overflow-hidden px-4 py-12 selection:bg-[#FA8112] selection:text-[#FAF3E1]">
+      {/* 1. HUMANIZED BACKGROUND: Subtle paper texture and soft organic blurs */}
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
-      <div className="relative z-10 w-full max-w-5xl">
-        {/* 🔁 mode + setMode pass */}
+      {/* Soft Beige and Orange blurs for a gentle, "hand-painted" depth */}
+      <div className="absolute top-0 left-[-10%] w-[50%] h-full bg-[#F5E7C6]/60 blur-[120px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 right-[-10%] w-[50%] h-full bg-[#FA8112]/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div className="relative z-10 w-full max-w-5xl animate-fade-in">
+        {/* 🔁 mode + setMode pass to your specialized AuthCard */}
         <AuthCard mode={mode} setMode={setMode} />
+
+        {/* SUBTLE BRAND FOOTER: Clean and Professional */}
+        <div className="mt-8 text-center">
+          <p className="text-[#222222]/20 text-[10px] font-black uppercase tracking-[0.4em]">
+            SmartPark Infrastructure &bull; Gujarat &bull; 2026
+          </p>
+        </div>
       </div>
     </div>
   );

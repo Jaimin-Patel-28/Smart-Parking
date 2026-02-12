@@ -2,52 +2,55 @@ import { Target, Eye, Zap, Leaf, Coins, BarChart3, Globe2 } from "lucide-react";
 
 const MissionVision = () => {
   return (
-    <div className="container mx-auto px-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="container mx-auto px-6 md:px-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* MISSION CARD */}
-        <div className="group relative p-8 md:p-12 rounded-4xl bg-slate-900 border border-slate-800 hover:border-cyan-400/30 transition-all duration-500 overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Target size={120} />
+        <div className="group relative p-10 md:p-14 rounded-[3rem] bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2">
+          {/* Subtle Background Image Reveal */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <img
+              src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800"
+              alt="Mission"
+              className="w-full h-full object-cover opacity-0 group-hover:opacity-[0.05] grayscale group-hover:scale-110 transition-all duration-1000"
+            />
           </div>
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-400 text-[10px] font-black uppercase tracking-widest mb-6">
-              <Zap size={12} />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-[#F5E7C6] text-[#222222] text-[11px] font-black uppercase tracking-[0.2em] mb-8">
+              <Zap size={14} className="text-[#FA8112]" />
               Our Mission
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
-              Digitizing the <span className="text-cyan-400">Streets.</span>
+            <h2 className="text-4xl md:text-5xl font-black text-[#222222] mb-8 tracking-tighter leading-none">
+              Digitizing the <br />
+              <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+                Streets.
+              </span>
             </h2>
 
-            <p className="text-slate-400 text-lg leading-relaxed mb-8">
+            <p className="text-[#222222]/60 text-lg font-medium leading-relaxed mb-10">
               Our mission is to eliminate urban congestion in{" "}
-              <strong>Anand</strong> by replacing outdated manual logs with a
-              high-speed <strong>MERN-powered</strong>
-              automation system that saves time and reduces stress for every
-              commuter.
+              <strong className="text-[#222222]">Anand</strong> by replacing
+              outdated manual logs with a high-speed{" "}
+              <strong className="text-[#222222]">MERN-powered</strong>{" "}
+              automation system that saves time for every commuter.
             </p>
 
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3 text-slate-300 font-medium text-sm">
-                <div className="w-5 h-5 rounded-md bg-emerald-400/20 flex items-center justify-center text-emerald-400">
-                  <Leaf size={12} strokeWidth={3} />
-                </div>
-                Eco-friendly Urban Planning
-              </li>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {[
-                "Real-time Slot Visibility",
-                "Reduction in Traffic Flow",
-                "Seamless Digital Entry",
+                { text: "Eco-friendly Planning", icon: Leaf },
+                { text: "Real-time Visibility", icon: Zap },
+                { text: "Traffic Reduction", icon: Zap },
+                { text: "Seamless Digital Entry", icon: Zap },
               ].map((item, i) => (
                 <li
                   key={i}
-                  className="flex items-center gap-3 text-slate-300 font-medium text-sm"
+                  className="flex items-center gap-3 text-[#222222] font-bold text-sm"
                 >
-                  <div className="w-5 h-5 rounded-md bg-cyan-400/20 flex items-center justify-center text-cyan-400">
-                    <Zap size={12} strokeWidth={3} />
+                  <div className="w-6 h-6 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+                    <item.icon size={14} strokeWidth={3} />
                   </div>
-                  {item}
+                  {item.text}
                 </li>
               ))}
             </ul>
@@ -55,49 +58,57 @@ const MissionVision = () => {
         </div>
 
         {/* VISION CARD */}
-        <div className="group relative p-8 md:p-12 rounded-4xl bg-linear-to-br from-slate-900 to-slate-800 border border-slate-800 hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Eye size={120} />
+        <div className="group relative p-10 md:p-14 rounded-[3rem] bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2">
+          {/* Subtle Background Image Reveal */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <img
+              src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&q=80&w=800"
+              alt="Vision"
+              className="w-full h-full object-cover opacity-0 group-hover:opacity-[0.05] grayscale group-hover:scale-110 transition-all duration-1000"
+            />
           </div>
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-400/10 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-6">
-              <Globe2 size={12} />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-[#F5E7C6] text-[#222222] text-[11px] font-black uppercase tracking-[0.2em] mb-8">
+              <Globe2 size={14} className="text-[#FA8112]" />
               Our Vision
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
-              Smart City <span className="text-blue-400">Integration.</span>
+            <h2 className="text-4xl md:text-5xl font-black text-[#222222] mb-8 tracking-tighter leading-none">
+              Smart City <br />
+              <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+                Integration.
+              </span>
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <div className="text-blue-400">
-                  <Coins size={20} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+                  <Coins size={22} />
                 </div>
-                <h4 className="text-white font-bold text-sm">
+                <h4 className="text-[#222222] font-black text-sm uppercase tracking-tight">
                   Cashless Ecosystem
                 </h4>
-                <p className="text-slate-500 text-xs">
+                <p className="text-[#222222]/50 text-sm font-medium leading-relaxed">
                   Full UPI and Smart Wallet integration for paperless
                   transactions.
                 </p>
               </div>
-              <div className="space-y-2">
-                <div className="text-blue-400">
-                  <BarChart3 size={20} />
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+                  <BarChart3 size={22} />
                 </div>
-                <h4 className="text-white font-bold text-sm">
+                <h4 className="text-[#222222] font-black text-sm uppercase tracking-tight">
                   AI-Based Prediction
                 </h4>
-                <p className="text-slate-500 text-xs">
+                <p className="text-[#222222]/50 text-sm font-medium leading-relaxed">
                   Future-ready algorithms to predict slot availability patterns.
                 </p>
               </div>
             </div>
 
-            <div className="mt-8 p-4 rounded-2xl bg-slate-950/50 border border-slate-800">
-              <p className="text-slate-400 text-sm italic">
+            <div className="mt-10 p-6 rounded-2xl bg-[#F5E7C6]/50 border-2 border-dashed border-[#222222]/10">
+              <p className="text-[#222222]/70 text-[15px] italic font-medium">
                 "Scaling SmartPark to optimize urban space across every major
                 hub in Gujarat."
               </p>

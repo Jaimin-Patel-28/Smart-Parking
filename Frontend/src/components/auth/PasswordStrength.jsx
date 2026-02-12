@@ -24,8 +24,8 @@ const PasswordStrength = ({ password }) => {
     if (score <= 4)
       return {
         label: "Improving",
-        color: "bg-amber-500",
-        text: "text-amber-500",
+        color: "bg-[#FA8112]",
+        text: "text-[#FA8112]",
         width: "w-2/3",
         icon: ShieldEllipsis,
       };
@@ -41,39 +41,39 @@ const PasswordStrength = ({ password }) => {
   const { label, color, text, width, icon: Icon } = getStrengthData();
 
   return (
-    <div className="space-y-2 px-1">
-      {/* 1. PROGRESS BAR TRACK */}
-      <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+    <div className="space-y-3 px-1">
+      {/* 1. PROGRESS BAR TRACK: Clean & Tactile */}
+      <div className="h-2 w-full bg-[#222222]/5 rounded-full overflow-hidden border border-[#222222]/5">
         <div
-          className={`h-full ${color} ${width} transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,0,0,0.5)]`}
+          className={`h-full ${color} ${width} transition-all duration-700 ease-in-out shadow-sm`}
         />
       </div>
 
-      {/* 2. DYNAMIC FEEDBACK */}
+      {/* 2. DYNAMIC FEEDBACK: Editorial Style */}
       <div className="flex items-center justify-between">
         <div
-          className={`flex items-center gap-1.5 ${text} transition-colors duration-300`}
+          className={`flex items-center gap-2 ${text} transition-colors duration-300`}
         >
-          <Icon size={12} strokeWidth={3} />
-          <span className="text-[10px] font-black uppercase tracking-widest">
+          <Icon size={14} strokeWidth={3} />
+          <span className="text-[11px] font-black uppercase tracking-[0.2em]">
             {label}
           </span>
         </div>
 
-        {/* HINT FOR THE USER */}
-        <p className="text-[9px] text-slate-600 font-medium">
+        {/* HINT FOR THE USER: Hand-drawn Note Style */}
+        <p className="text-[10px] text-[#222222]/40 font-black uppercase tracking-widest">
           {score < 5 ? "Use symbols & numbers" : "Encryption ready"}
         </p>
       </div>
 
-      {/* 3. VIVA DETAIL: REGEX REQUIREMENTS (Shows your technical depth) */}
-      <div className="flex gap-1 pt-1">
+      {/* 3. VIVA DETAIL: SECURED SEGMENTS (Visual Logic) */}
+      <div className="flex gap-1.5 pt-1">
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={`h-1 grow rounded-full transition-colors duration-500 ${
-              i < score ? color : "bg-slate-900"
-            }`}
+            className={`h-1.5 grow rounded-full transition-all duration-500 ${
+              i < score ? color : "bg-[#222222]/10"
+            } ${i < score ? "opacity-100" : "opacity-30"}`}
           />
         ))}
       </div>

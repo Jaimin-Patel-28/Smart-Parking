@@ -1,109 +1,113 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // FIX: Close mobile menu automatically when a link is clicked or route changes
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
 
-  // FIX: Prevent background scrolling when menu is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
   }, [isOpen]);
 
+  // Notion-style typography: Heavy charcoal for active, subtle for inactive
   const linkStyles = ({ isActive }) =>
-    `relative transition-all duration-300 font-bold uppercase tracking-widest text-xs ${
-      isActive ? "text-cyan-400" : "text-slate-400 hover:text-white"
+    `relative text-[15px] font-medium transition-all duration-300 py-1 ${
+      isActive
+        ? "text-[#222222] border-b-2 border-[#FA8112]"
+        : "text-[#222222]/60 hover:text-[#FA8112]"
     }`;
 
   return (
-    <header className="sticky top-0 z-1000 w-full flex items-center justify-between px-6 md:px-12 py-5 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
-      {/* 1. LOGO (Ensure high z-index to stay visible) */}
-      <div className="relative z-1010">
-        <NavLink
-          to="/"
-          className="text-2xl font-black tracking-tighter text-white flex items-center gap-2"
+    <header className="sticky top-0 z-100 w-full border-b border-[#222222]/5 bg-[#FAF3E1]/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-4 md:px-12 lg:px-20">
+        {/* 1. LOGO: Using Vibrant Orange as the focal point */}
+        <div className="relative z-110">
+          <NavLink to="/" className="flex items-center gap-3 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FA8112] transition-all duration-500 group-hover:rotate-[-5deg] shadow-sm">
+              <div className="h-1.5 w-1.5 rounded-full bg-[#FAF3E1]"></div>
+            </div>
+            <span className="text-xl font-bold tracking-tight text-[#222222]">
+              Smart<span className="text-[#FA8112]">Park</span>
+            </span>
+          </NavLink>
+        </div>
+
+        {/* 2. DESKTOP NAV: Minimalist & Breathable */}
+        <nav className="hidden items-center gap-10 md:flex">
+          <NavLink to="/" end className={linkStyles}>
+            Home
+          </NavLink>
+          <NavLink to="/about" className={linkStyles}>
+            About
+          </NavLink>
+          <NavLink to="/contact" className={linkStyles}>
+            Contact
+          </NavLink>
+
+          <div className="h-5 w-px bg-[#222222]/10 mx-2"></div>
+
+          <NavLink
+            to="/login"
+            className="rounded-lg bg-[#222222] px-6 py-2.5 text-sm font-bold text-[#FAF3E1] transition-all hover:bg-[#FA8112] hover:-translate-y-0.5 active:translate-y-0"
+          >
+            Sign in
+          </NavLink>
+        </nav>
+
+        {/* 3. MOBILE TOGGLE */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="relative z-110 rounded-lg p-2 text-[#222222] hover:bg-[#F5E7C6] md:hidden transition-colors"
+          aria-label="Toggle Menu"
         >
-          <div className="w-8 h-8 bg-cyan-400 rounded-lg rotate-12 flex items-center justify-center">
-            <div className="w-3 h-3 bg-slate-950 rounded-full"></div>
-          </div>
-          Smart<span className="text-cyan-400">Park</span>
-        </NavLink>
-      </div>
+          {isOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
 
-      {/* 2. DESKTOP NAV (Hidden on mobile) */}
-      <nav className="hidden md:flex items-center gap-10">
-        <NavLink to="/" end className={linkStyles}>
-          Home
-        </NavLink>
-        <NavLink to="/about" className={linkStyles}>
-          About
-        </NavLink>
-        <NavLink to="/contact" className={linkStyles}>
-          Contact
-        </NavLink>
-        <NavLink
-          to="/login"
-          className="px-6 py-2 bg-cyan-400 text-slate-950 rounded-full font-black text-xs uppercase tracking-widest"
+        {/* 4. MOBILE MENU: Full Screen Humanized Layout */}
+        <div
+          className={`fixed inset-0 z-105 h-screen w-full bg-[#FAF3E1] transition-all duration-500 ease-in-out md:hidden ${
+            isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+          }`}
         >
-          Login
-        </NavLink>
-      </nav>
+          <div className="flex h-full flex-col px-8 pt-32 pb-16">
+            <nav className="flex flex-col space-y-8">
+              {["Home", "About", "Contact"].map((item) => (
+                <NavLink
+                  key={item}
+                  to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between text-4xl font-black tracking-tighter transition-colors ${
+                      isActive ? "text-[#FA8112]" : "text-[#222222]"
+                    }`
+                  }
+                >
+                  {item}
+                  <ArrowRight
+                    size={32}
+                    className={
+                      location.pathname ===
+                      (item === "Home" ? "/" : `/${item.toLowerCase()}`)
+                        ? "opacity-100"
+                        : "opacity-10"
+                    }
+                  />
+                </NavLink>
+              ))}
+            </nav>
 
-      {/* 3. MOBILE TOGGLE BUTTON (Critical Fix: High Z-index) */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden relative z-1010 p-2 text-cyan-400 focus:outline-none"
-        aria-label="Toggle Menu"
-      >
-        {isOpen ? <X size={30} /> : <Menu size={30} />}
-      </button>
-
-      {/* 4. MOBILE MENU OVERLAY (The "Unique UI" Slide) */}
-      <div
-        className={`fixed inset-0 h-screen w-screen bg-slate-950 z-1005 flex flex-col transition-all duration-500 ease-in-out ${
-          isOpen
-            ? "translate-y-0 opacity-100 visible"
-            : "-translate-y-full opacity-0 invisible"
-        }`}
-      >
-        <div className="flex flex-col h-full pt-32 px-10 space-y-10">
-          <span className="text-slate-600 text-xs font-black uppercase tracking-[0.5em]">
-            Menu
-          </span>
-
-          <nav className="flex flex-col gap-8">
-            {["Home", "About", "Contact"].map((item) => (
+            <div className="mt-auto">
               <NavLink
-                key={item}
-                to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className="text-5xl font-black text-white hover:text-cyan-400 transition-all flex items-center justify-between group"
+                to="/login"
+                className="flex w-full items-center justify-center rounded-xl bg-[#FA8112] py-5 text-xl font-bold text-[#FAF3E1] shadow-lg shadow-[#FA8112]/20 active:scale-[0.98] transition-transform"
               >
-                {item}
-                <ChevronRight
-                  className="opacity-0 group-hover:opacity-100 text-cyan-400 -translate-x-4 group-hover:translate-x-0 transition-all"
-                  size={40}
-                />
+                Get Started
               </NavLink>
-            ))}
-          </nav>
-
-          <div className="pt-10 border-t border-slate-900">
-            <NavLink
-              to="/login"
-              className="w-full py-6 bg-cyan-400 rounded-2xl flex items-center justify-center text-slate-950 font-black uppercase tracking-widest text-lg"
-            >
-              Login to Dashboard
-            </NavLink>
+            </div>
           </div>
         </div>
       </div>

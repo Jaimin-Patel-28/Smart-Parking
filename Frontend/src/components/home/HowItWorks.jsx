@@ -49,87 +49,81 @@ const HowItWorks = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-slate-950 py-24 px-6 relative overflow-hidden"
+      className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden"
     >
-      {/* Background Grid */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale">
-        <img
-          src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=2000"
-          alt="Map"
-          className="w-full h-full object-cover"
-        />
-      </div>
+      {/* HUMANIZED BACKGROUND: Subtle paper texture instead of heavy images */}
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
-      <div className="container mx-auto max-w-7xl relative z-10">
+      <div className="container mx-auto max-w-screen-2xl relative z-10">
         <div
-          className={`text-center mb-24 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          className={`text-center mb-24 transition-all duration-1000 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
         >
-          <span className="text-cyan-400 font-black tracking-[0.3em] uppercase text-xs mb-4 block">
-            The Journey
+          <span className="text-[#FA8112] font-black tracking-[0.2em] uppercase text-sm mb-4 block">
+            THE PROCESS
           </span>
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Four Simple <span className="text-cyan-400">Steps</span>
+          <h2 className="text-5xl md:text-7xl font-black text-[#222222] tracking-tighter">
+            Four Simple{" "}
+            <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+              Steps
+            </span>
           </h2>
         </div>
 
         <div className="relative">
-          {/* THE PROGRESS PATH (Desktop Only) */}
-          <div className="hidden lg:block absolute top-12 left-[12%] right-[12%] h-px bg-slate-800">
+          {/* THE PROGRESS PATH: Humanized with your Primary Orange */}
+          <div className="hidden lg:block absolute top-16 left-[10%] right-[10%] h-0.5 bg-[#222222]/5">
             <div
-              className="absolute h-full bg-linear-to-r from-cyan-500 via-blue-500 to-cyan-500 transition-all duration-2500 ease-in-out shadow-[0_0_15px_rgba(34,211,238,0.4)]"
+              className="absolute h-full bg-[#FA8112] transition-all duration-2000 ease-in-out"
               style={{ width: isVisible ? "100%" : "0%" }}
             ></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
             {steps.map((item, index) => {
               const Icon = item.icon;
               return (
                 <div
                   key={index}
-                  className="flex flex-col items-center text-center group relative transition-all duration-1000 ease-out"
+                  className="flex flex-col items-center text-center group relative transition-all duration-1000"
                   style={{
-                    transitionDelay: isVisible ? `${index * 300}ms` : "0ms",
+                    transitionDelay: isVisible ? `${index * 200}ms` : "0ms",
                     opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? "translateY(0)" : "translateY(40px)",
+                    transform: isVisible ? "translateY(0)" : "translateY(30px)",
                   }}
                 >
-                  {/* Fixed Icon Container: Removed overflow-hidden so number isn't cut off */}
-                  <div className="relative mb-10">
-                    {/* Ripple Effect */}
-                    <div className="absolute inset-0 rounded-3xl bg-cyan-400/20 animate-ping opacity-0 group-hover:opacity-100"></div>
-
-                    {/* The Icon Box - overflow-visible is key here */}
-                    <div className="w-24 h-24 rounded-4xl bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:border-cyan-400 group-hover:-rotate-6 transition-all duration-500 relative z-20 shadow-2xl">
+                  <div className="relative mb-8">
+                    {/* The Icon Box: Beige background with Charcoal border */}
+                    <div className="w-28 h-28 rounded-3xl bg-[#F5E7C6] border-2 border-[#222222]/5 flex items-center justify-center group-hover:border-[#FA8112] group-hover:-rotate-3 transition-all duration-500 relative z-20 shadow-sm">
                       <Icon
-                        size={38}
-                        className="text-white group-hover:text-cyan-400 transition-colors"
+                        size={42}
+                        className="text-[#222222] group-hover:text-[#FA8112] transition-colors stroke-[1.5px]"
                       />
 
-                      {/* Fixed Step Number: Now sits on top and isn't clipped */}
-                      <div className="absolute -bottom-3 -right-3 w-11 h-11 rounded-2xl bg-cyan-400 text-slate-950 font-black flex items-center justify-center text-sm shadow-[0_4px_20px_rgba(34,211,238,0.4)] z-30 transform group-hover:scale-110 group-hover:rotate-12 transition-all">
-                        0{index + 1}
+                      {/* Step Number: High contrast Charcoal/Cream */}
+                      <div className="absolute -top-3 -right-3 w-10 h-10 rounded-xl bg-[#222222] text-[#FAF3E1] font-bold flex items-center justify-center text-sm z-30 transform group-hover:scale-110 group-hover:rotate-6 transition-all">
+                        {index + 1}
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+                  <div className="space-y-3 px-4">
+                    <h3 className="text-2xl font-black text-[#222222] tracking-tight">
                       {item.title}
                     </h3>
-                    <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-65 mx-auto group-hover:text-slate-300">
+                    <p className="text-[#222222]/60 text-base md:text-lg leading-relaxed font-medium">
                       {item.description}
                     </p>
                   </div>
 
-                  {/* Mobile Divider (Sequential Growth) */}
+                  {/* Mobile Divider */}
                   {index !== steps.length - 1 && (
                     <div
-                      className={`lg:hidden w-0.5 h-12 bg-linear-to-b from-cyan-500 to-transparent mt-8 transition-all duration-1000 origin-top`}
+                      className={`lg:hidden w-px h-12 bg-[#222222]/10 mt-8 transition-all duration-1000 origin-top`}
                       style={{
-                        transitionDelay: `${index * 300 + 150}ms`,
+                        transitionDelay: `${index * 200 + 100}ms`,
                         transform: isVisible ? "scaleY(1)" : "scaleY(0)",
-                        opacity: isVisible ? 0.5 : 0,
                       }}
                     ></div>
                   )}

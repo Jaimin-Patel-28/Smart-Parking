@@ -34,22 +34,20 @@ const RegisterForm = ({ setMode }) => {
     e.preventDefault();
     setError("");
 
-    if (!passwordsMatch) return;
-    if (!emailRegex.test(form.email)) return;
+    if (!passwordsMatch || !emailRegex.test(form.email)) return;
     if (form.vehicleNumber && !vehicleRegex.test(form.vehicleNumber)) return;
 
     try {
       setIsLoading(true);
-
       await axios.post("http://localhost:5000/api/auth/register", form);
 
-      // 🔹 RULE 2: save for login autofill (NO auto-login)
+      // Rule 2: Save for login prefill logic remains identical
       sessionStorage.setItem(
         "loginPrefill",
         JSON.stringify({
           email: form.email,
           password: form.password,
-        })
+        }),
       );
 
       setMode("login");
@@ -61,59 +59,61 @@ const RegisterForm = ({ setMode }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* FULL NAME */}
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* 1. FULL NAME */}
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-purple-400">
-          <User size={18} />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#222222]/30 group-focus-within:text-[#FA8112]">
+          <User size={18} strokeWidth={2.5} />
         </div>
         <input
           type="text"
           placeholder="Full Name"
           required
           onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="w-full bg-slate-950/50 border border-slate-800 text-white text-sm rounded-xl py-3 pl-11 pr-4 focus:border-purple-400/50"
+          className="w-full bg-[#FAF3E1] border-2 border-transparent text-[#222222] text-sm font-bold rounded-2xl py-4 pl-11 pr-4 focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/20"
         />
       </div>
 
-      {/* EMAIL */}
+      {/* 2. EMAIL */}
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-purple-400">
-          <Mail size={18} />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#222222]/30 group-focus-within:text-[#FA8112]">
+          <Mail size={18} strokeWidth={2.5} />
         </div>
         <input
           type="email"
           placeholder="Email Address"
           required
           onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full bg-slate-950/50 border border-slate-800 text-white text-sm rounded-xl py-3 pl-11 pr-4 focus:border-purple-400/50"
+          className="w-full bg-[#FAF3E1] border-2 border-transparent text-[#222222] text-sm font-bold rounded-2xl py-4 pl-11 pr-4 focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/20"
         />
       </div>
       {form.email && !emailRegex.test(form.email) && (
-        <p className="text-rose-400 text-xs">Example: admin123@gmail.com</p>
+        <p className="text-rose-500 text-[10px] font-black uppercase tracking-widest px-2">
+          Example: user@gmail.com
+        </p>
       )}
 
-      {/* PASSWORD */}
-      <div className="space-y-2">
+      {/* 3. PASSWORD & STRENGTH */}
+      <div className="space-y-3">
         <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-purple-400">
-            <Lock size={18} />
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#222222]/30 group-focus-within:text-[#FA8112]">
+            <Lock size={18} strokeWidth={2.5} />
           </div>
           <input
             type="password"
             placeholder="Password"
             required
             onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="w-full bg-slate-950/50 border border-slate-800 text-white text-sm rounded-xl py-3 pl-11 pr-4"
+            className="w-full bg-[#FAF3E1] border-2 border-transparent text-[#222222] text-sm font-bold rounded-2xl py-4 pl-11 pr-4 focus:border-[#222222] outline-none transition-all"
           />
         </div>
         <PasswordStrength password={form.password} />
       </div>
 
-      {/* CONFIRM PASSWORD */}
+      {/* 4. CONFIRM PASSWORD */}
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-purple-400">
-          <Lock size={18} />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#222222]/30 group-focus-within:text-[#FA8112]">
+          <Lock size={18} strokeWidth={2.5} />
         </div>
         <input
           type="password"
@@ -121,29 +121,37 @@ const RegisterForm = ({ setMode }) => {
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           required
-          className={`w-full bg-slate-950/50 border text-white text-sm rounded-xl py-3 pl-11 pr-10 ${
+          className={`w-full bg-[#FAF3E1] border-2 text-[#222222] text-sm font-bold rounded-2xl py-4 pl-11 pr-10 outline-none transition-all ${
             confirm
               ? passwordsMatch
                 ? "border-emerald-500/50"
                 : "border-rose-500/50"
-              : "border-slate-800"
+              : "border-transparent focus:border-[#222222]"
           }`}
         />
         {confirm && (
           <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
             {passwordsMatch ? (
-              <CheckCircle2 size={16} className="text-emerald-500" />
+              <CheckCircle2
+                size={18}
+                strokeWidth={3}
+                className="text-emerald-500"
+              />
             ) : (
-              <AlertCircle size={16} className="text-rose-500" />
+              <AlertCircle
+                size={18}
+                strokeWidth={3}
+                className="text-rose-500"
+              />
             )}
           </div>
         )}
       </div>
 
-      {/* VEHICLE */}
+      {/* 5. VEHICLE NUMBER */}
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-purple-400">
-          <Car size={18} />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#222222]/30 group-focus-within:text-[#FA8112]">
+          <Car size={18} strokeWidth={2.5} />
         </div>
         <input
           type="text"
@@ -154,32 +162,40 @@ const RegisterForm = ({ setMode }) => {
               vehicleNumber: e.target.value.toUpperCase(),
             })
           }
-          className="w-full bg-slate-950/50 border border-slate-800 text-white text-sm rounded-xl py-3 pl-11 pr-4"
+          className="w-full bg-[#FAF3E1] border-2 border-transparent text-[#222222] text-sm font-bold rounded-2xl py-4 pl-11 pr-4 focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/20"
         />
       </div>
       {form.vehicleNumber && !vehicleRegex.test(form.vehicleNumber) && (
-        <p className="text-rose-400 text-xs">Format: GJ-07-AC-1234</p>
+        <p className="text-rose-500 text-[10px] font-black uppercase tracking-widest px-2">
+          Format: GJ-07-AC-1234
+        </p>
       )}
 
-      {/* ERROR */}
-      {error && <p className="text-rose-400 text-sm">{error}</p>}
+      {/* ERROR MESSAGE */}
+      {error && (
+        <p className="text-rose-500 text-xs font-black uppercase tracking-widest px-2">
+          {error}
+        </p>
+      )}
 
-      {/* SUBMIT */}
+      {/* 6. SUBMIT BUTTON */}
       <button
         disabled={!passwordsMatch || isLoading}
-        className="w-full bg-linear-to-r from-purple-500 to-pink-600 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full bg-[#FA8112] text-[#FAF3E1] font-black py-5 rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-[#FA8112]/20 hover:bg-[#222222] transition-all active:scale-95 disabled:opacity-50 text-[11px] uppercase tracking-[0.2em]"
       >
         {isLoading ? (
           <Loader2 size={20} className="animate-spin" />
         ) : (
           <>
-            <UserPlus size={20} />
+            <UserPlus size={20} strokeWidth={3} />
             Create Account
           </>
         )}
       </button>
 
-      <SecurityNotes />
+      <div className="pt-2 border-t border-[#222222]/5">
+        <SecurityNotes />
+      </div>
     </form>
   );
 };

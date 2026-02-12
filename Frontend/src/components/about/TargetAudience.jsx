@@ -1,4 +1,11 @@
-import { Car, Building2, ShoppingBag, Ticket, Landmark, ChevronRight } from "lucide-react";
+import {
+  Car,
+  Building2,
+  ShoppingBag,
+  Ticket,
+  Landmark,
+  ChevronRight,
+} from "lucide-react";
 
 const TargetAudience = () => {
   const audiences = [
@@ -6,109 +13,113 @@ const TargetAudience = () => {
       title: "Daily Commuters",
       desc: "Anand's office workers and students looking for guaranteed daily spots.",
       icon: Car,
-      color: "text-cyan-400",
-      tag: "Individuals"
+      tag: "Individuals",
     },
     {
       title: "Shopping Malls",
       desc: "Optimizing customer flow and reducing weekend entrance congestion.",
       icon: ShoppingBag,
-      color: "text-emerald-400",
-      tag: "Commercial"
+      tag: "Commercial",
     },
     {
       title: "Offices & IT Parks",
       desc: "Structured parking for employees with automated RFID/Digital entry.",
       icon: Building2,
-      color: "text-blue-400",
-      tag: "Corporate"
+      tag: "Corporate",
     },
     {
       title: "Event Venues",
       desc: "Temporary high-capacity booking for festivals and sports events.",
       icon: Ticket,
-      color: "text-amber-400",
-      tag: "Temporary"
+      tag: "Temporary",
     },
     {
       title: "City Authorities",
       desc: "Real-time traffic data and urban space utilization analytics.",
       icon: Landmark,
-      color: "text-purple-400",
-      tag: "Government"
+      tag: "Government",
     },
   ];
 
   return (
-    <section className="py-24 px-6 bg-slate-950">
-      <div className="container mx-auto max-w-6xl">
-        
-        {/* SECTION HEADER */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <div className="space-y-4 text-center md:text-left">
-            <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
+    <section className="py-24 px-6 md:px-12 lg:px-24 bg-[#F5E7C6]">
+      <div className="container mx-auto max-w-screen-2xl">
+        {/* SECTION HEADER: Clean & Balanced Editorial Style */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+          <div className="space-y-6 text-center md:text-left max-w-2xl">
+            <h2 className="text-5xl md:text-7xl font-black text-[#222222] leading-none tracking-tighter">
               Built for Every <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-500">
+              <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
                 Stakeholder.
               </span>
             </h2>
-            <p className="text-slate-400 max-w-md mx-auto md:mx-0 text-sm md:text-base">
-              SmartPark provides tailored solutions for individuals, businesses, 
+            <p className="text-[#222222]/60 max-w-md mx-auto md:mx-0 text-lg font-medium leading-relaxed">
+              SmartPark provides tailored solutions for individuals, businesses,
               and urban planners in the Anand Smart City network.
             </p>
           </div>
-          
-          <div className="hidden lg:block h-px grow mx-8 bg-slate-800"></div>
-          
+
+          <div className="hidden lg:block h-0.5 grow mx-12 bg-[#222222]/5"></div>
+
           <div className="flex justify-center">
-            <div className="px-6 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-500 text-xs font-bold uppercase tracking-widest">
+            <div className="px-6 py-3 rounded-xl bg-white border-2 border-[#222222] text-[#222222] text-[11px] font-black uppercase tracking-[0.2em] shadow-sm">
               Market Segments
             </div>
           </div>
         </div>
 
-        {/* AUDIENCE GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* AUDIENCE GRID: Responsive 1/2/3 Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {audiences.map((audience, index) => {
             const Icon = audience.icon;
             return (
-              <div 
-                key={index} 
-                className="group p-8 rounded-3xl bg-slate-900/50 border border-slate-800 hover:border-cyan-400/30 transition-all duration-500 relative overflow-hidden"
+              <div
+                key={index}
+                className="group p-10 rounded-[2.5rem] bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 relative overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:shadow-[#222222]/5"
               >
-                <div className="absolute -bottom-4 -right-4 text-white/5 group-hover:text-cyan-400/5 transition-colors">
-                  <Icon size={120} />
+                {/* Visual Depth: Background Icon Reveal */}
+                <div className="absolute -bottom-6 -right-6 text-[#222222]/5 group-hover:text-[#FA8112]/5 transition-colors duration-700">
+                  <Icon size={160} strokeWidth={1} />
                 </div>
 
                 <div className="relative z-10">
-                  <div className={`inline-flex p-3 rounded-xl bg-slate-950 shadow-inner mb-6 group-hover:scale-110 transition-transform duration-300 ${audience.color}`}>
-                    <Icon size={24} />
+                  {/* Icon Box: Signature Beige to Orange transition */}
+                  <div className="inline-flex p-4 rounded-2xl bg-[#F5E7C6] text-[#222222] mb-8 group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] group-hover:-rotate-6 transition-all duration-500 shadow-sm">
+                    <Icon size={28} strokeWidth={1.5} />
                   </div>
-                  
-                  <span className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">
+
+                  <span className="block text-[11px] font-black uppercase tracking-[0.3em] text-[#FA8112] mb-3">
                     {audience.tag}
                   </span>
-                  
-                  <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+
+                  <h3 className="text-2xl font-black text-[#222222] mb-4 tracking-tight flex items-center justify-between">
                     {audience.title}
-                    <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-cyan-400" />
+                    <ChevronRight
+                      size={20}
+                      strokeWidth={3}
+                      className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 text-[#FA8112]"
+                    />
                   </h3>
-                  
-                  <p className="text-slate-500 text-sm leading-relaxed">
+
+                  <p className="text-[#222222]/50 text-base md:text-lg font-medium leading-relaxed">
                     {audience.desc}
                   </p>
                 </div>
               </div>
-            ); // Fixed the syntax here: closed the curly brace and added semicolon
+            );
           })}
-          
-          {/* SPECIAL INVITATION CARD */}
-          <div className="p-8 rounded-3xl bg-linear-to-b from-cyan-500/10 to-transparent border border-cyan-400/20 flex flex-col justify-center items-center text-center space-y-4">
-             <h4 className="text-white font-bold">Interested in Partnering?</h4>
-             <p className="text-slate-500 text-xs">Join our growing network of smart parking providers in Gujarat.</p>
-             <button className="text-cyan-400 font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
-               Contact Partner Support &rarr;
-             </button>
+
+          {/* SPECIAL INVITATION CARD: High Contrast Orange Block */}
+          <div className="p-10 rounded-[2.5rem] bg-[#222222] border-2 border-[#222222] flex flex-col justify-center items-center text-center space-y-6 shadow-xl shadow-[#222222]/10">
+            <h4 className="text-[#FAF3E1] font-black text-2xl tracking-tight">
+              Interested in Partnering?
+            </h4>
+            <p className="text-[#FAF3E1]/60 text-base font-medium leading-relaxed">
+              Join our growing network of smart parking providers in Gujarat.
+            </p>
+            <button className="px-8 py-3 rounded-xl bg-[#FA8112] text-[#FAF3E1] font-black text-xs uppercase tracking-[0.2em] hover:bg-[#FAF3E1] hover:text-[#222222] transition-all duration-300">
+              Contact Partner Support
+            </button>
           </div>
         </div>
       </div>

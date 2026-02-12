@@ -3,49 +3,40 @@ import { Link } from "react-router-dom";
 
 const ContactCTA = () => {
   return (
-    <section className="bg-slate-900 py-24 px-6 relative overflow-hidden">
-      {/* BACKGROUND DECORATION */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-100 bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+    <section className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24">
+      <div className="container mx-auto max-w-6xl">
+        <div className="relative p-12 md:p-24 rounded-[3.5rem] bg-[#222222] text-center shadow-2xl overflow-hidden">
+          {/* Subtle Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
-      <div className="container mx-auto max-w-5xl">
-        <div className="relative p-10 md:p-16 rounded-[3rem] bg-slate-800/40 border border-slate-700/50 backdrop-blur-xl text-center shadow-2xl">
-          {/* SECTION HEADER */}
-          <div className="max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <h2 className="text-5xl md:text-7xl font-black text-[#FAF3E1] mb-8 tracking-tighter leading-[0.9]">
               Your parking experience <br />
-              <span className="text-cyan-400">matters to us.</span>
+              <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
+                matters to us.
+              </span>
             </h2>
-            <p className="text-slate-400 text-lg">
-              Still have questions? Our support team in Anand is just a message
-              away to ensure your journey is seamless and stress-free.
+            <p className="text-[#FAF3E1]/60 text-xl md:text-2xl mb-16 font-medium leading-relaxed">
+              Still have questions? Our support team in{" "}
+              <strong className="text-[#FAF3E1]">Anand</strong> is just a
+              message away.
             </p>
-          </div>
 
-          {/* ACTION BUTTONS */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold rounded-2xl flex items-center justify-center gap-2 transition-all group active:scale-95 shadow-lg shadow-cyan-400/20">
-              <Headset size={20} />
-              Get Support Now
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <button className="w-full sm:w-auto px-12 py-5 bg-[#FA8112] text-[#FAF3E1] font-black rounded-2xl flex items-center justify-center gap-3 transition-all hover:bg-[#FAF3E1] hover:text-[#222222] active:scale-95 shadow-xl shadow-[#FA8112]/20 text-xs uppercase tracking-[0.2em]">
+                <Headset size={22} />
+                Get Support Now
+                <ArrowRight size={20} />
+              </button>
 
-            <Link
-              to="/"
-              className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-slate-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-800 transition-all active:scale-95"
-            >
-              <Home size={20} />
-              Back to Home
-            </Link>
-          </div>
-
-          {/* TRUST INDICATOR */}
-          <div className="mt-10 flex items-center justify-center gap-6 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">
-              Trusted by commuters in Gujarat
-            </p>
+              <Link
+                to="/"
+                className="w-full sm:w-auto px-12 py-5 bg-transparent border-2 border-[#FAF3E1]/20 text-[#FAF3E1] font-black rounded-2xl flex items-center justify-center gap-3 hover:border-[#FAF3E1] hover:bg-[#FAF3E1]/5 transition-all text-xs uppercase tracking-[0.2em]"
+              >
+                <Home size={22} />
+                Back to Home
+              </Link>
+            </div>
           </div>
         </div>
       </div>
