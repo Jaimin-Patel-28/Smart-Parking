@@ -59,35 +59,35 @@ const UseCases = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24"
+      className="bg-[#FAF3E1] py-20 px-5 md:px-12 lg:px-24"
     >
       <div className="container mx-auto max-w-screen-2xl">
         {/* HEADER: Notion-style Editorial Layout */}
         <div
-          className={`mb-20 transition-all duration-1000 ${
+          className={`mb-15 transition-all duration-1000 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <h2 className="text-5xl md:text-7xl font-black text-[#222222] tracking-tighter mb-6 leading-none">
+          <h2 className="text-5xl md:text-7xl font-black text-[#222222] tracking-tighter mb-4 leading-none">
             Built for <br />
             <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
               every scenario.
             </span>
           </h2>
-          <p className="text-[#222222]/60 text-xl max-w-2xl font-medium leading-relaxed">
+          <p className="text-[#222222]/60 text-lg max-w-xl font-medium leading-relaxed">
             A flexible platform designed to scale across urban environments and
             specialized sectors.
           </p>
         </div>
 
         {/* GRID: Hand-coded "Card" feel with high-contrast borders */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {users.map((item, index) => {
             const Icon = item.icon;
             return (
               <div
                 key={index}
-                className={`group relative overflow-hidden rounded-[2.5rem] border-2 border-[#222222]/5 bg-white transition-all duration-500 hover:border-[#222222] hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)] ${
+                className={`h-fit group relative overflow-hidden rounded-3xl border-[#222222]/5 bg-white transition-all duration-500  hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)] ${
                   isVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-12"
@@ -96,7 +96,7 @@ const UseCases = () => {
               >
                 <div className="flex flex-col h-full">
                   {/* Image Container: Black and White to Color Transition */}
-                  <div className="relative aspect-16/11 overflow-hidden border-b-2 border-[#222222]/5 group-hover:border-[#222222]">
+                  <div className="relative aspect-16/11 overflow-hidden border-[#222222]/5 group-hover:border-[#222222]">
                     <img
                       src={item.img}
                       alt={item.title}
@@ -109,8 +109,8 @@ const UseCases = () => {
                   </div>
 
                   {/* Content: Clean, High-Contrast Typography */}
-                  <div className="p-10">
-                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F5E7C6] text-[#222222] mb-8 group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] transition-colors duration-500 border border-[#222222]/5">
+                  <div className="p-7">
+                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#F5E7C6] text-[#222222] mb-6 group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] transition-colors duration-500 border border-[#222222]/5">
                       <Icon size={28} strokeWidth={1.5} />
                     </div>
 
@@ -118,7 +118,7 @@ const UseCases = () => {
                       {item.title}
                     </h3>
 
-                    <p className="text-[#222222]/60 font-medium leading-relaxed text-base">
+                    <p className="text-[#222222]/60 font-medium leading-relaxed text-sm">
                       {item.desc}
                     </p>
                   </div>

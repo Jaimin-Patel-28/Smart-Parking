@@ -31,18 +31,18 @@ const AppPreview = () => {
           }`}
         >
           <div className="flex justify-center mb-6">
-            <span className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#F5E7C6] border border-[#222222]/5 text-[#FA8112] text-[11px] font-black uppercase tracking-[0.2em]">
+            <span className="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#F5E7C6] border border-[#222222]/5 text-[#FA8112] text-[10px] font-black uppercase tracking-[0.2em]">
               <Sparkles size={14} className="animate-pulse" />
               Intelligence Suite
             </span>
           </div>
-          <h2 className="text-5xl md:text-8xl font-black text-[#222222] mb-6 tracking-tighter leading-none">
+          <h2 className="text-5xl md:text-7xl font-black text-[#222222] mb-6 tracking-tighter leading-none">
             Real-time <br className="md:hidden" />
             <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
               Analytics.
             </span>
           </h2>
-          <p className="text-[#222222]/60 text-xl max-w-2xl mx-auto font-medium">
+          <p className="text-[#222222]/60 text-lg max-w-xl mx-auto font-medium">
             Our MERN-powered dashboard provides instant insights into occupancy,
             revenue, and peak hours.
           </p>
@@ -50,16 +50,16 @@ const AppPreview = () => {
 
         {/* Browser Frame Window: Humanized with soft shadows and custom palette */}
         <div
-          className={`relative mx-auto max-w-6xl rounded-[2.5rem] overflow-hidden border-4 border-[#222222] shadow-[0_40px_100px_-20px_rgba(34,34,34,0.15)] bg-white transition-all duration-1000 ease-out transform
+          className={`relative mx-auto max-w-6xl rounded-3xl overflow-hidden border-2 border-[#222222] shadow-[0_40px_100px_-20px_rgba(34,34,34,0.15)] bg-white transition-all duration-1000 ease-out transform
             ${isVisible ? "translate-y-0 rotate-x-0 opacity-100" : "translate-y-32 rotate-x-6 opacity-0"}`}
           style={{ perspective: "1500px" }}
         >
           {/* Header Bar: Clean & Minimal */}
           <div className="bg-[#F5E7C6] px-8 py-5 border-b-2 border-[#222222] flex items-center justify-between">
             <div className="flex gap-2.5">
-              <div className="w-3.5 h-3.5 rounded-full bg-[#222222]/10"></div>
-              <div className="w-3.5 h-3.5 rounded-full bg-[#222222]/10"></div>
-              <div className="w-3.5 h-3.5 rounded-full bg-[#222222]/10"></div>
+              <div className="w-3.5 h-3.5 rounded-full bg-[#FA8112]/50"></div>
+              <div className="w-3.5 h-3.5 rounded-full bg-[#FA8112]/40"></div>
+              <div className="w-3.5 h-3.5 rounded-full bg-[#FA8112]/30"></div>
             </div>
             <div className="hidden sm:block bg-white px-8 py-2 rounded-lg text-[11px] text-[#222222]/40 font-bold border border-[#222222]/5 tracking-widest">
               ADMIN.SMARTPARK.IO/ANALYTICS
@@ -76,7 +76,7 @@ const AppPreview = () => {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className={`h-12 w-full rounded-xl transition-all ${
+                    className={`h-12 w-full rounded-lg transition-all ${
                       i === 1
                         ? "bg-[#FA8112] shadow-lg shadow-[#FA8112]/20"
                         : "bg-[#FAF3E1]"
@@ -97,7 +97,7 @@ const AppPreview = () => {
                 ].map((stat, i) => (
                   <div
                     key={i}
-                    className="h-32 bg-[#FAF3E1] border-2 border-transparent rounded-3xl flex flex-col items-center justify-center gap-4 hover:border-[#FA8112]/20 hover:bg-white transition-all duration-300 group shadow-sm"
+                    className="h-32 bg-[#FAF3E1] border-2 border-transparent rounded-xl flex flex-col items-center justify-center gap-4 hover:border-[#FA8112]/20 hover:bg-white transition-all duration-300 group shadow-sm"
                   >
                     <stat.icon
                       className="text-[#222222]/40 group-hover:text-[#FA8112] transition-colors duration-500"
@@ -111,7 +111,7 @@ const AppPreview = () => {
               </div>
 
               {/* High-Tech Image Display */}
-              <div className="relative group w-full aspect-video rounded-4xl overflow-hidden border-2 border-[#222222]/5 shadow-inner bg-[#FAF3E1]">
+              <div className="relative group w-full aspect-video rounded-2xl overflow-hidden border-2 border-[#222222]/5 shadow-inner bg-[#FAF3E1]">
                 <img
                   src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1200"
                   alt="Dashboard"
@@ -120,7 +120,7 @@ const AppPreview = () => {
 
                 {/* Status Indicator */}
                 <div className="absolute top-8 left-8 z-20">
-                  <div className="flex items-center gap-3 px-5 py-2.5 bg-white border-2 border-[#222222] rounded-full shadow-xl">
+                  <div className="flex items-center gap-3 px-5 py-2.5 bg-white border-2 border-[#222222] rounded-xl shadow-xl">
                     <div className="w-2.5 h-2.5 bg-[#FA8112] rounded-full animate-ping"></div>
                     <span className="text-[11px] text-[#222222] font-black uppercase tracking-widest">
                       System Active
@@ -130,7 +130,7 @@ const AppPreview = () => {
 
                 {/* Center Action Button */}
                 <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <button className="group relative flex items-center gap-4 bg-[#222222] hover:bg-[#FA8112] px-12 py-6 rounded-2xl transition-all duration-500 shadow-2xl hover:-translate-y-1">
+                  <button className="group relative flex items-center gap-4 bg-[#222222] hover:bg-[#FA8112] px-12 py-6 rounded-lg transition-all duration-500 shadow-2xl hover:-translate-y-1">
                     <span className="text-[#FAF3E1] font-black uppercase text-xs tracking-[0.3em] flex items-center gap-3">
                       <Layout size={20} /> Explore Demo
                     </span>

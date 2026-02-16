@@ -23,7 +23,7 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+    <section className="bg-[#F5E7C6] rounded-lg py-20 px-3 md:px-10 lg:px-20 relative overflow-hidden">
       {/* HUMANIZED BACKGROUND: Subtle paper texture for a premium tactile feel */}
       <div className="absolute inset-0 opacity-[0.3] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
@@ -35,7 +35,7 @@ const Testimonials = () => {
               Feedback
             </span>
           </h2>
-          <p className="text-[#222222]/60 text-xl font-medium max-w-2xl mx-auto">
+          <p className="text-[#222222]/60 text-lg font-medium max-w-xl mx-auto">
             See how SmartPark is changing the way people park in the city.
           </p>
         </div>
@@ -44,11 +44,11 @@ const Testimonials = () => {
           {reviews.map((review, index) => (
             <div
               key={index}
-              className="relative p-10 rounded-[2.5rem] bg-white border-2 border-[#222222]/5 transition-all duration-500 hover:border-[#222222] hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)] flex flex-col justify-between"
+              className="relative p-10 rounded-2xl bg-white border-2 border-[#222222]/5 transition-all duration-500 hover:border-[#222222] hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)] flex flex-col justify-between"
             >
               {/* Decorative Quote Icon: Subtle and integrated */}
               <div className="absolute top-8 right-10 text-[#222222]/5">
-                <Quote size={56} fill="currentColor" stroke="none" />
+                <Quote size={40} fill="currentColor" stroke="none" />
               </div>
 
               <div className="relative z-10">
@@ -57,7 +57,7 @@ const Testimonials = () => {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      size={18}
+                      size={15}
                       className={`transition-colors duration-300 ${
                         i < review.stars
                           ? "fill-[#FA8112] text-[#FA8112]"
@@ -67,14 +67,14 @@ const Testimonials = () => {
                   ))}
                 </div>
 
-                <p className="text-[#222222] text-xl font-medium italic mb-10 leading-relaxed tracking-tight">
+                <p className="text-[#222222] text-lg font-medium italic mb-10 leading-relaxed tracking-tight">
                   “{review.text}”
                 </p>
               </div>
 
               {/* User Info: Humanized with Beige background and Charcoal text */}
               <div className="flex items-center gap-5 border-t-2 border-[#FAF3E1] pt-8">
-                <div className="w-14 h-14 rounded-2xl bg-[#F5E7C6] border border-[#222222]/5 flex items-center justify-center text-[#222222] font-black text-xl shadow-sm">
+                <div className="w-14 h-14 rounded-xl bg-[#F5E7C6] border border-[#222222]/5 flex items-center justify-center text-[#222222] font-black text-xl shadow-sm">
                   {review.name[0]}
                 </div>
                 <div>

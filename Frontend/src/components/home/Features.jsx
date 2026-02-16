@@ -77,29 +77,29 @@ const Features = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24 overflow-hidden"
+      className="bg-[#FAF3E1] py-12 px-3 md:px-12 lg:px-24 overflow-hidden"
     >
       <div className="container mx-auto max-w-screen-2xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-12">
           <div
             className={`max-w-2xl transition-all duration-1000 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
           >
-            <span className="text-[#FA8112] font-black tracking-[0.3em] text-xs uppercase mb-4 block">
+            <span className="text-[#FA8112] font-black tracking-[0.3em] text-xs uppercase mb-2 block">
               PREMIUM MODULES
             </span>
-            <h2 className="text-5xl md:text-8xl font-black text-[#222222] mb-8 tracking-tighter leading-[0.9]">
+            <h2 className="text-5xl md:text-8xl font-black text-[#222222] mb-4 tracking-tighter leading-[0.9]">
               Advanced <br />
               <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
                 Features
               </span>
             </h2>
-            <p className="text-[#222222]/60 text-xl font-medium leading-relaxed">
+            <p className="text-[#222222]/60 text-base font-medium leading-relaxed">
               Everything you need to manage city parking, built with the power
               of the MERN stack for high-performance real-time updates.
             </p>
           </div>
           <div
-            className={`hidden md:block h-0.5 grow bg-[#222222]/5 mx-12 mb-8 transition-all duration-1000 delay-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
+            className={`hidden md:block h-0.5 grow bg-[#222222]/5 mx-12 mb-4 transition-all duration-1000 delay-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
           ></div>
         </div>
 
@@ -109,7 +109,7 @@ const Features = () => {
             return (
               <div
                 key={index}
-                className="group relative p-12 rounded-[3rem] bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 overflow-hidden flex flex-col items-start shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:shadow-[#222222]/5"
+                className="group relative p-10 rounded-2xl bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-500 overflow-hidden flex flex-col items-start shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:shadow-[#222222]/5"
                 style={{
                   transitionDelay: isVisible ? `${index * 100}ms` : "0ms",
                   opacity: isVisible ? 1 : 0,
@@ -127,15 +127,15 @@ const Features = () => {
 
                 <div className="relative z-10 w-full">
                   {/* ICON BOX: Beige to Orange transition */}
-                  <div className="w-16 h-16 rounded-2xl bg-[#F5E7C6] border-2 border-[#222222]/5 flex items-center justify-center mb-10 group-hover:bg-[#FA8112] group-hover:border-[#FA8112] group-hover:-rotate-6 transition-all duration-500 shadow-sm">
-                    <Icon className="w-8 h-8 text-[#222222] group-hover:text-[#FAF3E1] transition-colors duration-300 stroke-[1.5px]" />
+                  <div className="w-14 h-14 rounded-xl bg-[#F5E7C6] border-2 border-[#222222]/5 flex items-center justify-center mb-10 group-hover:bg-[#FA8112] group-hover:border-[#FA8112] group-hover:-rotate-6 transition-all duration-500 shadow-sm">
+                    <Icon className="w-7 h-7 text-[#222222] group-hover:text-[#FAF3E1] transition-colors duration-300 stroke-[1.5px]" />
                   </div>
 
-                  <h3 className="text-2xl font-black text-[#222222] mb-5 tracking-tight group-hover:text-[#FA8112] transition-colors">
+                  <h3 className="text-xl font-black text-[#222222] mb-5 tracking-tight group-hover:text-[#FA8112] transition-colors">
                     {item.title}
                   </h3>
 
-                  <p className="text-[#222222]/50 text-base md:text-lg font-medium leading-relaxed group-hover:text-[#222222]/70 transition-colors">
+                  <p className="text-[#222222]/50 text-base md:text-sm font-medium leading-relaxed group-hover:text-[#222222]/70 transition-colors">
                     {item.description}
                   </p>
                 </div>

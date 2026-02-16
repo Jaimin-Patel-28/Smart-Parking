@@ -26,7 +26,7 @@ const StatsSection = () => {
   ];
 
   return (
-    <section className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+    <section className="bg-[#F5E7C6] py-10 px-3 md:px-5 lg:px-10 relative overflow-hidden">
       {/* HUMANIZED BACKGROUND: Subtle paper grain texture */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
 
@@ -37,24 +37,24 @@ const StatsSection = () => {
             return (
               <div
                 key={index}
-                className="group relative p-10 rounded-[2.5rem] bg-white border-2 border-[#222222]/5 transition-all duration-500 hover:border-[#222222] hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)]"
+                className="group relative p-10 rounded-xl bg-white border-2 border-[#222222]/5 transition-all duration-500  hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(34,34,34,0.1)]"
               >
                 {/* Background Accent: Soft Beige hover */}
-                <div className="absolute inset-0 rounded-[2.5rem] bg-[#F5E7C6] opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 rounded-xl bg-[#F5E7C6] opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
 
                 <div className="relative z-10 flex flex-col items-center text-center">
                   {/* Icon Container: Signature Orange on hover */}
-                  <div className="p-5 rounded-2xl bg-[#F5E7C6] mb-8 group-hover:bg-[#FA8112] group-hover:rotate-6 transition-all duration-500 border border-[#222222]/5">
+                  <div className="p-5 rounded-xl bg-[#F5E7C6] mb-8 group-hover:bg-[#FA8112] group-hover:rotate-6 transition-all duration-500 border border-[#222222]/5">
                     <Icon className="w-10 h-10 text-[#222222] group-hover:text-[#FAF3E1] transition-colors duration-300 stroke-[1.5px]" />
                   </div>
 
                   {/* Value: Massive, "Hand-set" Typography */}
-                  <h3 className="text-5xl lg:text-6xl font-black text-[#222222] mb-4 tracking-tighter">
+                  <h3 className="text-2xl lg:text-3xl font-black text-[#222222] mb-4 tracking-tighter">
                     {item.value}
                   </h3>
 
                   {/* Label: Clean & Intentional */}
-                  <p className="text-[#222222]/50 font-black uppercase tracking-[0.2em] text-xs">
+                  <p className="text-[#222222]/50 font-black uppercase tracking-[0.2em] text-2xs">
                     {item.label}
                   </p>
                 </div>

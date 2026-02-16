@@ -19,6 +19,7 @@ import FindParking from "../pages/user/FindParking";
 import WalletHub from "../pages/user/WalletHub";
 import ActiveBookings from "../pages/user/Mybookings/ActiveBookings";
 import Notifications from "../pages/user/Notifications";
+// import HelpCenter from "../pages/user/HelpCenter";
 import BookingHistory from "../pages/user/Mybookings/BookingHistory";
 
 
@@ -39,7 +40,7 @@ const AppRoutes = () => {
           {/* 👇 THIS IS IMPORTANT */}
           <Route index element={<Dashboard />} />
 
-          <Route path="dashboard" element={<Dashboard />} />
+           <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
 
           <Route path="bookings">
@@ -59,6 +60,10 @@ const AppRoutes = () => {
           <Route path="notifications">
             <Route index element={<Notifications/>}/>
           </Route>
+
+          {/* <Route path="help">
+            <Route index element={<HelpCenter/>}/>
+          </Route> */}
         </Route>
       </Route>
     </Routes>

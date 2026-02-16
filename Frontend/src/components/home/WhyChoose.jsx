@@ -42,7 +42,7 @@ const WhyChoose = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden"
+      className="bg-[#FAF3E1] py-12 px-3 md:px-12 lg:px-24 relative overflow-hidden"
     >
       {/* HUMANIZED BACKGROUND: Subtle paper grain and a grayscale city blend */}
       <div className="absolute top-0 right-0 w-full lg:w-1/2 h-full opacity-10 pointer-events-none">
@@ -63,7 +63,7 @@ const WhyChoose = () => {
             {/* Replaced Glow with a Beige Shadow layer */}
             <div className="absolute -inset-4 bg-[#F5E7C6]/50 blur-3xl rounded-full"></div>
 
-            <div className="relative group overflow-hidden border-4 border-[#222222] bg-white p-10 md:p-14 rounded-[3.5rem] shadow-[0_40px_80px_-15px_rgba(34,34,34,0.1)]">
+            <div className="relative group overflow-hidden border-2 border-[#fa821299] bg-white p-10 md:p-14 rounded-4xl shadow-[0_40px_80px_-15px_rgba(34,34,34,0.1)]">
               {/* Subtle background image within the card */}
               <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
                 <img
@@ -73,7 +73,7 @@ const WhyChoose = () => {
                 />
               </div>
 
-              <h2 className="text-5xl md:text-7xl font-black text-[#222222] leading-[0.95] tracking-tighter relative z-10">
+              <h2 className="text-4xl md:text-6xl font-black text-[#222222] leading-[0.95] tracking-tighter relative z-10">
                 Built for the <br />
                 <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
                   Next Gen
@@ -82,7 +82,7 @@ const WhyChoose = () => {
                 of Cities.
               </h2>
 
-              <p className="text-[#222222]/60 mt-8 text-xl font-medium relative z-10 max-w-sm leading-relaxed">
+              <p className="text-[#222222]/60 mt-6 text-lg font-medium relative z-10 max-w-sm leading-relaxed">
                 Revolutionizing urban mobility with data-driven parking
                 management.
               </p>
@@ -104,7 +104,7 @@ const WhyChoose = () => {
               <span className="text-[#FA8112] font-black uppercase tracking-[0.3em] text-xs mb-4 block">
                 WHY CHOOSE US
               </span>
-              <h3 className="text-4xl md:text-5xl font-black text-[#222222] mb-12 tracking-tighter">
+              <h3 className="text-4xl md:text-5xl font-black text-[#222222] mb-8 tracking-tighter">
                 The Core Advantages
               </h3>
             </div>
@@ -113,7 +113,7 @@ const WhyChoose = () => {
               {reasons.map((item, index) => (
                 <div
                   key={index}
-                  className="group flex items-start gap-6 p-6 rounded-4xl border-2 border-transparent hover:border-[#222222]/10 hover:bg-[#F5E7C6]/30 transition-all duration-500"
+                  className="group flex items-start gap-6 p-6 rounded-2xl border-2 border-transparent hover:border-[#222222]/10 hover:bg-[#F5E7C6]/30 transition-all duration-500 mb-2"
                   style={{
                     transitionDelay: isVisible ? `${index * 150}ms` : "0ms",
                     opacity: isVisible ? 1 : 0,
@@ -123,13 +123,13 @@ const WhyChoose = () => {
                   <div className="mt-1 relative">
                     {/* Hand-drawn style checkmark */}
                     <div className="absolute inset-0 bg-[#FA8112]/20 blur-lg rounded-full scale-0 group-hover:scale-125 transition-transform"></div>
-                    <CheckCircle className="w-8 h-8 text-[#FA8112] relative z-10 stroke-[2.5px]" />
+                    <CheckCircle className="w-6 h-6 text-[#FA8112] relative z-10 stroke-[2.5px]" />
                   </div>
                   <div>
-                    <h4 className="text-[#222222] font-black text-2xl tracking-tight transition-colors">
+                    <h4 className="text-[#222222] font-black text-xl tracking-tight transition-colors">
                       {item.title}
                     </h4>
-                    <p className="text-[#222222]/60 text-base md:text-lg mt-2 font-medium leading-relaxed">
+                    <p className="text-[#222222]/60 text-base md:text-base mt-2 font-medium leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
