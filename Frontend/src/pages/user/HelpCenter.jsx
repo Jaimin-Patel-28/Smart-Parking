@@ -13,7 +13,7 @@ import HelpEmptyState from "./Help-Center/HelpEmptyState";
 import HelpErrorState from "./Help-Center/HelpErrorState";
 
 const HelpCenter = () => {
-  // Mock state for Viva demonstration
+  // Mock state for Viva demonstration and to understand 
   const isLoading = false;
   const hasError = false;
 
@@ -48,7 +48,7 @@ const HelpCenter = () => {
                 </div>
 
                 {/* Specialized Support Cards Group */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-rows-1 md:grid-rows-2 gap-6">
                   <BookingSupport />
                   <WalletSupport />
                 </div>
