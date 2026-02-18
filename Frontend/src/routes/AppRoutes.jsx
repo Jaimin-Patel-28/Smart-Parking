@@ -19,8 +19,8 @@ import FindParking from "../pages/user/FindParking";
 import WalletHub from "../pages/user/WalletHub";
 import ActiveBookings from "../pages/user/Mybookings/ActiveBookings";
 import Notifications from "../pages/user/Notifications";
-// import HelpCenter from "../pages/user/HelpCenter";
 import BookingHistory from "../pages/user/Mybookings/BookingHistory";
+import HelpCenter from "../pages/user/HelpCenter";
 
 
 const AppRoutes = () => {
@@ -60,10 +60,9 @@ const AppRoutes = () => {
           <Route path="notifications">
             <Route index element={<Notifications/>}/>
           </Route>
-
-          {/* <Route path="help">
+          <Route path="help">
             <Route index element={<HelpCenter/>}/>
-          </Route> */}
+          </Route>
         </Route>
       </Route>
     </Routes>
