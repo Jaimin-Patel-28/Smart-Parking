@@ -9,91 +9,64 @@ import {
 
 const HelpSupport = () => {
   return (
-    /* FIXED: Changed rounded-[2.5rem] to rounded-3xl and increased padding to p-8 lg:p-10 */
-    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl overflow-hidden relative group">
-      {/* 1. SECTION HEADER: Increased margin-bottom (mb-10) */}
-      <div className="flex items-center gap-4 mb-10">
-        <div className="shrink-0 p-4 bg-cyan-500/10 rounded-2xl text-cyan-400 group-hover:rotate-12 transition-transform duration-500">
-          <LifeBuoy size={28} />
+    <section className="bg-white rounded-2xl p-6 shadow-sm border border-[#F5E7C6]">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+          <LifeBuoy size={18} />
         </div>
         <div>
-          <h2 className="text-2xl font-black text-white tracking-tight uppercase">
-            Need Help?
-          </h2>
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-1">
-            24/7 Support Active
-          </p>
+          <h2 className="text-lg font-semibold text-[#222222]">Need Help?</h2>
+          <p className="text-sm text-[#6B6B6B]">24/7 support available</p>
         </div>
       </div>
 
-      {/* 2. RICH CONTENT: FAST TRACK TILES */}
-      <div className="space-y-4 mb-10">
-        {/* Support Chat Tile */}
-        <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-950/60 border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer group/item shadow-inner">
-          <div className="flex items-center gap-4">
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 shadow-sm">
-              <MessageSquare size={18} />
+      {/* Support Options */}
+      <div className="space-y-4 mb-6">
+        {/* Live Chat */}
+        <div className="flex items-center justify-between p-4 rounded-xl border border-[#F5E7C6] hover:bg-[#FAF3E1] transition cursor-pointer">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+              <MessageSquare size={16} />
             </div>
             <div>
-              <p className="text-sm font-black text-white tracking-wide">
-                Live Chat
-              </p>
-              <p className="text-[10px] text-slate-500 font-bold uppercase mt-1">
-                Wait time: ~2 mins
+              <p className="text-sm font-medium text-[#222222]">Live Chat</p>
+              <p className="text-xs text-[#6B6B6B]">
+                Average wait time: 2 mins
               </p>
             </div>
           </div>
-          <ExternalLink
-            size={16}
-            className="text-slate-700 group-hover/item:text-blue-400 group-hover/item:translate-x-0.5 transition-all"
-          />
+          <ExternalLink size={16} className="text-[#6B6B6B]" />
         </div>
 
-        {/* Documentation Tile */}
-        <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-950/60 border border-white/5 hover:border-cyan-500/30 transition-all cursor-pointer group/item shadow-inner">
-          <div className="flex items-center gap-4">
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 shadow-sm">
-              <Headset size={18} />
+        {/* Knowledge Base */}
+        <div className="flex items-center justify-between p-4 rounded-xl border border-[#F5E7C6] hover:bg-[#FAF3E1] transition cursor-pointer">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+              <Headset size={16} />
             </div>
             <div>
-              <p className="text-sm font-black text-white tracking-wide">
+              <p className="text-sm font-medium text-[#222222]">
                 Knowledge Base
               </p>
-              <p className="text-[10px] text-slate-500 font-bold uppercase mt-1">
-                FAQs & User Guides
-              </p>
+              <p className="text-xs text-[#6B6B6B]">FAQs & guides</p>
             </div>
           </div>
-          <ExternalLink
-            size={16}
-            className="text-slate-700 group-hover/item:text-cyan-400 group-hover/item:translate-x-0.5 transition-all"
-          />
+          <ExternalLink size={16} className="text-[#6B6B6B]" />
         </div>
       </div>
 
-      {/* 3. PRIMARY ACTION BUTTONS */}
+      {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-4">
-        <button className="flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-rose-500/10 border border-white/10 hover:border-rose-500/30 text-slate-400 hover:text-rose-400 rounded-xl transition-all group/btn active:scale-95">
-          <Bug size={18} className="group-hover/btn:animate-bounce shrink-0" />
-          <span className="text-[11px] font-black uppercase tracking-widest">
-            Report Bug
-          </span>
+        <button className="flex items-center justify-center gap-2 py-3 border border-[#F5E7C6] rounded-lg text-sm text-[#6B6B6B] hover:bg-[#FAF3E1] transition">
+          <Bug size={16} />
+          Report Bug
         </button>
 
-        <button className="flex items-center justify-center gap-3 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-xl shadow-blue-600/20 transition-all active:scale-95">
-          <Headset size={18} className="shrink-0" />
-          <span className="text-[11px] font-black uppercase tracking-widest">
-            Call Hub
-          </span>
+        <button className="flex items-center justify-center gap-2 py-3 bg-[#FA8112] hover:bg-[#e6730f] text-white rounded-lg text-sm transition">
+          <Headset size={16} />
+          Call Support
         </button>
-      </div>
-
-      {/* Decorative Branding: Balanced at bottom */}
-      <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-center gap-3 opacity-20">
-        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-        <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.4em]">
-          Anand Grid Support Node
-        </span>
       </div>
     </section>
   );

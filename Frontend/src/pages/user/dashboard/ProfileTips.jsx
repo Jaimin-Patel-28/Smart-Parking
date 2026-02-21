@@ -6,94 +6,77 @@ const ProfileTips = () => {
     {
       icon: UserCheck,
       title: "Complete Profile",
-      desc: "Add your name and photo for Anand Hub verification.",
-      color: "text-blue-400",
-      bg: "bg-blue-500/10",
+      desc: "Add your name and photo for verification.",
     },
     {
       icon: Car,
       title: "Add Vehicle Details",
-      desc: "Speed up entry with saved license plate numbers.",
-      color: "text-cyan-400",
-      bg: "bg-cyan-500/10",
+      desc: "Save license plate numbers for faster entry.",
     },
     {
       icon: BellRing,
       title: "Enable Alerts",
-      desc: "Get notified when your parking session is ending.",
-      color: "text-purple-400",
-      bg: "bg-purple-500/10",
+      desc: "Get reminders before your session ends.",
     },
   ];
 
   return (
-    <section className="relative">
-      {/* 1. SECTION HEADER: Increased margin-bottom (mb-8) for breathing room */}
-      <div className="flex items-center gap-3 mb-8 px-1">
-        <Sparkles size={22} className="text-amber-400 fill-amber-400/20" />
+    <section className="bg-white rounded-2xl p-6 shadow-sm border border-[#F5E7C6]">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+          <Sparkles size={18} />
+        </div>
         <div>
-          <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">
+          <h2 className="text-lg font-semibold text-[#222222]">
             Profile Boosters
           </h2>
-          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-            Unlock Pro Features
+          <p className="text-sm text-[#6B6B6B]">
+            Improve your experience and unlock benefits
           </p>
         </div>
       </div>
 
-      {/* 2. TIPS STACK: Increased gap (space-y-5) between items */}
-      <div className="space-y-5">
+      {/* Tips List */}
+      <div className="space-y-4">
         {tips.map((tip, index) => (
           <div
             key={index}
-            className="group flex items-start gap-5 p-4 rounded-2xl bg-white/1 hover:bg-white/4 transition-all cursor-pointer border border-transparent hover:border-white/5"
+            className="flex items-start gap-4 p-4 rounded-xl border border-[#F5E7C6] hover:bg-[#FAF3E1] transition cursor-pointer"
           >
-            {/* Icon Container: Using shrink-0 to resolve canonical warning */}
-            <div
-              className={`shrink-0 p-3 rounded-xl ${tip.bg} ${tip.color} transition-all duration-300 group-hover:scale-110 shadow-sm`}
-            >
-              <tip.icon size={20} />
+            <div className="w-9 h-9 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+              <tip.icon size={16} />
             </div>
 
-            {/* Content Area */}
-            <div className="flex-1 min-w-0 pt-0.5">
-              <div className="flex items-center justify-between mb-1.5">
-                <h4 className="text-xs font-black text-white tracking-wide uppercase">
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-medium text-[#222222]">
                   {tip.title}
                 </h4>
-                <ArrowRight
-                  size={14}
-                  className="text-slate-700 group-hover:text-white transition-all group-hover:translate-x-1"
-                />
+                <ArrowRight size={16} className="text-[#6B6B6B]" />
               </div>
-              <p className="text-[10px] text-slate-500 font-bold leading-relaxed tracking-tight">
-                {tip.desc}
-              </p>
+
+              <p className="text-sm text-[#6B6B6B] mt-1">{tip.desc}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* 3. PROGRESS INDICATOR: Balanced spacing and depth */}
-      <div className="mt-10 p-6 bg-slate-950/60 rounded-3xl border border-white/5 shadow-inner">
-        <div className="flex justify-between items-end mb-3 px-1">
-          <div className="space-y-1">
-            <span className="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em]">
-              Verification Progress
-            </span>
-          </div>
-          <span className="text-xs font-black text-blue-400">65%</span>
+      {/* Progress Section */}
+      <div className="mt-8 bg-[#FAF3E1] rounded-xl p-5 border border-[#F5E7C6]">
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-sm text-[#6B6B6B]">Verification Progress</span>
+          <span className="text-sm font-medium text-[#FA8112]">65%</span>
         </div>
 
-        {/* Progress Bar with Glow */}
-        <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden p-0.5">
+        <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#F5E7C6]">
           <div
-            className="h-full rounded-full bg-linear-to-r from-blue-600 to-cyan-400 shadow-[0_0_12px_rgba(59,130,246,0.4)] transition-all duration-1000 ease-out"
+            className="h-full bg-[#FA8112] rounded-full transition-all duration-500"
             style={{ width: "65%" }}
           />
         </div>
 
-        <p className="text-[8px] font-bold text-slate-700 uppercase tracking-widest mt-4 text-center">
+        <p className="text-xs text-[#6B6B6B] mt-3 text-center">
           Complete 1 more task to reach Level 2
         </p>
       </div>
@@ -102,3 +85,4 @@ const ProfileTips = () => {
 };
 
 export default ProfileTips;
+ 

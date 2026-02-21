@@ -15,7 +15,7 @@ const UserLayout = () => {
 
       {/* MAIN CONTENT */}
       <main className="flex-1 transition-all duration-300 overflow-x-hidden">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-8">
+        <div className="max-w-100% mx-auto px-0 sm:px-0 md:px-0 lg:px-0 py-0">
           <Outlet />
         </div>
       </main>

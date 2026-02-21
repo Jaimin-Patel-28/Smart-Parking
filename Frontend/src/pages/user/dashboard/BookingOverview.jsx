@@ -9,11 +9,9 @@ import {
   Clock4,
   History,
 } from "lucide-react";
-
 import { useNavigate } from "react-router-dom";
 
 const BookingOverview = () => {
-
   const navigate = useNavigate();
 
   const bookings = [
@@ -46,111 +44,116 @@ const BookingOverview = () => {
   const getStatusStyle = (type) => {
     switch (type) {
       case "success":
-        return "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+        return "bg-green-100 text-green-700";
       case "error":
-        return "text-rose-400 bg-rose-500/10 border-rose-500/20";
+        return "bg-red-100 text-red-700";
       case "warn":
-        return "text-amber-400 bg-amber-500/10 border-amber-500/20";
+        return "bg-amber-100 text-amber-700";
       default:
-        return "text-slate-400 bg-slate-500/10 border-slate-500/20";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl overflow-hidden group">
-      {/* 1. HEADER: Increased margin-bottom (mb-10) for better separation */}
-      <div className="flex items-center justify-between mb-10">
-        <div className="flex items-center gap-4">
-          <div className="p-4 bg-purple-500/10 rounded-2xl text-purple-400 shrink-0">
-            <History size={26} />
+    <section className="bg-white rounded-2xl p-6 shadow-sm border border-[#F5E7C6]">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+            <History size={18} />
           </div>
           <div>
-            <h2 className="text-3xl font-black text-white tracking-tight uppercase">
+            <h2 className="text-lg font-semibold text-[#222222]">
               Recent Bookings
             </h2>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">
-              Transaction History
+            <p className="text-sm text-[#6B6B6B]">
+              Overview of your latest parking sessions
             </p>
           </div>
         </div>
-        <button 
-        onClick={()=>navigate('/user/bookings/history')}
-        className="hidden sm:block px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-white hover:bg-blue-600/10 transition-all">
-          View All History
+
+        <button
+          onClick={() => navigate("/user/bookings/history")}
+          className="text-sm text-[#FA8112] hover:underline"
+        >
+          View all
         </button>
       </div>
 
-      {/* 2. LIST HEADER: Balanced spacing for 110% zoom */}
-      <div className="hidden md:grid grid-cols-4 px-8 py-4 mb-4 bg-white/2 rounded-2xl border border-white/5">
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600">
-          Location
-        </span>
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 text-center">
-          Date
-        </span>
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 text-center">
-          Duration
-        </span>
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 text-right">
-          Status
-        </span>
+      {/* Table Header */}
+      <div className="hidden md:grid grid-cols-4 pb-3 mb-4 text-sm text-[#6B6B6B] border-b border-[#F5E7C6]">
+        <span>Location</span>
+        <span className="text-center">Date</span>
+        <span className="text-center">Duration</span>
+        <span className="text-right">Status</span>
       </div>
 
-      {/* 3. BOOKING ITEMS: Increased vertical gap (space-y-4) and horizontal padding */}
-      <ul className="space-y-4">
+      {/* Booking List */}
+      <ul className="space-y-3">
         {bookings.map((item) => (
-          <li key={item.id} className="group/item cursor-pointer">
-            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-6 px-8 py-6 rounded-3xl bg-slate-950/40 border border-white/5 group-hover/item:bg-white/5 group-hover/item:border-blue-500/30 transition-all duration-300">
-              {/* Location Detail */}
-              <div className="flex items-center gap-4">
-                <div className="shrink-0 w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover/item:text-blue-400 group-hover/item:bg-blue-400/10 transition-colors">
-                  <MapPin size={18} />
-                </div>
-                <span className="text-sm font-black text-white tracking-wide uppercase">
-                  {item.loc}
-                </span>
+          <li
+            key={item.id}
+            className="grid grid-cols-1 md:grid-cols-4 items-center gap-4 p-4 rounded-xl hover:bg-[#FAF3E1] transition cursor-pointer"
+          >
+            {/* Location */}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
+                <MapPin size={16} />
               </div>
+              <span className="text-sm font-medium text-[#222222]">
+                {item.loc}
+              </span>
+            </div>
 
-              {/* Date Detail */}
-              <div className="flex items-center justify-center gap-2.5 text-slate-400">
-                <Calendar size={15} className="opacity-40" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  {item.date}
-                </span>
-              </div>
+            {/* Date */}
+            <div className="flex items-center justify-center gap-2 text-sm text-[#6B6B6B]">
+              <Calendar size={14} />
+              {item.date}
+            </div>
 
-              {/* Duration Detail */}
-              <div className="flex items-center justify-center gap-2.5 text-slate-400">
-                <Clock size={15} className="opacity-40" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  {item.duration}
-                </span>
-              </div>
+            {/* Duration */}
+            <div className="flex items-center justify-center gap-2 text-sm text-[#6B6B6B]">
+              <Clock size={14} />
+              {item.duration}
+            </div>
 
-              {/* Status Detail */}
-              <div className="flex items-center justify-end">
-                <span
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-[10px] font-black uppercase tracking-[0.15em] shadow-sm ${getStatusStyle(item.type)}`}
-                >
-                  {item.type === "success" && <CheckCircle2 size={13} />}
-                  {item.type === "error" && <XCircle size={13} />}
-                  {item.type === "warn" && <Clock4 size={13} />}
-                  {item.status}
-                </span>
-                <ChevronRight
-                  size={16}
-                  className="ml-4 text-slate-700 group-hover/item:text-white transition-all group-hover/item:translate-x-1"
-                />
-              </div>
+            {/* Status */}
+            <div className="flex items-center justify-end gap-3">
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                  item.type,
+                )}`}
+              >
+                {item.type === "success" && (
+                  <CheckCircle2 size={12} className="inline mr-1" />
+                )}
+                {item.type === "error" && (
+                  <XCircle size={12} className="inline mr-1" />
+                )}
+                {item.type === "warn" && (
+                  <Clock4 size={12} className="inline mr-1" />
+                )}
+                {item.status}
+              </span>
+
+              <ChevronRight
+                size={16}
+                className="text-[#6B6B6B] group-hover:translate-x-1 transition"
+              />
             </div>
           </li>
         ))}
       </ul>
 
-      {/* MOBILE ACTION: Visible only on small screens */}
-      <button className="w-full mt-8 py-5 bg-white/5 border border-white/5 rounded-2xl text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-blue-600 transition-all md:hidden">
-        Show Full History
-      </button>
+      {/* Mobile View Button */}
+      <div className="mt-6 md:hidden">
+        <button
+          onClick={() => navigate("/user/bookings/history")}
+          className="w-full py-3 bg-[#FA8112] text-white rounded-lg text-sm hover:bg-[#e6730f] transition"
+        >
+          View Full History
+        </button>
+      </div>
     </section>
   );
 };
