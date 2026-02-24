@@ -1,62 +1,30 @@
 import React from "react";
-import { Car, History, Wallet, MapPin, ArrowUpRight } from "lucide-react";
+import { Car, History, Wallet, MapPin } from "lucide-react";
 
-const SummaryCards = () => {
+const SummaryCards = ({ activeSession, wallet, bookings }) => {
   const stats = [
-    {
-      label: "Active Booking",
-      value: "P-104",
-      sub: "Anand Central",
-      icon: Car,
-    },
-    {
-      label: "Total Bookings",
-      value: "24",
-      sub: "Lifetime",
-      icon: History,
-    },
-    {
-      label: "Wallet Balance",
-      value: "₹450",
-      sub: "INR Credits",
-      icon: Wallet,
-    },
-    {
-      label: "Saved Locations",
-      value: "08",
-      sub: "Gujarat Hub",
-      icon: MapPin,
-    },
+    { label: "Active", value: activeSession.slotId, icon: Car },
+    { label: "Sessions", value: bookings.length, icon: History },
+    { label: "Wallet", value: `₹${wallet.balance}`, icon: Wallet },
+    { label: "Nodes", value: "08", icon: MapPin },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {stats.map((stat, index) => (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      {stats.map((s, i) => (
         <div
-          key={index}
-          className="bg-white rounded-2xl p-6 border border-[#F5E7C6] shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+          key={i}
+          className="flex items-center gap-3 bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-2xl px-4 py-3"
         >
-          {/* Top Row */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="w-11 h-11 rounded-xl bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-              <stat.icon size={20} />
-            </div>
-
-            <ArrowUpRight
-              size={18}
-              className="text-[#6B6B6B] opacity-0 group-hover:opacity-100 transition"
-            />
+          <div className="w-9 h-9 rounded-xl bg-[#222222] text-[#FA8112] flex items-center justify-center">
+            <s.icon size={16} />
           </div>
 
-          {/* Content */}
           <div>
-            <p className="text-sm text-[#6B6B6B]">{stat.label}</p>
-
-            <h4 className="text-2xl font-semibold text-[#222222] mt-1">
-              {stat.value}
-            </h4>
-
-            <p className="text-xs text-[#6B6B6B] mt-1">{stat.sub}</p>
+            <p className="text-[9px] uppercase tracking-widest text-[#F5E7C6]/30">
+              {s.label}
+            </p>
+            <p className="text-sm font-black">{s.value}</p>
           </div>
         </div>
       ))}

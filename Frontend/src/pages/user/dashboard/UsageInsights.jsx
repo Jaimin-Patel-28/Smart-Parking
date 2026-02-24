@@ -1,64 +1,50 @@
 import React from "react";
-import { BarChart3, TrendingUp, Clock, CreditCard } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 
-const UsageInsights = () => {
+const UsageInsights = ({ stats }) => {
   const insights = [
     {
       label: "Monthly Bookings",
-      value: "18 / 25",
-      percent: 72,
-      icon: TrendingUp,
+      value: stats.monthlyBookings,
+      percent: stats.monthlyBookings * 10,
     },
     {
-      label: "Average Duration",
-      value: "3.5 hrs",
-      percent: 45,
-      icon: Clock,
+      label: "Avg Duration",
+      value: `${stats.avgDuration} hrs`,
+      percent: stats.avgDuration * 15,
     },
     {
       label: "Wallet Usage",
-      value: "₹1,240 spent",
+      value: `₹${stats.walletUsage}`,
       percent: 85,
-      icon: CreditCard,
     },
   ];
 
   return (
-    <section className="bg-white rounded-2xl p-6 shadow-sm border border-[#F5E7C6]">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-          <BarChart3 size={18} />
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#222222]">
-            Usage Insights
-          </h2>
-          <p className="text-sm text-[#6B6B6B]">Overview for February 2026</p>
-        </div>
+    <section className="flex flex-col gap-6 h-full">
+      <div className="flex items-center gap-3">
+        <BarChart3 size={20} className="text-[#FA8112]" />
+        <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight">
+          Analytics Board
+        </h3>
       </div>
 
-      {/* Insights */}
-      <div className="space-y-6">
-        {insights.map((item, index) => (
-          <div key={index}>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-md bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-                  <item.icon size={14} />
-                </div>
-                <span className="text-sm text-[#222222]">{item.label}</span>
-              </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 grow">
+        {insights.map((i, idx) => (
+          <div
+            key={idx}
+            className="bg-[#222222]/40 border border-[#F5E7C6]/10 rounded-2xl p-4"
+          >
+            <span className="text-[10px] uppercase text-[#FAF3E1]/30">
+              {i.label}
+            </span>
 
-              <span className="text-sm font-medium text-[#FA8112]">
-                {item.value}
-              </span>
-            </div>
+            <p className="text-xl font-black">{i.value}</p>
 
-            <div className="w-full h-2 bg-[#FAF3E1] rounded-full overflow-hidden border border-[#F5E7C6]">
+            <div className="h-1.5 bg-[#FAF3E1]/10 rounded-full overflow-hidden mt-3">
               <div
-                className="h-full bg-[#FA8112] rounded-full transition-all duration-500"
-                style={{ width: `${item.percent}%` }}
+                className="h-full bg-[#FA8112]"
+                style={{ width: `${i.percent}%` }}
               />
             </div>
           </div>

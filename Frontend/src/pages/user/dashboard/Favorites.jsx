@@ -1,73 +1,48 @@
 import React from "react";
-import { Heart, MapPin, Star, Navigation, Zap } from "lucide-react";
+import { Heart, MapPin, Navigation, Zap } from "lucide-react";
 
 const Favorites = () => {
   const favoriteLocation = {
     name: "Anand Central Mall",
     zone: "Zone A-1",
-    lastUsed: "2 days ago",
-    avgPrice: "₹20/hr",
+    price: "₹20/hr",
   };
 
   return (
-    <section className="bg-white rounded-2xl p-6 shadow-sm border border-[#F5E7C6]">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-            <Heart size={18} />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-[#222222]">
-              Favorite Spot
-            </h2>
-            <p className="text-sm text-[#6B6B6B]">Your most visited location</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1 text-xs text-[#FA8112] bg-[#FA8112]/10 px-3 py-1 rounded-full">
-          <Star size={14} />
-          Top Rated
-        </div>
+    <section className="flex flex-col gap-5">
+      <div className="flex items-center gap-3">
+        <Heart size={18} className="text-[#FA8112]" />
+        <h3 className="text-lg font-black uppercase tracking-tight">
+          Priority Node
+        </h3>
       </div>
 
-      {/* Location Card */}
-      <div className="bg-[#FAF3E1] rounded-xl p-5 mb-6 border border-[#F5E7C6]">
-        <div className="flex items-start justify-between gap-4">
+      <div className="bg-[#222222]/40 border border-[#F5E7C6]/10 rounded-2xl p-5 flex flex-col gap-4">
+        <div className="flex justify-between items-start">
           <div>
-            <div className="flex items-center gap-2 text-sm text-[#6B6B6B] mb-1">
-              <MapPin size={14} />
-              Most Visited
-            </div>
-
-            <p className="text-base font-medium text-[#222222]">
-              {favoriteLocation.name}
+            <p className="text-[10px] uppercase text-[#FAF3E1]/30">
+              Favorite Location
             </p>
-
-            <p className="text-sm text-[#6B6B6B] mt-1">
-              {favoriteLocation.zone} • {favoriteLocation.lastUsed}
+            <h4 className="text-lg font-black">{favoriteLocation.name}</h4>
+            <p className="text-[10px] uppercase text-[#FAF3E1]/30 mt-1">
+              {favoriteLocation.zone}
             </p>
           </div>
 
-          <div className="text-right">
-            <p className="text-base font-semibold text-[#FA8112]">
-              {favoriteLocation.avgPrice}
-            </p>
-            <p className="text-xs text-[#6B6B6B]">Avg. Rate</p>
-          </div>
+          <span className="text-[#FA8112] font-black text-sm">
+            {favoriteLocation.price}
+          </span>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-4">
-        <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#FA8112] hover:bg-[#e6730f] text-white rounded-lg text-sm transition">
-          <Zap size={16} />
-          Quick Book
-        </button>
+        <div className="flex gap-3">
+          <button className="flex-1 flex items-center justify-center gap-2 bg-[#FAF3E1] text-[#222222] py-3 rounded-xl font-black text-[10px] uppercase hover:bg-[#FA8112] hover:text-white">
+            <Zap size={14} /> Quick Book
+          </button>
 
-        <button className="p-3 border border-[#F5E7C6] rounded-lg text-[#6B6B6B] hover:bg-[#FAF3E1] transition">
-          <Navigation size={18} />
-        </button>
+          <button className="px-4 flex items-center justify-center bg-[#222222] border border-[#F5E7C6]/10 rounded-xl hover:border-[#FA8112]">
+            <Navigation size={16} />
+          </button>
+        </div>
       </div>
     </section>
   );
