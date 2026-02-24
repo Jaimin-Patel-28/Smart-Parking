@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import UserNavbar from "../components/sidebar/UserNavbar";
+import UserNavbar from "../components/UserNavbar";
 
 const UserLayout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
