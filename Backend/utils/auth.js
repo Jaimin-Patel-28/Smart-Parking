@@ -1,11 +1,17 @@
-export const isAuthenticated = () => {
+const isAuthenticated = () => {
   return localStorage.getItem("isAuth") === "true";
 };
 
-export const loginUser = () => {
+const loginUser = () => {
   localStorage.setItem("isAuth", "true");
 };
 
-export const logoutUser = () => {
+const logoutUser = () => {
   localStorage.removeItem("isAuth");
+};
+
+module.exports = {
+  isAuthenticated,
+  loginUser,
+  logoutUser,
 };

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     vehicleNumber: { type: String, unique: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export default mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);

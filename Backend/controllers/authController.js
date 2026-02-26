@@ -1,8 +1,9 @@
-import User from "../models/User.js";
-import bcrypt from "bcryptjs";
-import generateToken from "../utils/generateToken.js";
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const generateToken = require("../utils/generateToken");
 
-export const registerUser = async (req, res) => {
+// Register
+const registerUser = async (req, res) => {
   const { name, email, password, vehicleNumber } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -31,12 +32,13 @@ export const registerUser = async (req, res) => {
   });
 };
 
-export const loginUser = async (req, res) => {
+// Login
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(400).json({ message: "Invalid credentials" });
+    return res.status(400).json({ message: "User Not Registered!" });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -52,4 +54,9 @@ export const loginUser = async (req, res) => {
       email: user.email,
     },
   });
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
 };
