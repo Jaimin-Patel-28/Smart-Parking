@@ -1,15 +1,15 @@
-import NotificationsHeader from "./Notifications/NotificationsHeader";
-import NotificationsSummary from "./Notifications/NotificationsSummary";
-import NotificationsFilters from "./Notifications/NotificationsFilters";
-import NotificationsList from "./Notifications/NotificationsList";
-import BookingNotifications from "./Notifications/BookingNotifications";
-import WalletNotifications from "./Notifications/WalletNotifications";
-import SystemNotifications from "./Notifications/SystemNotifications";
-import NotificationDetails from "./Notifications/NotificationDetails";
-import NotificationPreferencesShortcut from "./Notifications/NotificationPreferencesShortcut";
-import NotificationsEmptyState from "./Notifications/NotificationsEmptyState";
-import NotificationsErrorState from "./Notifications/NotificationsErrorState";
-import NotificationsSupport from "./Notifications/NotificationsSupport";
+import NotificationsHeader from "../Modules/Notifications/NotificationsHeader";
+import NotificationsSummary from "../Modules/Notifications/NotificationsSummary";
+import NotificationsFilters from "../Modules/Notifications/NotificationsFilters";
+import NotificationsList from "../Modules/Notifications/NotificationsList";
+import BookingNotifications from "../Modules/Notifications/BookingNotifications";
+import WalletNotifications from "../Modules/Notifications/WalletNotifications";
+import SystemNotifications from "../Modules/Notifications/SystemNotifications";
+import NotificationDetails from "../Modules/Notifications/NotificationDetails";
+import NotificationPreferencesShortcut from "../Modules/Notifications/NotificationPreferencesShortcut";
+import NotificationsEmptyState from "../Modules/Notifications/NotificationsEmptyState";
+import NotificationsErrorState from "../Modules/Notifications/NotificationsErrorState";
+import NotificationsSupport from "../Modules/Notifications/NotificationsSupport";
 
 const Notifications = () => {
   // Mock state for Viva demonstration

@@ -1,16 +1,16 @@
 import React from "react";
-import PageHeader from "./Mybookings/PageHeader";
-import BookingSummary from "./Mybookings/BookingSummary";
-import FiltersSearch from "./Mybookings/FiltersSearch";
-import ActiveBookings from "./Mybookings/ActiveBookings";
-import UpcomingBookings from "./Mybookings/UpcomingBookings";
-import BookingHistory from "./Mybookings/BookingHistory";
-import BookingDetailsView from "./Mybookings/BookingDetailsView";
-import PaymentInfo from "./Mybookings/PaymentInfo";
-import BookingPolicies from "./Mybookings/BookingPolicies";
-import NotificationsAlerts from "./Mybookings/NotificationsAlerts";
-import SupportHelp from "./Mybookings/SupportHelp";
-import EmptyState from "./Mybookings/EmptyState";
+import PageHeader from "../Modules/Mybookings/PageHeader";
+import BookingSummary from "../Modules/Mybookings/BookingSummary";
+import FiltersSearch from "../Modules/Mybookings/FiltersSearch";
+import ActiveBookings from "../Modules/Mybookings/ActiveBookings";
+import UpcomingBookings from "../Modules/Mybookings/UpcomingBookings";
+import BookingHistory from "../Modules/Mybookings/BookingHistory";
+import BookingDetailsView from "../Modules/Mybookings/BookingDetailsView";
+import PaymentInfo from "../Modules/Mybookings/PaymentInfo";
+import BookingPolicies from "../Modules/Mybookings/BookingPolicies";
+import NotificationsAlerts from "../Modules/Mybookings/NotificationsAlerts";
+import SupportHelp from "../Modules/Mybookings/SupportHelp";
+import EmptyState from "../Modules/Mybookings/EmptyState";
 
 const MyBookingsPage = () => {
   return (

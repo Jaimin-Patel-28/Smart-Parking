@@ -1,14 +1,14 @@
 import React from "react";
-import ProfileHeader from "./Profile/ProfileHeader";
-import PersonalInfo from "./Profile/PersonalInfo";
-import VehicleInfo from "./Profile/VehicalInfo";
-import AccountSecurity from "./Profile/AccountSecurity";
-import WalletInfo from "./Profile/WalletInfo";
-import NotificationPreferences from "./Profile/NotificationPreferences";
-import AccountActivity from "./Profile/AccountActivity";
-import DataPrivacy from "./Profile/DataPrivacy";
-import Preferences from "./Profile/Preferences";
-import DangerZone from "./Profile/DangerZone";
+import ProfileHeader from "../Modules/Profile/ProfileHeader";
+import PersonalInfo from "../Modules/Profile/PersonalInfo";
+import VehicleInfo from "../Modules/Profile/VehicalInfo";
+import AccountSecurity from "../Modules/Profile/AccountSecurity";
+import WalletInfo from "../Modules/Profile/WalletInfo";
+import NotificationPreferences from "../Modules/Profile/NotificationPreferences";
+import AccountActivity from "../Modules/Profile/AccountActivity";
+import DataPrivacy from "../Modules/Profile/DataPrivacy";
+import Preferences from "../Modules/Profile/Preferences";
+import DangerZone from "../Modules/Profile/DangerZone";
 
 const ProfilePage = () => {
   return (

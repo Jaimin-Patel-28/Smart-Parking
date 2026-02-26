@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import SummaryCards from "./dashboard/SummaryCards";
-import ActiveParkingStatus from "./dashboard/ActiveParkingStatus";
-import QuickActions from "./dashboard/QuickActions";
-import BookingOverview from "./dashboard/BookingOverview";
-import WalletSnapshot from "./dashboard/WalletSnapshot";
-import Notifications from "./dashboard/Notifications";
-import UsageInsights from "./dashboard/UsageInsights";
-import Favorites from "./dashboard/Favorites";
-import ProfileTips from "./dashboard/ProfileTips";
-import HelpSupport from "./dashboard/HelpSupport";
+import SummaryCards from "../Modules/dashboard/SummaryCards";
+import ActiveParkingStatus from "../Modules/dashboard/ActiveParkingStatus";
+import QuickActions from "../Modules/dashboard/QuickActions";
+import BookingOverview from "../Modules/dashboard/BookingOverview";
+import WalletSnapshot from "../Modules/dashboard/WalletSnapshot";
+import Notifications from "../Modules/dashboard/Notifications";
+import UsageInsights from "../Modules/dashboard/UsageInsights";
+import Favorites from "../Modules/dashboard/Favorites";
+import ProfileTips from "../Modules/dashboard/ProfileTips";
+import HelpSupport from "../Modules/dashboard/HelpSupport";
 
 const Dashboard = () => {
   /* =========================
@@ -82,13 +82,9 @@ const Dashboard = () => {
   }, []);
 
   const analyticsStats = {
-    monthlyBookings: smartParkState.bookings.length,
-    avgDuration: Math.floor(
-      (smartParkState.activeSession.totalDuration -
-        smartParkState.activeSession.remaining) /
-        3600,
-    ),
-    walletUsage: smartParkState.wallet.totalUsage,
+    monthlyBookings: smartParkState.bookings.length, //monthly booking count
+    avgDuration: Math.floor((smartParkState.activeSession.totalDuration - smartParkState.activeSession.remaining) / 3600,), //average session duration in hours
+    walletUsage: smartParkState.wallet.totalUsage, //total wallet outflow
   };
 
   return (

@@ -20,7 +20,7 @@ const About = () => {
       <AboutHero />
 
       {/* 2. Core Purpose (Mission & Vision): Using the warmer Beige background */}
-      <section className="py-20 md:py-32 bg-[#F5E7C6]">
+      <section className="min-h-[calc(100vh-70px)] py-10 md:py-16 bg-[#F5E7C6]">
         <div className="container mx-auto px-6 md:px-12">
           <MissionVision />
         </div>

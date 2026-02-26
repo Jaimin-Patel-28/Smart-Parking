@@ -1,17 +1,17 @@
 import React from "react";
-import WalletHeader from "./Wallet/WalletHeader";
-import WalletOverview from "./wallet/WalletOverview";
-import WalletQuickActions from "./wallet/WalletQuickActions";
-import AddMoney from "./wallet/AddMoney";
-import TransactionSummary from "./wallet/TransactionSummary";
-import RecentTransactions from "./wallet/RecentTransactions";
-import LinkedPaymentInfo from "./wallet/LinkedPaymentInfo";
-import WalletInsights from "./wallet/WalletInsights";
-import WalletRules from "./wallet/WalletRules";
-import WalletNotifications from "./wallet/WalletNotifications";
-import WalletEmptyState from "./wallet/WalletEmptyState";
-import WalletErrorState from "./wallet/WalletErrorState";
-import WalletSupport from "./wallet/WalletSupport";
+import WalletHeader from "../Modules/Wallet/WalletHeader";
+import WalletOverview from "../Modules/wallet/WalletOverview";
+import WalletQuickActions from "../Modules/wallet/WalletQuickActions";
+import AddMoney from "../Modules/wallet/AddMoney";
+import TransactionSummary from "../Modules/wallet/TransactionSummary";
+import RecentTransactions from "../Modules/wallet/RecentTransactions";
+import LinkedPaymentInfo from "../Modules/wallet/LinkedPaymentInfo";
+import WalletInsights from "../Modules/wallet/WalletInsights";
+import WalletRules from "../Modules/wallet/WalletRules";
+import WalletNotifications from "../Modules/wallet/WalletNotifications";
+import WalletEmptyState from "../Modules/wallet/WalletEmptyState";
+import WalletErrorState from "../Modules/wallet/WalletErrorState";
+import WalletSupport from "../Modules/wallet/WalletSupport";
 
 const WalletHub = () => {
   const hasTransactions = true; // State toggle for Empty/Error views

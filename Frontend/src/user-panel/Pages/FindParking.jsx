@@ -1,17 +1,17 @@
-import FindParkingHeader from "./Findparking/FindParkingHeader";
-import LocationSearch from "./Findparking/LocationSearch";
-import DateTimeSelector from "./Findparking/DateTimeSelector";
-import VehicleSelector from "./Findparking/VehicleSelector";
-import ParkingResults from "./Findparking/ParkingResults";
-import ParkingDetails from "./Findparking/ParkingDetails";
-import SlotSelection from "./Findparking/SlotSelection";
-import PriceSummary from "./Findparking/PriceSummary";
-import BookingActions from "./Findparking/BookingActions";
-import BookingRules from "./Findparking/BookingRules";
-import BookingConfirmation from "./Findparking/BookingConfirmation";
-import EmptyState from "./Findparking/EmptyState";
-import ErrorState from "./Findparking/ErrorState";
-import SupportShortcut from "./Findparking/SupportShortcut";
+import FindParkingHeader from "../Modules/Findparking/FindParkingHeader";
+import LocationSearch from "../Modules/Findparking/LocationSearch";
+import DateTimeSelector from "../Modules/Findparking/DateTimeSelector";
+import VehicleSelector from "../Modules/Findparking/VehicleSelector";
+import ParkingResults from "../Modules/Findparking/ParkingResults";
+import ParkingDetails from "../Modules/Findparking/ParkingDetails";
+import SlotSelection from "../Modules/Findparking/SlotSelection";
+import PriceSummary from "../Modules/Findparking/PriceSummary";
+import BookingActions from "../Modules/Findparking/BookingActions";
+import BookingRules from "../Modules/Findparking/BookingRules";
+import BookingConfirmation from "../Modules/Findparking/BookingConfirmation";
+import EmptyState from "../Modules/Findparking/EmptyState";
+import ErrorState from "../Modules/Findparking/ErrorState";
+import SupportShortcut from "../Modules/Findparking/SupportShortcut";
 
 const FindParking = () => {
   const hasResults = true; // Logic to toggle EmptyState/ErrorState
