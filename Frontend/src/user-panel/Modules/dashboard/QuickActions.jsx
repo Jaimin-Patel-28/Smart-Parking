@@ -8,7 +8,7 @@ const QuickActions = () => {
   const actions = [
     { icon: Search, label: "Find", route: "/user/find-parking" },
     { icon: PlusCircle, label: "Book", route: "/user/find-parking" },
-    { icon: CalendarDays, label: "Sessions", route: "/user/bookings" },
+    { icon: CalendarDays, label: "Sessions", route: "/user/my-bookings" },
     { icon: Wallet, label: "Wallet", route: "/user/wallet" },
   ];
 

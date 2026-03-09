@@ -30,7 +30,7 @@ const ActiveParkingStatus = ({ activeSession }) => {
         </div>
 
         <button
-          onClick={() => navigate("/user/bookings/edit-session")}
+          onClick={() => navigate("/user/my-bookings/edit-session")}
           className="flex items-center gap-2 bg-[#FAF3E1] text-[#222222] px-5 py-3 rounded-xl font-black text-[10px] uppercase hover:bg-[#FA8112] hover:text-white"
         >
           Modify <ChevronRight size={14} />

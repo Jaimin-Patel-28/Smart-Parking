@@ -157,7 +157,7 @@ const UserNavbar = () => {
   const navLinks = [
     { to: ".", label: "Dashboard", end: true },
     { to: "find-parking", label: "Find Parking" },
-    { to: "bookings", label: "My Bookings" },
+    { to: "my-bookings", label: "My Bookings" },
     { to: "wallet", label: "Wallet Hub" },
     { to: "help", label: "Help Center", icon: <LifeBuoy size={18} /> },
   ];
