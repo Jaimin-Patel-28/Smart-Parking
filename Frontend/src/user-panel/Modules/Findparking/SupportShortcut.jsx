@@ -10,84 +10,80 @@ import {
 
 const SupportShortcut = () => {
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl backdrop-blur-xl group transition-all duration-500 hover:border-blue-500/20 relative overflow-hidden">
-      {/* 1. SECTION HEADER: "Small & Perfect" labeling */}
-      <div className="flex items-center justify-between mb-8 relative z-10">
+    <div className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+      {/* 🟠 Header Section */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="shrink-0 p-3 bg-blue-500/10 rounded-2xl text-blue-400 group-hover:rotate-12 transition-transform duration-500">
-            <LifeBuoy size={22} />
+          <div className="p-3 bg-[#FA8112]/20 rounded-2xl text-[#FA8112]">
+            <LifeBuoy size={24} className="animate-spin-slow" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter leading-none">
+            <h2 className="text-xl font-black tracking-tight text-[#FAF3E1]">
               Need Help?
             </h2>
-            <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">
+            <p className="text-[#FAF3E1]/40 text-[10px] uppercase tracking-[0.3em] font-bold">
               Assistance Node v1.0
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/5 border border-blue-500/10 rounded-full">
-          <Zap size={10} className="text-blue-400 animate-pulse" />
-          <span className="text-[8px] font-black text-blue-400 uppercase tracking-widest">
+
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#FA8112]/5 border border-[#FA8112]/20 rounded-full">
+          <Zap size={12} className="text-[#FA8112] fill-[#FA8112]" />
+          <span className="text-[9px] font-black text-[#FA8112] uppercase tracking-widest">
             24/7 Live
           </span>
         </div>
       </div>
 
-      <div className="space-y-4 relative z-10">
-        {/* 2. INTERACTIVE ACTIONS: Content-rich buttons with metadata */}
-        <button className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-950/60 border border-white/5 hover:border-rose-500/30 hover:bg-slate-950 transition-all group/btn shadow-inner">
-          <div className="flex items-center gap-4">
-            <div className="shrink-0 p-3 rounded-xl bg-rose-500/10 text-rose-400 group-hover/btn:scale-110 transition-transform">
-              <AlertCircle size={20} />
-            </div>
-            <div className="text-left">
-              <p className="text-[11px] font-black text-white uppercase tracking-wider mb-0.5">
-                Report Parking Issue
-              </p>
-              <p className="text-[9px] font-bold text-slate-600 uppercase tracking-tight">
-                Technical or Slot Discrepancy
-              </p>
-            </div>
+      {/* 🟠 Support Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Report Issue Button */}
+        <button className="group flex items-center gap-4 p-5 rounded-[1.5rem] bg-[#222222] border border-red-500/10 hover:border-red-500/40 hover:bg-red-500/[0.02] transition-all text-left">
+          <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover:scale-110 transition-transform">
+            <AlertCircle size={20} />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-black text-[#FAF3E1] uppercase tracking-tight">
+              Report Issue
+            </p>
+            <p className="text-[10px] text-[#FAF3E1]/30 font-medium">
+              Technical or Slot Discrepancy
+            </p>
           </div>
           <ChevronRight
-            size={14}
-            className="text-slate-800 group-hover/btn:text-rose-500 group-hover/btn:translate-x-1 transition-all"
+            size={18}
+            className="text-[#FAF3E1]/10 group-hover:text-red-500 group-hover:translate-x-1 transition-all"
           />
         </button>
 
-        <button className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-950/60 border border-white/5 hover:border-blue-500/30 hover:bg-slate-950 transition-all group/btn shadow-inner">
-          <div className="flex items-center gap-4">
-            <div className="shrink-0 p-3 rounded-xl bg-blue-500/10 text-blue-400 group-hover/btn:scale-110 transition-transform">
-              <Headphones size={20} />
-            </div>
-            <div className="text-left">
-              <p className="text-[11px] font-black text-white uppercase tracking-wider mb-0.5">
-                Contact Support
-              </p>
-              <p className="text-[9px] font-bold text-slate-600 uppercase tracking-tight">
-                Direct Node Assistance
-              </p>
-            </div>
+        {/* Contact Support Button */}
+        <button className="group flex items-center gap-4 p-5 rounded-[1.5rem] bg-[#222222] border border-[#F5E7C6]/5 hover:border-[#FA8112]/40 hover:bg-[#FA8112]/[0.02] transition-all text-left">
+          <div className="p-3 bg-[#FA8112]/10 rounded-xl text-[#FA8112] group-hover:scale-110 transition-transform">
+            <Headphones size={20} />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-black text-[#FAF3E1] uppercase tracking-tight">
+              Contact Node
+            </p>
+            <p className="text-[10px] text-[#FAF3E1]/30 font-medium">
+              Direct Human Assistance
+            </p>
           </div>
           <ChevronRight
-            size={14}
-            className="text-slate-800 group-hover/btn:text-blue-400 group-hover/btn:translate-x-1 transition-all"
+            size={18}
+            className="text-[#FAF3E1]/10 group-hover:text-[#FA8112] group-hover:translate-x-1 transition-all"
           />
         </button>
-
-        {/* 3. QUICK RESPONSE METADATA */}
-        <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-center gap-3 opacity-20">
-          <MessageSquare size={12} className="text-slate-500" />
-          <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">
-            Avg Response: 2 Mins
-          </span>
-        </div>
       </div>
 
-      {/* Decorative Glow */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 blur-[80px] -z-10 group-hover:bg-blue-500/10 transition-all duration-700" />
-    </section>
+      {/* 🟠 Status Footer */}
+      <div className="flex items-center justify-center gap-2 text-[#FAF3E1]/20">
+        <MessageSquare size={12} />
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+          Avg Response: <span className="text-[#4ADE80]">2 Mins</span>
+        </span>
+      </div>
+    </div>
   );
 };
 

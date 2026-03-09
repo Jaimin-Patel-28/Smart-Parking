@@ -8,123 +8,184 @@ import {
   Clock,
   ShieldCheck,
   ChevronRight,
+  TrendingUp,
 } from "lucide-react";
 
-const PriceSummary = () => {
+const PriceSummary = ({ selection }) => {
+  // Constants (These could eventually come from selection.selectedNode)
+  const baseRate = 20;
+
+  // Parse duration from selection
+  const parseDuration = (durationStr) => {
+    if (!durationStr || durationStr === "Invalid Range") return 2.5;
+    const match = durationStr.match(/(\d+):(\d+)/);
+    if (match) {
+      const hours = parseInt(match[1]);
+      const minutes = parseInt(match[2]);
+      return hours + minutes / 60;
+    }
+    return 2.5;
+  };
+
+  const durationHours = parseDuration(selection?.duration);
+  const smartFee = 5;
+
+  // Dynamic Calculation
+  const subTotal = baseRate * durationHours;
+  const totalLiability = subTotal + smartFee;
+  const walletBalance = 450.0;
+  const isSufficient = walletBalance >= totalLiability;
+
+  // 🟢 Logic Check: Is a slot actually selected?
+  const hasActiveSlot = !!selection?.slotId;
+
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl backdrop-blur-xl group transition-all duration-500 hover:border-emerald-500/20 relative overflow-hidden h-full flex flex-col justify-between">
-      {/* 1. SECTION HEADER: Financial metadata */}
-      <div className="flex items-center justify-between mb-8">
+    <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* 🟢 Header: Identity */}
+      <div className="flex justify-between items-start border-b border-[#F5E7C6]/10 pb-6">
         <div className="flex items-center gap-4">
-          <div className="shrink-0 p-3 bg-emerald-500/10 rounded-2xl text-emerald-400 group-hover:rotate-12 transition-transform duration-500">
+          <div className="p-2.5 bg-[#FA8112]/20 rounded-xl text-[#FA8112]">
             <CreditCard size={22} />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter leading-none">
+            <h2 className="text-2xl font-black tracking-tight text-[#FAF3E1]">
               Price Summary
             </h2>
-            <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">
-              Settlement Node
+            <p className="text-[#FAF3E1]/40 text-[10px] uppercase tracking-[0.3em] font-bold">
+              Settlement Node v1.0.4
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-full">
-          <ShieldCheck size={10} className="text-emerald-500" />
-          <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">
+        <div className="flex items-center gap-2 bg-[#4ADE80]/10 border border-[#4ADE80]/20 px-3 py-1 rounded-full">
+          <ShieldCheck size={12} className="text-[#4ADE80]" />
+          <span className="text-[10px] font-black text-[#4ADE80] uppercase">
             Verified Rate
           </span>
         </div>
       </div>
 
-      <div className="space-y-6 relative z-10">
-        {/* 2. TRANSACTION CONTEXT: High-density info rows */}
-        <div className="space-y-4 bg-slate-950/40 border border-white/5 rounded-2xl p-5 shadow-inner">
-          <PriceDetail
-            icon={MapPin}
-            label="Location Node"
-            value="Anand Central Hub"
-          />
-          <PriceDetail icon={Hash} label="Target Slot" value="Slot P-104" />
-          <PriceDetail icon={Clock} label="Duration" value="02:30 Hrs" />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* 🟢 Left: Parameters & Financials */}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-3">
+            <PriceDetail
+              icon={MapPin}
+              label="Location Node"
+              value={selection?.selectedNode?.name || "Anand Central Hub"}
+            />
 
-        {/* 3. CALCULATION ENGINE: Content-rich breakdown */}
-        <div className="space-y-3 px-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-              Base Rate (₹20/hr)
-            </span>
-            <span className="text-[11px] font-bold text-white uppercase tracking-tighter">
-              ₹50.00
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-              Smart Fee
-            </span>
-            <span className="text-[11px] font-bold text-white uppercase tracking-tighter">
-              ₹05.00
-            </span>
-          </div>
-          <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Calculator size={12} className="text-blue-400" />
-              <span className="text-[10px] font-black text-white uppercase tracking-widest">
-                Total Liability
-              </span>
-            </div>
-            <span className="text-2xl font-black text-white tracking-tighter">
-              ₹55.00
-            </span>
-          </div>
-        </div>
+            {/* 🟢 Target Slot: Highlighted when active */}
+            <PriceDetail
+              icon={Hash}
+              label="Target Slot"
+              value={hasActiveSlot ? selection.slotId : "Not Selected"}
+              highlight={hasActiveSlot}
+            />
 
-        {/* 4. WALLET AUDIT: Real-time balance check */}
-        <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex items-center justify-between group/wallet cursor-pointer">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-              <Wallet size={16} />
-            </div>
-            <div>
-              <p className="text-[8px] font-black text-emerald-400/60 uppercase tracking-widest">
-                Wallet Balance
-              </p>
-              <h4 className="text-[11px] font-black text-white uppercase tracking-wider">
-                ₹450.00
-              </h4>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">
-              Sufficient
-            </span>
-            <ChevronRight
-              size={12}
-              className="text-slate-700 group-hover/wallet:translate-x-1 transition-all"
+            <PriceDetail
+              icon={Clock}
+              label="Duration"
+              value={`${durationHours} Hrs`}
             />
           </div>
+
+          {/* Cost Breakdown Card */}
+          <div className="bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded-2xl p-5 space-y-4">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-[#FAF3E1]/40">
+                Base Rate (₹{baseRate}/hr)
+              </span>
+              <span className="text-[#FAF3E1] font-mono font-bold">
+                ₹{subTotal.toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-[#FAF3E1]/40">Smart Utility Fee</span>
+                <TrendingUp size={12} className="text-[#FA8112]" />
+              </div>
+              <span className="text-[#FAF3E1] font-mono font-bold">
+                ₹{smartFee.toFixed(2)}
+              </span>
+            </div>
+
+            <div className="pt-4 border-t border-[#F5E7C6]/10 flex justify-between items-center">
+              <div className="flex items-center gap-2 text-[#FA8112]">
+                <Calculator size={18} />
+                <span className="text-xs font-black uppercase tracking-widest">
+                  Total Liability
+                </span>
+              </div>
+              <span className="text-3xl font-black text-[#FAF3E1]">
+                ₹{totalLiability.toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 🟢 Right: Wallet & Auth */}
+        <div className="flex flex-col gap-6">
+          <div
+            className={`bg-[#222222] border-2 rounded-[2.5rem] p-8 relative overflow-hidden group transition-all 
+            ${isSufficient ? "border-[#FA8112]/20 hover:border-[#FA8112]/40" : "border-red-500/40"}`}
+          >
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-[#FAF3E1]/40">
+                  <Wallet size={16} />
+                  <p className="text-[10px] uppercase font-bold tracking-widest">
+                    Available Balance
+                  </p>
+                </div>
+                <h4 className="text-4xl font-black text-[#FAF3E1]">
+                  ₹{walletBalance.toFixed(2)}
+                </h4>
+              </div>
+              <div
+                className={`px-3 py-1 text-[10px] font-black rounded-lg uppercase tracking-widest 
+                ${isSufficient ? "bg-[#4ADE80]/20 text-[#4ADE80]" : "bg-red-500/20 text-red-500"}`}
+              >
+                {isSufficient ? "Sufficient" : "Low Balance"}
+              </div>
+            </div>
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#FA8112]/10 blur-[50px] rounded-full group-hover:bg-[#FA8112]/20 transition-all" />
+          </div>
+
+          <button
+            disabled={!hasActiveSlot || !isSufficient}
+            className="w-full group bg-[#FA8112] disabled:opacity-20 disabled:grayscale hover:bg-[#fa8e2e] text-[#222222] py-6 rounded-[2rem] font-black uppercase tracking-[0.25em] flex items-center justify-center gap-4 transition-all shadow-[0_20px_40px_rgba(250,129,18,0.2)]"
+          >
+            <span>Authorize Settlement</span>
+            <ChevronRight
+              size={20}
+              className="group-hover:translate-x-2 transition-transform"
+            />
+          </button>
         </div>
       </div>
-
-      {/* Decorative Glow */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 blur-[80px] -z-10 group-hover:bg-emerald-500/10 transition-all duration-700" />
-    </section>
+    </div>
   );
 };
 
-/* REUSABLE DETAIL ROW */
-const PriceDetail = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center justify-between group/row">
+// 🟢 Reusable Price Detail Row with Highlight Logic
+const PriceDetail = ({ icon: Icon, label, value, highlight }) => (
+  <div
+    className={`flex items-center justify-between p-4 bg-[#FAF3E1]/[0.03] border rounded-xl transition-all
+    ${highlight ? "border-[#FA8112]/40 bg-[#FA8112]/5" : "border-[#F5E7C6]/5"}`}
+  >
     <div className="flex items-center gap-3">
-      <Icon
-        size={14}
-        className="text-slate-600 group-hover/row:text-emerald-400 transition-colors"
-      />
-      <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">
+      <div
+        className={`p-1.5 rounded-lg ${highlight ? "bg-[#FA8112] text-[#222222]" : "bg-[#222222] text-[#FA8112]/60"}`}
+      >
+        <Icon size={16} />
+      </div>
+      <span className="text-[10px] font-bold uppercase tracking-widest text-[#FAF3E1]/30">
         {label}
       </span>
     </div>
-    <span className="text-[10px] font-black text-white uppercase tracking-tighter">
+    <span
+      className={`text-xs font-bold uppercase tracking-tighter ${highlight ? "text-[#FA8112] scale-110" : "text-[#FAF3E1]"}`}
+    >
       {value}
     </span>
   </div>

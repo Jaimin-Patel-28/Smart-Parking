@@ -8,111 +8,90 @@ import {
   Zap,
 } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
-
-const BookingActions = () => {
-
-    const navigate = useNavigate();
-
-    const handleConfirmBooking = async () =>{
-      // await createBooking();
-
-      navigate("/dashboard/bookings");
-    }
-
+const BookingActions = ({ onConfirm, onChangeSlot, onCancel }) => {
   return (
-    <section className="bg-slate-900/60 border border-white/5 rounded-[2.5rem] p-8 lg:p-10 shadow-2xl backdrop-blur-2xl group transition-all duration-500 relative overflow-hidden">
-      {/* 1. HEADER: Small & Perfect operational labeling */}
-      <div className="flex items-center justify-between mb-10 relative z-10">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* 🟠 Header Section */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="shrink-0 p-3 bg-blue-500/10 rounded-2xl text-blue-400 group-hover:rotate-12 transition-transform duration-500">
-            <Zap size={22} className="fill-blue-400/10" />
+          <div className="p-3 bg-[#FA8112]/20 rounded-2xl text-[#FA8112]">
+            <Zap size={24} className="fill-[#FA8112]/20" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter leading-none">
+            <h2 className="text-2xl font-black tracking-tight text-[#FAF3E1]">
               Execution Node
             </h2>
-            <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">
+            <p className="text-[#FAF3E1]/40 text-[10px] uppercase tracking-[0.3em] font-bold">
               Final Command Phase
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/5 border border-blue-500/10 rounded-xl">
-          <ShieldCheck size={12} className="text-blue-400" />
-          <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest">
+
+        <div className="flex items-center gap-2 px-4 py-2 bg-[#4ADE80]/5 border border-[#4ADE80]/20 rounded-full">
+          <ShieldCheck size={14} className="text-[#4ADE80]" />
+          <span className="text-[10px] font-black text-[#4ADE80] uppercase tracking-widest">
             Ready
           </span>
         </div>
       </div>
 
-      <div className="space-y-4 relative z-10">
-        {/* 2. PRIMARY ACTION: High-impact Confirm */}
-        <button 
-        onClick={handleConfirmBooking}
-        className="w-full group/main relative overflow-hidden flex items-center justify-between p-6 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl shadow-xl shadow-blue-600/20 transition-all active:scale-95">
-          <div className="flex items-center gap-4">
-            <CheckCircle2
-              size={24}
-              className="group-hover/main:scale-110 transition-transform"
-            />
-            <div className="text-left">
-              <span className="block text-[10px] font-black uppercase tracking-[0.2em] opacity-60">
-                Initialize Transaction
-              </span>
-              <span className="text-lg font-black uppercase tracking-tighter">
-                Confirm Booking
-              </span>
-            </div>
-          </div>
-          <ArrowRight
-            size={20}
-            className="group-hover/main:translate-x-2 transition-transform"
+      {/* 🟠 Primary Action: Initialize */}
+      <button
+        onClick={onConfirm}
+        className="group relative w-full flex items-center justify-between bg-[#FA8112] text-[#222222] p-2 rounded-[2.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-[#FA8112]/20 overflow-hidden"
+      >
+        <div className="flex items-center gap-4 ml-6">
+          <CheckCircle2
+            size={24}
+            className="group-hover:rotate-[360deg] transition-transform duration-500"
           />
-          {/* Animated background glow for the button */}
-          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/main:translate-x-full transition-transform duration-1000" />
+          <div className="flex flex-col items-start">
+            <span className="text-[10px] font-black uppercase tracking-tighter opacity-60">
+              Initialize Transaction
+            </span>
+            <span className="text-xl font-black uppercase">
+              Confirm Booking
+            </span>
+          </div>
+        </div>
+        <div className="bg-[#222222] text-[#FA8112] p-5 rounded-full mr-1 group-hover:translate-x-1 transition-transform">
+          <ArrowRight size={24} />
+        </div>
+      </button>
+
+      {/* 🟠 Secondary Actions: Grid */}
+      <div className="grid grid-cols-2 gap-4">
+        <button
+          onClick={onChangeSlot}
+          className="flex items-center justify-center gap-3 py-5 rounded-[1.5rem] border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] text-[#FAF3E1]/60 font-black text-sm hover:bg-[#FAF3E1]/5 hover:text-[#FAF3E1] transition-all"
+        >
+          <RefreshCw size={18} />
+          <span>CHANGE SLOT</span>
         </button>
 
-        {/* 3. SECONDARY ACTIONS: Organized grid */}
-        <div className="grid grid-cols-2 gap-4 pt-2">
-          <button className="flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl text-slate-400 hover:text-white transition-all group/btn">
-            <RefreshCw
-              size={16}
-              className="group-hover/btn:rotate-180 transition-transform duration-700"
-            />
-            <span className="text-[9px] font-black uppercase tracking-widest">
-              Change Slot
-            </span>
-          </button>
-
-          <button className="flex items-center justify-center gap-3 py-4 bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/10 rounded-2xl text-rose-500/60 hover:text-rose-500 transition-all group/cancel">
-            <XCircle
-              size={16}
-              className="group-hover/cancel:scale-110 transition-transform"
-            />
-            <span className="text-[9px] font-black uppercase tracking-widest">
-              Cancel All
-            </span>
-          </button>
-        </div>
-
-        {/* 4. FOOTER: Verification metadata */}
-        <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-center gap-4 opacity-30">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={10} className="text-slate-500" />
-            <p className="text-[8px] font-black uppercase tracking-widest">
-              Secure Handshake
-            </p>
-          </div>
-          <div className="w-1 h-1 rounded-full bg-slate-700" />
-          <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">
-            v2.0.4 Encrypted
-          </p>
-        </div>
+        <button
+          onClick={onCancel}
+          className="flex items-center justify-center gap-3 py-5 rounded-[1.5rem] border border-red-500/10 bg-red-500/[0.02] text-red-500/60 font-black text-sm hover:bg-red-500/10 hover:text-red-500 transition-all"
+        >
+          <XCircle size={18} />
+          <span>CANCEL ALL</span>
+        </button>
       </div>
 
-      {/* Decorative Glow */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] -z-10 group-hover:bg-blue-500/10 transition-all duration-700" />
-    </section>
+      {/* 🟠 Footer Security Info */}
+      <div className="flex items-center justify-center gap-6 pt-4 border-t border-[#F5E7C6]/5">
+        <div className="flex items-center gap-2 text-[#FAF3E1]/20">
+          <ShieldCheck size={14} />
+          <p className="text-[10px] font-bold uppercase tracking-widest">
+            Secure Handshake
+          </p>
+        </div>
+        <div className="h-1 w-1 rounded-full bg-[#FAF3E1]/10" />
+        <p className="text-[10px] font-black text-[#FA8112]/40 tracking-widest uppercase">
+          v2.0.4 Encrypted
+        </p>
+      </div>
+    </div>
   );
 };
 

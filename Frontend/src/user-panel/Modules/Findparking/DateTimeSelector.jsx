@@ -1,119 +1,182 @@
-import React from "react";
-import {
-  Calendar,
-  Clock,
-  Hourglass,
-  Timer,
-  ChevronRight,
-  Info,
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Calendar, Clock, Hourglass, Info, AlertCircle } from "lucide-react";
 
-const DateTimeSelector = () => {
+const DateTimeSelector = ({
+  bookingDate,
+  startTime,
+  endTime,
+  duration,
+  onUpdate,
+}) => {
+  const [localBookingDate, setLocalBookingDate] = useState(
+    bookingDate || new Date().toISOString().split("T")[0],
+  );
+  const [localStartTime, setLocalStartTime] = useState(startTime || "09:00");
+  const [localEndTime, setLocalEndTime] = useState(endTime || "11:30");
+  const [localDuration, setLocalDuration] = useState(duration || "02:30 Hrs");
+
+  // 1. Logic to calculate duration and update parent ONLY when local state changes
+  useEffect(() => {
+    if (localStartTime && localEndTime) {
+      const [startH, startM] = localStartTime.split(":").map(Number);
+      const [endH, endM] = localEndTime.split(":").map(Number);
+
+      const startTotalMinutes = startH * 60 + startM;
+      const endTotalMinutes = endH * 60 + endM;
+
+      if (endTotalMinutes > startTotalMinutes) {
+        const diff = endTotalMinutes - startTotalMinutes;
+        const hours = Math.floor(diff / 60);
+        const minutes = diff % 60;
+        const newDuration = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} Hrs`;
+
+        setLocalDuration(newDuration);
+
+        // 🟢 GUARD: Only call onUpdate if the values are actually different from the props
+        // This stops the infinite loop
+        if (
+          localBookingDate !== bookingDate ||
+          localStartTime !== startTime ||
+          localEndTime !== endTime ||
+          newDuration !== duration
+        ) {
+          onUpdate({
+            bookingDate: localBookingDate,
+            startTime: localStartTime,
+            endTime: localEndTime,
+            duration: newDuration,
+          });
+        }
+      } else {
+        setLocalDuration("Invalid Range");
+      }
+    }
+    // 🟢 Removed 'onUpdate' from dependencies to prevent re-triggering the loop
+  }, [localStartTime, localEndTime, localBookingDate]);
+
+  // 2. Sync local state IF props change from outside (e.g., reset or navigation)
+  useEffect(() => {
+    if (bookingDate && bookingDate !== localBookingDate)
+      setLocalBookingDate(bookingDate);
+    if (startTime && startTime !== localStartTime) setLocalStartTime(startTime);
+    if (endTime && endTime !== localEndTime) setLocalEndTime(endTime);
+    if (duration && duration !== localDuration) setLocalDuration(duration);
+  }, [bookingDate, startTime, endTime, duration]);
+
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl backdrop-blur-xl group transition-all duration-500 hover:border-indigo-500/20 relative overflow-hidden h-full flex flex-col justify-between">
-      {/* 1. SECTION HEADER: "Small & Perfect" labeling */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="shrink-0 p-3 bg-indigo-500/10 rounded-2xl text-indigo-400 group-hover:rotate-12 transition-transform duration-500">
-            <Calendar size={22} />
-          </div>
-          <div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter leading-none">
-              Date & Time
-            </h2>
-            <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">
-              Timeline Node
-            </p>
-          </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-[#FA8112]/20 rounded-lg">
+          <Calendar className="text-[#FA8112]" size={20} />
         </div>
-        <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/5 border border-indigo-500/10 rounded-full">
-          <Timer size={10} className="text-indigo-500 animate-pulse" />
-          <span className="text-[8px] font-black text-indigo-500 uppercase tracking-widest">
-            Live Sync
-          </span>
-        </div>
-      </div>
-
-      <div className="space-y-6 relative z-10">
-        {/* 2. DATE SELECTION: Cinematic focus with icon */}
-        <div className="relative group/input">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/input:text-indigo-400 transition-colors">
-            <Calendar size={18} />
-          </div>
-          <input
-            type="date"
-            className="w-full bg-slate-950/60 border border-white/5 rounded-2xl py-4 pl-12 pr-6 text-xs font-black text-white uppercase focus:outline-none focus:border-indigo-500/50 transition-all shadow-inner scheme-dark"
-          />
-        </div>
-
-        {/* 3. TIME RANGE: Split row for start/end */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="relative group/time">
-            <p className="absolute -top-2 left-4 px-2 bg-slate-900 text-[8px] font-black text-slate-500 uppercase tracking-widest z-20">
-              Start Node
-            </p>
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/time:text-blue-400">
-              <Clock size={16} />
-            </div>
-            <input
-              type="time"
-              className="w-full bg-slate-950/60 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-xs font-black text-white uppercase focus:outline-none focus:border-blue-500/50 transition-all shadow-inner scheme-dark"
-            />
-          </div>
-          <div className="relative group/time">
-            <p className="absolute -top-2 left-4 px-2 bg-slate-900 text-[8px] font-black text-slate-500 uppercase tracking-widest z-20">
-              End Node
-            </p>
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/time:text-rose-400">
-              <Clock size={16} />
-            </div>
-            <input
-              type="time"
-              className="w-full bg-slate-950/60 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-xs font-black text-white uppercase focus:outline-none focus:border-rose-500/50 transition-all shadow-inner scheme-dark"
-            />
-          </div>
-        </div>
-
-        {/* 4. DURATION ANALYTICS: High-density data node */}
-        <div className="p-5 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl flex items-center justify-between group/duration">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
-              <Hourglass
-                size={14}
-                className="group-hover/duration:rotate-180 transition-transform duration-700"
-              />
-            </div>
-            <div>
-              <p className="text-[8px] font-black text-indigo-400/60 uppercase tracking-widest">
-                Calculated Slot
-              </p>
-              <h4 className="text-[11px] font-black text-white uppercase tracking-wider">
-                Total Duration
-              </h4>
-            </div>
-          </div>
-          <div className="text-right">
-            <span className="text-xl font-black text-white tracking-tighter">
-              02:30
-            </span>
-            <span className="ml-1 text-[9px] font-black text-slate-500 uppercase tracking-widest">
-              Hrs
-            </span>
-          </div>
-        </div>
-
-        {/* 5. NOTICE: Subtle legal/system info */}
-        <div className="flex items-center gap-2 opacity-30 px-1">
-          <Info size={10} />
-          <p className="text-[8px] font-black uppercase tracking-[0.2em]">
-            Grace period: 15 mins included
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">Date & Time</h2>
+          <p className="text-[#FAF3E1]/40 text-xs uppercase tracking-widest font-semibold">
+            Timeline Node
           </p>
         </div>
       </div>
 
-      {/* Background Decorative Glow */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 blur-[80px] -z-10 group-hover:bg-indigo-500/10 transition-all duration-700" />
-    </section>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Date Picker */}
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] uppercase tracking-widest text-[#FAF3E1]/40 ml-1">
+            Arrival Date
+          </label>
+          <div className="relative group">
+            <Calendar
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within:text-[#FA8112] transition-colors"
+              size={16}
+            />
+            <input
+              type="date"
+              value={localBookingDate}
+              onChange={(e) => setLocalBookingDate(e.target.value)}
+              className="w-full bg-[#222222] border border-[#F5E7C6]/10 rounded-xl py-3 pl-11 pr-4 text-sm text-[#FAF3E1] focus:outline-none focus:border-[#FA8112]/50 transition-all appearance-none"
+            />
+          </div>
+        </div>
+
+        {/* Start Time */}
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] uppercase tracking-widest text-[#FAF3E1]/40 ml-1">
+            Start Node
+          </label>
+          <div className="relative group">
+            <Clock
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within:text-[#FA8112] transition-colors"
+              size={16}
+            />
+            <input
+              type="time"
+              value={localStartTime}
+              onChange={(e) => setLocalStartTime(e.target.value)}
+              className="w-full bg-[#222222] border border-[#F5E7C6]/10 rounded-xl py-3 pl-11 pr-4 text-sm text-[#FAF3E1] focus:outline-none focus:border-[#FA8112]/50 transition-all"
+            />
+          </div>
+        </div>
+
+        {/* End Time */}
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] uppercase tracking-widest text-[#FAF3E1]/40 ml-1">
+            End Node
+          </label>
+          <div className="relative group">
+            <Clock
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within:text-[#FA8112] transition-colors"
+              size={16}
+            />
+            <input
+              type="time"
+              value={localEndTime}
+              onChange={(e) => setLocalEndTime(e.target.value)}
+              className="w-full bg-[#222222] border border-[#F5E7C6]/10 rounded-xl py-3 pl-11 pr-4 text-sm text-[#FAF3E1] focus:outline-none focus:border-[#FA8112]/50 transition-all"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Section */}
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded-2xl">
+        <div className="flex items-center gap-3">
+          <div
+            className={`p-2 rounded-lg ${localDuration === "Invalid Range" ? "bg-red-500/10" : "bg-[#FA8112]/10"}`}
+          >
+            <Hourglass
+              size={18}
+              className={
+                localDuration === "Invalid Range"
+                  ? "text-red-500"
+                  : "text-[#FA8112]"
+              }
+            />
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-[#FAF3E1]/40">
+              Total Duration
+            </p>
+            <p
+              className={`text-lg font-bold ${localDuration === "Invalid Range" ? "text-red-500" : "text-[#FAF3E1]"}`}
+            >
+              {localDuration}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-[#FAF3E1]/40">
+          <Info size={14} className="text-[#FA8112]" />
+          <span className="text-xs">Grace period: 15 minutes included</span>
+        </div>
+      </div>
+
+      {localDuration === "Invalid Range" && (
+        <div className="flex items-center gap-2 text-red-400 text-xs animate-pulse">
+          <AlertCircle size={14} />
+          <span>Exit time must be later than arrival time</span>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -6,85 +6,98 @@ import {
   ChevronRight,
   Star,
   Globe,
+  Navigation,
 } from "lucide-react";
 
 const ParkingCard = ({
   name = "City Center Parking",
   slots = "12",
   distance = "0.8 km",
+  onSelect, // Triggered by the "View Details" button
 }) => {
-  return (
-    <div className="group relative bg-slate-900/40 border border-white/5 rounded-3xl p-6 transition-all duration-500 hover:bg-slate-900 hover:border-blue-500/30 shadow-xl overflow-hidden">
-      {/* 1. INTERACTIVE GLOW: Cinematic background effect */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-[50px] -z-10 group-hover:bg-blue-500/10 transition-all duration-700" />
+  const isFull = parseInt(slots) === 0;
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-        {/* 2. PRIMARY INFO: Node & Slot Data */}
-        <div className="flex items-center gap-5 w-full md:w-auto">
-          <div className="shrink-0 w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-blue-400 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-inner">
-            <Globe size={24} />
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-[9px] font-black text-blue-500/60 uppercase tracking-[0.3em]">
-                Parking Node
-              </span>
-              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-md">
-                <ShieldCheck size={8} className="text-emerald-500" />
-                <span className="text-[7px] font-black text-emerald-500 uppercase tracking-widest">
-                  Verified
-                </span>
-              </div>
-            </div>
-            <h3 className="text-lg font-black text-white uppercase tracking-tighter truncate leading-none">
-              {name}
-            </h3>
-            <div className="flex items-center gap-4 mt-2">
-              <div className="flex items-center gap-1.5">
-                <Zap size={12} className="text-amber-400" />
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  {slots} Available Slots
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 border-l border-white/10 pl-4">
-                <MapPin size={12} className="text-slate-500" />
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
-                  {distance}
-                </span>
-              </div>
-            </div>
-          </div>
+  return (
+    <div className="group relative bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-[2rem] p-5 hover:bg-[#FAF3E1]/[0.06] hover:border-[#FA8112]/30 transition-all duration-300 overflow-hidden">
+      {/* 🟢 Top Badge Section */}
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-2 bg-[#222222] px-3 py-1 rounded-full border border-[#F5E7C6]/10">
+          <Globe size={12} className="text-[#FA8112]" />
+          <span className="text-[10px] uppercase tracking-widest text-[#FAF3E1]/60 font-bold">
+            Parking Node
+          </span>
         </div>
 
-        {/* 3. PERFORMANCE STATS & ACTION: Content-rich buttons */}
-        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-white/5 pt-4 md:pt-0">
-          <div className="hidden lg:block text-right pr-4">
-            <div className="flex items-center justify-end gap-1 mb-1">
-              {[1, 2, 3, 4].map((i) => (
-                <Star
-                  key={i}
-                  size={8}
-                  className="fill-blue-500 text-blue-500"
-                />
-              ))}
-              <Star size={8} className="text-slate-700" />
-            </div>
-            <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">
-              Reliability Node
-            </p>
-          </div>
-
-          <button className="flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-600/20 transition-all active:scale-95 group/btn">
-            <span className="text-[10px] font-black uppercase tracking-widest">
-              View Details
-            </span>
-            <ChevronRight
-              size={14}
-              className="group-hover/btn:translate-x-1 transition-transform"
-            />
-          </button>
+        <div className="flex items-center gap-1 text-[#4ADE80] bg-[#4ADE80]/10 px-2 py-1 rounded-md">
+          <ShieldCheck size={12} />
+          <span className="text-[10px] uppercase font-black">Verified</span>
         </div>
       </div>
+
+      {/* 🟢 Main Info */}
+      <div className="space-y-1 mb-6">
+        <h3 className="text-xl font-bold text-[#FAF3E1] group-hover:text-[#FA8112] transition-colors">
+          {name}
+        </h3>
+        <div className="flex items-center gap-2 text-[#FAF3E1]/40 text-xs">
+          <MapPin size={14} className="text-[#FA8112]" />
+          <span>Located {distance} from your position</span>
+        </div>
+      </div>
+
+      {/* 🟢 Stats Grid */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        <div
+          className={`flex items-center gap-3 p-3 rounded-2xl border ${isFull ? "bg-red-500/10 border-red-500/20" : "bg-[#FA8112]/5 border-[#FA8112]/10"}`}
+        >
+          <Zap
+            size={18}
+            className={isFull ? "text-red-500" : "text-[#FA8112]"}
+          />
+          <div>
+            <p
+              className={`text-sm font-black ${isFull ? "text-red-500" : "text-[#FAF3E1]"}`}
+            >
+              {slots}
+            </p>
+            <p className="text-[10px] uppercase opacity-40">Slots Left</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10">
+          <div className="flex gap-0.5 text-[#FA8112]">
+            <Star size={10} fill="currentColor" />
+            <Star size={10} fill="currentColor" />
+            <Star size={10} fill="currentColor" />
+            <Star size={10} fill="currentColor" />
+          </div>
+          <div>
+            <p className="text-[10px] uppercase opacity-40 leading-none">
+              Reliability
+            </p>
+            <p className="text-[10px] font-bold text-[#FAF3E1]/80">
+              Node Level 4
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 🟢 Action Button */}
+      <button
+        onClick={onSelect}
+        className="w-full flex items-center justify-between bg-[#FAF3E1]/[0.05] hover:bg-[#FA8112] text-[#FAF3E1] hover:text-[#222222] font-bold py-4 px-6 rounded-2xl transition-all group/btn"
+      >
+        <span className="text-sm uppercase tracking-widest">View Details</span>
+        <div className="bg-[#222222]/20 p-1 rounded-full group-hover/btn:translate-x-1 transition-transform">
+          <ChevronRight size={18} />
+        </div>
+      </button>
+
+      {/* Decorative Navigation Icon */}
+      <Navigation
+        className="absolute -bottom-4 -right-4 text-[#FAF3E1]/5 rotate-45"
+        size={80}
+      />
     </div>
   );
 };

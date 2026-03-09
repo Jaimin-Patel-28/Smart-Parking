@@ -1,90 +1,142 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Car,
   Bike,
   PlusCircle,
   ChevronDown,
   ShieldCheck,
-  Zap,
+  CheckCircle2,
 } from "lucide-react";
 
 const VehicleSelector = () => {
+  const [vehicleType, setVehicleType] = useState("4-wheeler"); // Default selection
+  const [showSaved, setShowSaved] = useState(false);
+  const [selectedPlate, setSelectedPlate] = useState("GJ-23-AB-1234");
+
+  const savedVehicles = [
+    { id: 1, plate: "GJ-23-AB-1234", type: "4-wheeler" },
+    { id: 2, plate: "GJ-23-XY-5678", type: "2-wheeler" },
+  ];
+
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 lg:p-10 shadow-2xl backdrop-blur-xl group transition-all duration-500 hover:border-emerald-500/20 relative overflow-hidden h-full flex flex-col justify-between">
-      {/* 1. SECTION HEADER: "Small & Perfect" labeling */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="shrink-0 p-3 bg-emerald-500/10 rounded-2xl text-emerald-400 group-hover:rotate-12 transition-transform duration-500">
-            <Car size={22} />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-[#FA8112]/20 rounded-lg text-[#FA8112]">
+            {vehicleType === "4-wheeler" ? (
+              <Car size={20} />
+            ) : (
+              <Bike size={20} />
+            )}
           </div>
           <div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter leading-none">
+            <h2 className="text-xl font-bold tracking-tight text-[#FAF3E1]">
               Select Vehicle
             </h2>
-            <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">
-              Asset Node
+            <p className="text-[#FAF3E1]/40 text-xs uppercase tracking-widest font-semibold">
+              Asset Node v2.1
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-full">
-          <ShieldCheck size={10} className="text-emerald-500" />
-          <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">
-            Verified
-          </span>
+        <div className="flex items-center gap-1 text-[#FA8112]/60 text-[10px] font-bold uppercase tracking-tighter">
+          <ShieldCheck size={12} />
+          <span>Verified Hub</span>
         </div>
       </div>
 
-      <div className="space-y-6 relative z-10">
-        {/* 2. CUSTOM DROPDOWN: High-end selection UI */}
-        <div className="relative group/select cursor-pointer">
-          <div className="flex items-center justify-between w-full bg-slate-950/60 border border-white/5 rounded-2xl py-4 px-5 hover:border-white/10 transition-all shadow-inner">
-            <div className="flex items-center gap-3">
-              <Zap
-                size={16}
-                className="text-slate-500 group-hover/select:text-emerald-400"
-              />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Saved Vehicle (GJ-23-...)
-              </span>
-            </div>
-            <ChevronDown size={14} className="text-slate-700" />
+      {/* Saved Vehicle Dropdown */}
+      <div className="relative">
+        <button
+          onClick={() => setShowSaved(!showSaved)}
+          className="w-full flex items-center justify-between bg-[#222222] border border-[#F5E7C6]/10 rounded-2xl py-4 px-5 group hover:border-[#FA8112]/30 transition-all"
+        >
+          <div className="flex flex-col items-start">
+            <span className="text-[10px] uppercase text-[#FAF3E1]/30 tracking-widest">
+              Active License Plate
+            </span>
+            <span className="text-[#FAF3E1] font-mono font-bold tracking-wider">
+              {selectedPlate}
+            </span>
           </div>
-        </div>
-
-        {/* 3. QUICK TYPE TOGGLE: Cinematic selection buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          <button className="flex flex-col items-center gap-2 py-4 bg-emerald-600/10 border border-emerald-500/20 rounded-2xl group/car">
-            <Car size={20} className="text-emerald-400" />
-            <span className="text-[8px] font-black text-white uppercase tracking-widest">
-              4 Wheeler
-            </span>
-          </button>
-          <button className="flex flex-col items-center gap-2 py-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all group/bike">
-            <Bike
-              size={20}
-              className="text-slate-500 group-hover/bike:text-emerald-400"
-            />
-            <span className="text-[8px] font-black text-slate-500 group-hover/bike:text-white uppercase tracking-widest">
-              2 Wheeler
-            </span>
-          </button>
-        </div>
-
-        {/* 4. ADD ACTION: Clean interactive button */}
-        <button className="w-full flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl text-slate-400 hover:text-white transition-all active:scale-[0.98] group/add">
-          <PlusCircle
-            size={16}
-            className="group-hover/add:scale-110 transition-transform"
+          <ChevronDown
+            className={`text-[#FA8112] transition-transform duration-300 ${showSaved ? "rotate-180" : ""}`}
+            size={20}
           />
-          <span className="text-[10px] font-black uppercase tracking-widest">
-            Add New Vehicle
-          </span>
+        </button>
+
+        {showSaved && (
+          <div className="absolute top-full left-0 w-full mt-2 bg-[#2d2d2d] border border-[#F5E7C6]/10 rounded-2xl overflow-hidden z-50 shadow-2xl animate-in fade-in slide-in-from-top-2">
+            {savedVehicles.map((v) => (
+              <button
+                key={v.id}
+                onClick={() => {
+                  setSelectedPlate(v.plate);
+                  setVehicleType(v.type);
+                  setShowSaved(false);
+                }}
+                className="w-full flex items-center justify-between px-5 py-4 text-[#FAF3E1]/70 hover:bg-[#FA8112] hover:text-[#222222] transition-colors"
+              >
+                <span className="font-mono">{v.plate}</span>
+                <span className="text-[10px] uppercase font-bold">
+                  {v.type}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Vehicle Type Selection Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button
+          onClick={() => setVehicleType("4-wheeler")}
+          className={`relative flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 ${
+            vehicleType === "4-wheeler"
+              ? "bg-[#FA8112]/10 border-[#FA8112] text-[#FA8112]"
+              : "bg-[#222222] border-[#F5E7C6]/10 text-[#FAF3E1]/40 hover:border-[#F5E7C6]/30"
+          }`}
+        >
+          <Car size={24} />
+          <div className="text-left">
+            <p className="font-bold text-sm">4 Wheeler</p>
+            <p className="text-[10px] opacity-60">Sedan/SUV/Hatch</p>
+          </div>
+          {vehicleType === "4-wheeler" && (
+            <CheckCircle2 className="absolute top-3 right-3" size={14} />
+          )}
+        </button>
+
+        <button
+          onClick={() => setVehicleType("2-wheeler")}
+          className={`relative flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 ${
+            vehicleType === "2-wheeler"
+              ? "bg-[#FA8112]/10 border-[#FA8112] text-[#FA8112]"
+              : "bg-[#222222] border-[#F5E7C6]/10 text-[#FAF3E1]/40 hover:border-[#F5E7C6]/30"
+          }`}
+        >
+          <Bike size={24} />
+          <div className="text-left">
+            <p className="font-bold text-sm">2 Wheeler</p>
+            <p className="text-[10px] opacity-60">Bike/Scooter</p>
+          </div>
+          {vehicleType === "2-wheeler" && (
+            <CheckCircle2 className="absolute top-3 right-3" size={14} />
+          )}
         </button>
       </div>
 
-      {/* Background Decorative Glow */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 blur-[80px] -z-10 group-hover:bg-emerald-500/10 transition-all duration-700" />
-    </section>
+      {/* Add New Action */}
+      <button className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed border-[#F5E7C6]/10 text-[#FAF3E1]/30 hover:border-[#FA8112]/40 hover:text-[#FA8112] transition-all group">
+        <PlusCircle
+          size={18}
+          className="group-hover:rotate-90 transition-transform duration-300"
+        />
+        <span className="text-sm font-bold uppercase tracking-widest">
+          Register New Vehicle
+        </span>
+      </button>
+    </div>
   );
 };
 

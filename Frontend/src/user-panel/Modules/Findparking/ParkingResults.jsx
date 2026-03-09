@@ -1,70 +1,132 @@
-import React from "react";
+import React, { useState } from "react";
 import ParkingCard from "./ParkingCard";
-import { LayoutGrid, ListFilter, Activity, Sparkles } from "lucide-react";
+import {
+  LayoutGrid,
+  ListFilter,
+  Activity,
+  Sparkles,
+  ArrowDownAz,
+} from "lucide-react";
 
-const ParkingResults = () => {
+const ParkingResults = ({ onViewDetails }) => {
+  const [parkingNodes] = useState([
+    {
+      id: 1,
+      name: "Anand Central Hub",
+      slots: 42,
+      distance: "0.4 km",
+      price: "20/hr",
+      rating: 4.8,
+    },
+    {
+      id: 2,
+      name: "Gujarat Square Node",
+      slots: 18,
+      distance: "1.2 km",
+      price: "15/hr",
+      rating: 4.5,
+    },
+    {
+      id: 3,
+      name: "V.V. Nagar Terminal",
+      slots: "08",
+      distance: "2.5 km",
+      price: "25/hr",
+      rating: 4.9,
+    },
+    {
+      id: 4,
+      name: "Railway Station Plaza",
+      slots: "00",
+      distance: "3.1 km",
+      price: "10/hr",
+      rating: 4.2,
+    },
+  ]);
+
+  const [filterActive, setFilterActive] = useState(false);
+
   return (
-    <section className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-8 lg:p-12 shadow-2xl backdrop-blur-xl group transition-all duration-500 relative overflow-hidden">
-      {/* 1. SECTION HEADER: Cinematic metadata for the feed */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12 relative z-10">
+    /* FIXED: w-full ensures the component takes up all horizontal space */
+    <div className="w-full space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+      {/* 🟢 Status Bar - Forced Left and Right */}
+      <div className="flex flex-row items-center justify-between w-full gap-4 border-b border-[#F5E7C6]/10 pb-4">
         <div className="flex items-center gap-4">
-          <div className="shrink-0 p-4 bg-blue-500/10 rounded-2xl text-blue-400">
-            <LayoutGrid size={24} />
+          <div className="p-2 bg-[#FA8112]/20 rounded-lg text-[#FA8112]">
+            <LayoutGrid size={20} />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">
+            <h2 className="text-xl font-bold tracking-tight text-[#FAF3E1]">
               Parking Locations
             </h2>
-            <div className="flex items-center gap-3 mt-2">
-              <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">
-                Active Inventory Node
-              </p>
-              <div className="w-1 h-1 rounded-full bg-slate-700" />
-              <div className="flex items-center gap-1.5">
-                <Activity size={10} className="text-emerald-500" />
-                <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">
-                  Live Updates
-                </span>
-              </div>
-            </div>
+            <p className="text-[#FAF3E1]/40 text-[10px] uppercase tracking-[0.2em] font-semibold">
+              Active Inventory Node
+            </p>
           </div>
         </div>
 
-        {/* FEED METRICS: High-density quick stats */}
-        <div className="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-          <div className="flex items-center gap-3 px-4 py-2 bg-slate-950/60 border border-white/5 rounded-xl whitespace-nowrap">
-            <Sparkles size={12} className="text-amber-400" />
-            <span className="text-[10px] font-black text-white uppercase tracking-widest">
-              24 Nodes Found
+        <div className="flex items-center gap-4 md:gap-8">
+          <div className="hidden sm:flex items-center gap-2">
+            <Activity size={14} className="text-[#FA8112] animate-pulse" />
+            <span className="text-[10px] font-bold text-[#FA8112]/80 uppercase tracking-widest">
+              Live Updates
             </span>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-slate-400 transition-all">
-            <ListFilter size={14} />
-            <span className="text-[10px] font-black uppercase tracking-widest">
-              Filter Stream
+          <div className="flex items-center gap-2 bg-[#FAF3E1]/[0.05] px-3 py-1.5 rounded-full border border-[#F5E7C6]/10">
+            <Sparkles size={12} className="text-[#FA8112]" />
+            <span className="text-[10px] font-bold text-[#FAF3E1]/80 uppercase tracking-widest">
+              {parkingNodes.length} Nodes Found
             </span>
-          </button>
+          </div>
         </div>
       </div>
 
-      {/* 2. RESULTS STACK: Clean vertical alignment */}
-      <div className="space-y-6 relative z-10">
-        <ParkingCard name="Anand Central Hub" slots="42" distance="0.4 km" />
-        <ParkingCard name="Gujarat Square Node" slots="18" distance="1.2 km" />
-        <ParkingCard name="V.V. Nagar Terminal" slots="08" distance="2.5 km" />
+      {/* 🟢 Action Bar */}
+      <div className="flex justify-start gap-3">
+        <button
+          onClick={() => setFilterActive(!filterActive)}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all ${
+            filterActive
+              ? "bg-[#FA8112] text-[#222222] border-[#FA8112]"
+              : "bg-[#222222] text-[#FAF3E1]/60 border-[#F5E7C6]/10 hover:border-[#FA8112]/40"
+          }`}
+        >
+          <ListFilter size={14} />
+          <span>Filter Stream</span>
+        </button>
+        <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[#F5E7C6]/10 bg-[#222222] text-[#FAF3E1]/60 text-[10px] font-bold uppercase tracking-widest hover:border-[#FA8112]/40 transition-all">
+          <ArrowDownAz size={14} />
+          <span>Sort: Distance</span>
+        </button>
       </div>
 
-      {/* 3. LOAD MORE / FOOTER: Professional pagination placeholder */}
-      <div className="mt-12 pt-8 border-t border-white/5 flex flex-col items-center gap-4 opacity-40">
-        <p className="text-[8px] font-black text-slate-600 uppercase tracking-[0.4em]">
-          End of Current Inventory Stream
+      {/* 🟢 FIXED 2x2 Results Grid */}
+      {/* w-full + md:grid-cols-2 ensures 2 left, 2 right on laptop screens */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full auto-rows-fr">
+        {parkingNodes.map((node) => (
+          /* flex + w-full here makes sure the card fills its grid half */
+          <div key={node.id}>
+            <ParkingCard
+              name={node.name}
+              slots={node.slots}
+              distance={node.distance}
+              price={node.price}
+              rating={node.rating}
+              onSelect={() => onViewDetails(node)}
+              className="w-full"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* 🟢 End of Stream Indicator */}
+      <div className="pt-12 flex flex-col items-center gap-3 opacity-20 w-full">
+        <div className="w-24 h-[1px] bg-[#FAF3E1]" />
+        <p className="text-[10px] uppercase tracking-[0.4em] font-medium text-center">
+          End of Inventory Stream
         </p>
-        <div className="w-12 h-px bg-slate-800" />
       </div>
-
-      {/* Background Decorative Glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] -z-10 pointer-events-none" />
-    </section>
+    </div>
   );
 };
 
