@@ -1,107 +1,67 @@
-import { Zap, Leaf, Coins, BarChart3, Globe2 } from "lucide-react";
+import React from "react";
+import { Target, Eye, MoveRight } from "lucide-react";
 
 const MissionVision = () => {
   return (
-    <section className=" flex items-center pt-20 bg-[#F5E7C6]">
-      <div className="max-w-screen mx-auto px-4 md:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* MISSION CARD */}
-          <div className="group relative p-6 md:p-8 rounded-2xl bg-white border border-[#222222]/10 transition-all duration-300 hover:-translate-y-1 shadow-sm">
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#F5E7C6] text-[#222222] text-[10px] font-black uppercase tracking-widest mb-4">
-                <Zap size={12} className="text-[#FA8112]" />
-                Our Mission
+    <section className="relative w-full py-36 bg-[#222222]">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 px-6">
+        {/* MISSION CARD */}
+        <article className="group relative p-15 rounded-[2rem] bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 hover:border-[#FA8112]/20 transition-all duration-500 overflow-hidden flex flex-col justify-between">
+          {/* Shrunk Background Icon */}
+          <Target className="absolute -right-4 -top-4 w-24 h-24 text-[#FA8112] opacity-[0.02] group-hover:opacity-[0.04] transition-opacity duration-700" />
+
+          <div>
+            <header className="mb-6">
+              <div className="w-15 h-15 flex items-center justify-center rounded-xl bg-[#FA8112]/5 text-[#FA8112]/80 mb-4 group-hover:bg-[#FA8112] group-hover:text-[#222222] transition-all duration-500">
+                <Target size={28} />
               </div>
-
-              <h2 className="text-2xl md:text-3xl font-black text-[#222222] mb-4 leading-tight">
-                Digitizing the <br />
-                <span className="text-[#FA8112] italic font-serif font-medium">
-                  Streets.
-                </span>
+              <h2 className="text-3xl font-bold text-[#FAF3E1]/90">
+                Our <span className="text-[#FA8112]">Mission</span>
               </h2>
+            </header>
 
-              <p className="text-[#222222]/60 text-sm leading-relaxed mb-6">
-                Our mission is to eliminate urban congestion in{" "}
-                <strong className="text-[#222222]">Anand</strong> by replacing
-                outdated manual logs with a high-speed{" "}
-                <strong className="text-[#222222]">MERN-powered</strong>{" "}
-                automation system that saves time for every commuter.
-              </p>
-
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { text: "Eco-friendly Planning", icon: Leaf },
-                  { text: "Real-time Visibility", icon: Zap },
-                  { text: "Traffic Reduction", icon: Zap },
-                  { text: "Seamless Digital Entry", icon: Zap },
-                ].map((item, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center gap-2 text-[#222222] font-semibold text-xs"
-                  >
-                    <div className="w-5 h-5 rounded-md bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-                      <item.icon size={12} strokeWidth={3} />
-                    </div>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <p className="text-[#FAF3E1]/50 text-md leading-relaxed mb-6">
+              Simplifying urban mobility through a secure, real-time parking
+              platform. We eliminate city driving stress, giving you back your
+              <strong> Time.</strong>
+            </p>
           </div>
 
-          {/* VISION CARD */}
-          <div className="group relative p-6 md:p-8 rounded-2xl bg-white border border-[#222222]/10 transition-all duration-300 hover:-translate-y-1 shadow-sm">
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#F5E7C6] text-[#222222] text-[10px] font-black uppercase tracking-widest mb-4">
-                <Globe2 size={12} className="text-[#FA8112]" />
-                Our Vision
-              </div>
+          <footer className="flex items-center gap-2 text-[#FA8112]/80 font-bold text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500">
+            Solving the now <MoveRight size={14} />
+          </footer>
+        </article>
 
-              <h2 className="text-2xl md:text-3xl font-black text-[#222222] mb-6 leading-tight">
-                Smart City <br />
-                <span className="text-[#FA8112] italic font-serif font-medium">
-                  Integration.
-                </span>
+        {/* VISION CARD */}
+        <article className="group relative p-15 rounded-[2rem] bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 hover:border-[#FA8112]/20 transition-all duration-500 overflow-hidden flex flex-col justify-between">
+          {/* Shrunk Background Icon */}
+          <Eye className="absolute -right-4 -top-4 w-24 h-24 text-[#FA8112] opacity-[0.02] group-hover:opacity-[0.04] transition-opacity duration-700" />
+
+          <div>
+            <header className="mb-6">
+              <div className="w-15 h-15 flex items-center justify-center rounded-xl bg-[#FAF3E1]/5 text-[#FAF3E1]/60 mb-4 group-hover:bg-[#FA8112] group-hover:text-[#222222] transition-all duration-500">
+                <Eye size={28} />
+              </div>
+              <h2 className="text-3xl font-bold text-[#FAF3E1]/90">
+                Our <span className="text-[#FA8112]">Vision</span>
               </h2>
+            </header>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-                    <Coins size={16} />
-                  </div>
-                  <h4 className="text-[#222222] font-black text-xs uppercase">
-                    Cashless Ecosystem
-                  </h4>
-                  <p className="text-[#222222]/50 text-xs leading-relaxed">
-                    Full UPI and Smart Wallet integration for paperless
-                    transactions.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#FA8112]/10 flex items-center justify-center text-[#FA8112]">
-                    <BarChart3 size={16} />
-                  </div>
-                  <h4 className="text-[#222222] font-black text-xs uppercase">
-                    AI-Based Prediction
-                  </h4>
-                  <p className="text-[#222222]/50 text-xs leading-relaxed">
-                    Future-ready algorithms to predict slot availability
-                    patterns.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#F5E7C6]/50 border border-[#222222]/10">
-                <p className="text-[#222222]/70 text-xs italic">
-                  "Scaling SmartPark to optimize urban space across every major
-                  hub in Gujarat."
-                </p>
-              </div>
-            </div>
+            <p className="text-[#FAF3E1]/50 text-md leading-relaxed mb-6">
+              Becoming the backbone of smart cities. A future with autonomous
+              parking, EV integration, and a{" "}
+              <strong>Carbon-Neutral World.</strong>
+            </p>
           </div>
-        </div>
+
+          <footer className="flex items-center gap-2 text-[#FA8112]/80 font-bold text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500">
+            Building the future <MoveRight size={14} />
+          </footer>
+        </article>
       </div>
+
+      {/* Subtle bottom fade */}
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#222222] to-transparent z-10 pointer-events-none" />
     </section>
   );
 };

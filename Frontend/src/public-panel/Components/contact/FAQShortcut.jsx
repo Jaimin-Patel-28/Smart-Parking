@@ -1,85 +1,68 @@
-import {
-  HelpCircle,
-  ChevronRight,
-  Plus,
-  Wallet,
-  ShieldCheck,
-  CalendarClock,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { HelpCircle, ChevronRight, Zap } from "lucide-react";
 
 const FAQShortcut = () => {
   const faqs = [
     {
-      question: "How do I book a parking slot?",
-      icon: CalendarClock,
-      hint: "Search area, select slot, and confirm time.",
+      q: "How do I add funds to my Smart Wallet?",
+      a: "Go to Profile > Wallet and use any UPI or Card to top up instantly.",
     },
     {
-      question: "Can I cancel my booking?",
-      icon: Plus,
-      hint: "Cancellations allowed up to 30 mins before.",
+      q: "Can I extend my booking remotely?",
+      a: "Yes, use the 'Extend' button in your Active Bookings tab anytime.",
     },
     {
-      question: "Is my payment secure?",
-      icon: ShieldCheck,
-      hint: "Encrypted transactions via SSL & UPI.",
-    },
-    {
-      question: "How do I use the Smart Wallet?",
-      icon: Wallet,
-      hint: "Top up via dashboard to pay instantly.",
+      q: "What if someone else is in my spot?",
+      a: "Tap 'Report Issue' in-app; our real-time system will reassign you immediately.",
     },
   ];
 
   return (
     <section className="relative">
-      <div className="flex items-center justify-between mb-12">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-[#FA8112] text-[#FAF3E1]">
-            <HelpCircle size={28} />
-          </div>
-          <div>
-            <h2 className="text-3xl font-black text-[#222222] tracking-tighter">
-              Quick Answers
-            </h2>
-            <p className="text-[#FA8112] text-[10px] font-black uppercase tracking-[0.2em] mt-1">
-              Frequently Asked Questions
-            </p>
-          </div>
+      {/* SECTION HEADER */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="max-w-md">
+          <aside className="inline-flex items-center gap-2 bg-[#FA8112]/10 border border-[#FA8112]/20 px-3 py-1.5 rounded-full mb-4">
+            <HelpCircle size={14} className="text-[#FA8112]" />
+            <span className="text-[#FA8112] text-[10px] font-bold tracking-[0.2em] uppercase">
+              Quick Support
+            </span>
+          </aside>
+          <h2 className="text-3xl font-bold text-[#FAF3E1] tracking-tight">
+            Common <span className="text-[#FA8112]">Questions.</span>
+          </h2>
         </div>
-        <Link
-          to="/faqs"
-          className="hidden sm:flex items-center gap-2 text-[#222222] font-black text-xs uppercase tracking-widest border-b-2 border-[#222222]/10 hover:border-[#FA8112] transition-all"
-        >
-          View All <ChevronRight size={16} />
-        </Link>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {faqs.map((faq, index) => {
-          const Icon = faq.icon;
-          return (
-            <div
-              key={index}
-              className="p-8 rounded-4xl bg-white border-2 border-[#222222]/5 hover:border-[#222222] transition-all duration-300 group cursor-pointer shadow-sm"
-            >
-              <div className="flex items-start gap-5">
-                <div className="mt-1 p-2.5 rounded-xl bg-[#F5E7C6] text-[#222222]/40 group-hover:bg-[#FA8112] group-hover:text-[#FAF3E1] transition-all">
-                  <Icon size={20} />
-                </div>
-                <div>
-                  <h4 className="text-[#222222] font-black text-lg tracking-tight mb-2">
-                    {faq.question}
-                  </h4>
-                  <p className="text-[#222222]/40 text-sm font-medium leading-relaxed">
-                    {faq.hint}
-                  </p>
-                </div>
+        <a
+          href="#faqs"
+          className="text-[#FAF3E1]/40 hover:text-[#FA8112] text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all group"
+        >
+          View Full Help Center
+          <ChevronRight
+            size={14}
+            className="group-hover:translate-x-1 transition-transform"
+          />
+        </a>
+      </header>
+
+      {/* FAQ GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {faqs.map((faq, index) => (
+          <article
+            key={index}
+            className="p-6 rounded-3xl bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 hover:border-[#FA8112]/20 transition-all duration-500 group"
+          >
+            <header className="mb-4">
+              <div className="w-8 h-8 rounded-lg bg-[#2a2a2a] border border-[#F5E7C6]/5 flex items-center justify-center text-[#FA8112] mb-4">
+                <Zap size={14} strokeWidth={2.5} />
               </div>
-            </div>
-          );
-        })}
+              <h3 className="text-[#FAF3E1] text-sm font-bold leading-tight group-hover:text-[#FA8112] transition-colors">
+                {faq.q}
+              </h3>
+            </header>
+            <p className="text-[#FAF3E1]/40 text-xs leading-relaxed">{faq.a}</p>
+          </article>
+        ))}
       </div>
     </section>
   );

@@ -1,43 +1,36 @@
-import { MessageSquare, MousePointer2, Sparkles } from "lucide-react";
+import React from "react";
+import { MessageSquare } from "lucide-react";
 
 const ContactHero = () => {
   return (
-    <section className="relative pt-32 pb-20 px-6 overflow-hidden bg-[#FAF3E1]">
-      <div className="container mx-auto max-w-screen-2xl relative z-10 text-center">
-        {/* BREADCRUMB BADGE */}
-        <div className="flex justify-center mb-8">
-          <span className="flex items-center gap-3 px-6 py-2 rounded-xl bg-[#F5E7C6] border border-[#222222]/5 text-[#222222] text-[11px] font-black uppercase tracking-[0.3em] shadow-sm">
-            <Sparkles size={16} className="text-[#FA8112] animate-pulse" />
-            Support Center
+    <section className="relative pt-32 pb-44 md:pt-48 md:pb-64 bg-[#222222] overflow-hidden text-center">
+      {/* Background Decorative Element */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-[#FA8112]/5 to-transparent pointer-events-none" />
+
+      <div className="relative z-10 max-w-4xl mx-auto px-6">
+        {/* SMALL BADGE */}
+        <aside className="inline-flex items-center gap-2 bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 px-3 py-1.5 rounded-full mb-6">
+          <MessageSquare size={14} className="text-[#FA8112]" />
+          <span className="text-[#FAF3E1]/80 text-[10px] font-bold tracking-[0.2em] uppercase">
+            Get In Touch
           </span>
-        </div>
+        </aside>
 
         {/* MAIN HEADING */}
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-[#222222] mb-10 tracking-tighter leading-[0.9]">
-          How Can We Help <br />
-          <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
-            You Today?
-          </span>
+        <h1 className="text-4xl md:text-6xl font-bold text-[#FAF3E1] leading-tight mb-6 tracking-tight">
+          How can we <span className="text-[#FA8112]">help you?</span>
         </h1>
 
-        <p className="text-[#222222]/60 text-xl md:text-2xl max-w-3xl mx-auto mb-12 font-medium leading-relaxed">
-          Whether you're a commuter in{" "}
-          <strong className="text-[#222222]">Anand</strong> or a partner joining
-          our network, our team is ready to solve your queries.
+        {/* DESCRIPTION */}
+        <p className="text-[#FAF3E1]/50 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed">
+          Have questions about parking spots in Anand or our MERN
+          infrastructure? Our team is here to provide real-time support and
+          technical guidance.
         </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-8 text-[#222222]/40 text-sm font-black uppercase tracking-widest">
-          <div className="flex items-center gap-3">
-            <MessageSquare size={18} className="text-[#FA8112]" />
-            <span>24/7 Automated Support</span>
-          </div>
-          <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#222222]/10"></div>
-          <div className="flex items-center gap-3">
-            <MousePointer2 size={18} className="text-[#FA8112]" />
-            <span>Instant Booking Help</span>
-          </div>
-        </div>
       </div>
+
+      {/* Tapered bottom fade to blend with the cards */}
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#222222] to-transparent" />
     </section>
   );
 };

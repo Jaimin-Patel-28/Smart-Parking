@@ -1,9 +1,11 @@
+import React from "react";
 import {
   AlertCircle,
   CheckCircle2,
   Clock,
   CreditCard,
   Shield,
+  ArrowRight,
 } from "lucide-react";
 
 const ProblemSolution = () => {
@@ -12,100 +14,83 @@ const ProblemSolution = () => {
       problem: "Wasting 20+ minutes searching for a parking spot.",
       solution: "Instant real-time availability tracking.",
       icon: Clock,
-      img: "https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400",
     },
     {
       problem: "Complex and confusing manual payment systems.",
       solution: "One-tap secure digital payments.",
       icon: CreditCard,
-      img: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?q=80&w=400",
     },
     {
       problem: "Uncertainty about vehicle safety in open areas.",
       solution: "Verified and secure parking zones.",
       icon: Shield,
-      img: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=400",
     },
   ];
 
   return (
-    <section className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-10 overflow-hidden">
-      <div className="container mx-auto max-w-screen-2xl">
-        {/* Header: Editorial Notion Style */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-black text-[#222222] mb-8 tracking-tighter leading-none">
-            Why{" "}
-            <span className="text-[#FA8112] font-serif italic font-medium tracking-normal">
-              SmartPark?
+    <section className="relative w-full bg-[#222222] py-24 overflow-hidden">
+      <div className="relative z-10 max-w-6xl mx-auto px-6">
+        {/* SECTION HEADING */}
+        <header className="text-center max-w-3xl mx-auto mb-20">
+          <aside className="inline-flex items-center gap-2 bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 px-3 py-1.5 rounded-full mb-6">
+            <span className="text-[#FA8112] text-[10px] font-bold tracking-[0.2em] uppercase">
+              The Evolution
             </span>
+          </aside>
+          <h2 className="text-4xl md:text-5xl font-bold text-[#FAF3E1] mb-6">
+            Why <span className="text-[#FA8112]">SmartPark?</span>
           </h2>
-          <p className="text-[#222222]/60 max-w-2xl mx-auto text-m font-medium leading-relaxed">
+          <p className="text-[#FAF3E1]/50 text-lg leading-relaxed">
             Traditional parking is broken. We're here to fix it with a modern,
-            <span className="text-[#222222]"> hand-crafted approach</span> that
-            saves you time and stress.
+            hand-crafted approach that saves you time and stress.
           </p>
-        </div>
+        </header>
 
-        <div className="grid gap-10 md:gap-8">
-          {points.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={index}
-                className="group flex flex-col md:flex-row items-stretch gap-0 rounded-2xl overflow-hidden border-2 border-[#222222]/5 bg-white transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-[#222222]/5"
-              >
-                {/* PROBLEM SIDE: Clean Charcoal accents */}
-                <div className="flex-1 p-6 lg:p-10 flex items-start gap-8 relative bg-white">
-                  <div className="relative z-10 p-4 rounded-2xl bg-[#222222]/5 text-[#222222]/40 group-hover:bg-[#222222] group-hover:text-[#FAF3E1] transition-all duration-500">
-                    <AlertCircle size={20} strokeWidth={2.5} />
-                  </div>
-                  <div className="relative z-10">
-                    <span className="text-[10px] font-black text-[#222222]/30 uppercase tracking-[0.3em]">
+        {/* COMPARISON LIST */}
+        <ul className="space-y-6">
+          {points.map((item, index) => (
+            <li key={index} className="list-none group">
+              <article className="grid grid-cols-1 lg:grid-cols-11 items-center bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-[#FA8112]/30">
+                {/* PROBLEM BLOCK */}
+                <section className="lg:col-span-5 p-8 md:p-10 opacity-60 group-hover:opacity-100 transition-opacity">
+                  <header className="flex items-center gap-3 mb-4 text-[#FAF3E1]/60">
+                    <AlertCircle size={20} className="text-red-400/50" />
+                    <span className="text-xs font-bold uppercase tracking-widest">
                       The Friction
                     </span>
-                    <p className="text-xl text-[#222222] mt-4 font-bold tracking-tight leading-snug">
-                      {item.problem}
-                    </p>
-                  </div>
-                </div>
+                  </header>
+                  <p className="text-[#FAF3E1]/80 text-xl font-medium leading-snug">
+                    {item.problem}
+                  </p>
+                </section>
 
-                {/* CENTRAL CONNECTING ICON: The Bridge */}
-                <div className="flex items-center justify-center relative w-full md:w-20 h-20 md:h-auto">
-                  <div className="absolute h-0.5 md:h-full w-full md:w-0.5 bg-[#222222]/5"></div>
-                  <div className="z-20 w-13 h-13 rounded-xl bg-[#F5E7C6] border-2 border-[#222222] flex items-center justify-center group-hover:bg-[#FA8112] group-hover:border-[#FA8112] group-hover:rotate-15 transition-all duration-700 shadow-xl">
-                    <Icon
-                      size={20}
-                      className="text-[#222222] group-hover:text-[#FAF3E1] transition-colors"
-                    />
+                {/* TRANSITION ICON / DIVIDER */}
+                <aside className="lg:col-span-1 flex justify-center py-4 lg:py-0">
+                  <div className="bg-[#FA8112] p-4 rounded-2xl shadow-[0_0_20px_rgba(250,129,18,0.3)] group-hover:scale-110 transition-transform duration-500">
+                    <item.icon size={24} className="text-[#222222]" />
                   </div>
-                </div>
+                </aside>
 
-                {/* SOLUTION SIDE: Vibrant Orange accents */}
-                <div className="flex-1 p-6 lg:p-10 flex items-start gap-8 relative overflow-hidden bg-[#F5E7C6]/30 border-t md:border-t-0 md:border-l-2 border-[#222222]/5">
-                  {/* Subtle Image Reveal */}
-                  <img
-                    src={item.img}
-                    className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-10 transition-opacity duration-1000 grayscale group-hover:scale-110"
-                    alt="Solution"
-                  />
-
-                  <div className="relative z-10 p-4 rounded-2xl bg-[#FA8112] text-[#FAF3E1] shadow-lg shadow-[#FA8112]/20">
-                    <CheckCircle2 size={20} strokeWidth={2.5} />
-                  </div>
-                  <div className="relative z-10">
-                    <span className="text-[10px] font-black text-[#FA8112] uppercase tracking-[0.3em]">
+                {/* SOLUTION BLOCK */}
+                <section className="lg:col-span-5 p-8 md:p-10 bg-[#FA8112]/[0.03] lg:border-l border-[#F5E7C6]/10">
+                  <header className="flex items-center gap-3 mb-4">
+                    <CheckCircle2 size={20} className="text-[#FA8112]" />
+                    <span className="text-[#FA8112] text-xs font-bold uppercase tracking-widest">
                       The Fix
                     </span>
-                    <p className="text-xl text-[#222222] mt-4 font-black tracking-tight leading-snug">
-                      {item.solution}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                  </header>
+                  <p className="text-[#FAF3E1] text-xl font-bold leading-snug">
+                    {item.solution}
+                  </p>
+                </section>
+              </article>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {/* Background Decorative Glow */}
+      <div className="absolute top-1/2 right-0 w-96 h-96 bg-[#FA8112]/[0.02] blur-[120px] rounded-full pointer-events-none" />
     </section>
   );
 };

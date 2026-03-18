@@ -1,146 +1,151 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Layout, Sparkles, PieChart, BarChart3, Activity } from "lucide-react";
+import React from "react";
+import {
+  Layout,
+  Sparkles,
+  PieChart,
+  BarChart3,
+  Activity,
+  MousePointer2,
+} from "lucide-react";
 
 const AppPreview = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
-      },
-      { threshold: 0.1 },
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      ref={sectionRef}
-      className="bg-[#FAF3E1] py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden"
-    >
-      {/* HUMANIZED BACKGROUND: Subtle paper texture instead of digital glows */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-40 pointer-events-none"></div>
-
-      <div className="container mx-auto max-w-screen-2xl relative z-10">
-        <div
-          className={`text-center mb-20 transition-all duration-1000 ${
-            isVisible ? "opacity-100" : "opacity-0 translate-y-10"
-          }`}
-        >
-          <div className="flex justify-center mb-6">
-            <span className="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#F5E7C6] border border-[#222222]/5 text-[#FA8112] text-[10px] font-black uppercase tracking-[0.2em]">
-              <Sparkles size={14} className="animate-pulse" />
+    <section className="relative w-full bg-[#222222] py-24 overflow-hidden">
+      <div className="relative z-10 max-w-6xl mx-auto px-6">
+        {/* SECTION HEADER */}
+        <header className="text-center mb-16">
+          <aside className="inline-flex items-center gap-2 bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 px-3 py-1.5 rounded-full mb-6">
+            <Sparkles size={14} className="text-[#FA8112]" />
+            <span className="text-[#FAF3E1] text-[10px] font-bold tracking-[0.2em] uppercase">
               Intelligence Suite
             </span>
-          </div>
-          <h2 className="text-5xl md:text-7xl font-black text-[#222222] mb-6 tracking-tighter leading-none">
-            Real-time <br className="md:hidden" />
-            <span className="text-[#FA8112] italic font-serif font-medium tracking-normal">
-              Analytics.
-            </span>
+          </aside>
+
+          <h2 className="text-4xl md:text-6xl font-bold text-[#FAF3E1] leading-tight mb-6">
+            Real-time <br />
+            <span className="text-[#FA8112]">Analytics.</span>
           </h2>
-          <p className="text-[#222222]/60 text-lg max-w-xl mx-auto font-medium">
+
+          <p className="text-[#FAF3E1]/50 text-lg max-w-2xl mx-auto leading-relaxed">
             Our MERN-powered dashboard provides instant insights into occupancy,
-            revenue, and peak hours.
+            revenue, and peak hours at a single glance.
           </p>
-        </div>
+        </header>
 
-        {/* Browser Frame Window: Humanized with soft shadows and custom palette */}
-        <div
-          className={`relative mx-auto max-w-6xl rounded-3xl overflow-hidden border-2 border-[#222222] shadow-[0_40px_100px_-20px_rgba(34,34,34,0.15)] bg-white transition-all duration-1000 ease-out transform
-            ${isVisible ? "translate-y-0 rotate-x-0 opacity-100" : "translate-y-32 rotate-x-6 opacity-0"}`}
-          style={{ perspective: "1500px" }}
-        >
-          {/* Header Bar: Clean & Minimal */}
-          <div className="bg-[#F5E7C6] px-8 py-5 border-b-2 border-[#222222] flex items-center justify-between">
-            <div className="flex gap-2.5">
-              <div className="w-3.5 h-3.5 rounded-full bg-[#FA8112]/50"></div>
-              <div className="w-3.5 h-3.5 rounded-full bg-[#FA8112]/40"></div>
-              <div className="w-3.5 h-3.5 rounded-full bg-[#FA8112]/30"></div>
-            </div>
-            <div className="hidden sm:block bg-white px-8 py-2 rounded-lg text-[11px] text-[#222222]/40 font-bold border border-[#222222]/5 tracking-widest">
-              ADMIN.SMARTPARK.IO/ANALYTICS
-            </div>
-            <div className="w-12"></div>
-          </div>
+        {/* BROWSER FRAME REPRESENTATION */}
+        <article className="relative group mx-auto max-w-5xl transition-all duration-700 hover:rotate-x-2">
+          {/* Browser Top Bar */}
+          <header className="bg-[#2a2a2a] border border-[#F5E7C6]/10 rounded-t-2xl px-6 py-4 flex items-center justify-between shadow-2xl">
+            <nav className="flex gap-2">
+              <span className="w-3 h-3 rounded-full bg-red-500/50" />
+              <span className="w-3 h-3 rounded-full bg-yellow-500/50" />
+              <span className="w-3 h-3 rounded-full bg-green-500/50" />
+            </nav>
+            <address className="not-italic text-[#FAF3E1]/30 text-[10px] font-mono tracking-widest bg-[#222222] px-4 py-1.5 rounded-full border border-[#F5E7C6]/5 uppercase">
+              admin.smartpark.io/analytics
+            </address>
+            <div className="w-12" /> {/* Spacer */}
+          </header>
 
-          {/* Dashboard UI Body */}
-          <div className="p-6 md:p-10 grid grid-cols-12 gap-8 bg-white">
-            {/* Sidebar Skeleton */}
-            <div className="col-span-3 space-y-8 hidden lg:block border-r-2 border-[#FAF3E1] pr-8">
-              <div className="h-4 w-20 bg-[#F5E7C6] rounded animate-pulse"></div>
-              <div className="space-y-4">
+          {/* Dashboard Body Structure */}
+          <section className="flex bg-[#FAF3E1]/[0.02] backdrop-blur-xl border-x border-b border-[#F5E7C6]/10 rounded-b-2xl h-[400px] md:h-[500px] overflow-hidden shadow-2xl">
+            {/* Sidebar Navigation Skeleton */}
+            <aside className="hidden md:flex w-20 lg:w-64 border-r border-[#F5E7C6]/5 flex-col p-6 gap-8">
+              <div className="h-4 w-24 bg-[#FAF3E1]/10 rounded-full mb-4" />{" "}
+              {/* Sidebar Header */}
+              <nav className="flex flex-col gap-6">
                 {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className={`h-12 w-full rounded-lg transition-all ${
-                      i === 1
-                        ? "bg-[#FA8112] shadow-lg shadow-[#FA8112]/20"
-                        : "bg-[#FAF3E1]"
-                    }`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="col-span-12 lg:col-span-9 space-y-10">
-              {/* Stats Cards Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {[
-                  { icon: PieChart, label: "Occupancy" },
-                  { icon: BarChart3, label: "Revenue" },
-                  { icon: Activity, label: "Live Traffic" },
-                ].map((stat, i) => (
-                  <div
-                    key={i}
-                    className="h-32 bg-[#FAF3E1] border-2 border-transparent rounded-xl flex flex-col items-center justify-center gap-4 hover:border-[#FA8112]/20 hover:bg-white transition-all duration-300 group shadow-sm"
-                  >
-                    <stat.icon
-                      className="text-[#222222]/40 group-hover:text-[#FA8112] transition-colors duration-500"
-                      size={28}
-                    />
-                    <span className="text-[11px] uppercase tracking-[0.2em] text-[#222222] font-black">
-                      {stat.label}
-                    </span>
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded bg-[#FAF3E1]/5" />
+                    <div className="h-2 flex-1 bg-[#FAF3E1]/5 rounded-full" />
                   </div>
                 ))}
-              </div>
+              </nav>
+            </aside>
 
-              {/* High-Tech Image Display */}
-              <div className="relative group w-full aspect-video rounded-2xl overflow-hidden border-2 border-[#222222]/5 shadow-inner bg-[#FAF3E1]">
-                <img
-                  src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                  alt="Dashboard"
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-60 group-hover:scale-105 transition-transform duration-[2s]"
+            {/* Main Dashboard Content Area */}
+            <section className="flex-1 p-6 md:p-10 flex flex-col gap-8 overflow-y-auto">
+              {/* Metric Summary Grid */}
+              <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 list-none">
+                {[
+                  {
+                    icon: PieChart,
+                    label: "Occupancy",
+                    color: "text-blue-400",
+                  },
+                  {
+                    icon: BarChart3,
+                    label: "Revenue",
+                    color: "text-[#FA8112]",
+                  },
+                  {
+                    icon: Activity,
+                    label: "Live Traffic",
+                    color: "text-green-400",
+                  },
+                ].map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="bg-[#2a2a2a] p-6 rounded-2xl border border-[#F5E7C6]/5 flex items-center gap-4 group/card hover:border-[#FA8112]/30 transition-all"
+                  >
+                    <div
+                      className={`p-3 rounded-xl bg-[#222222] ${item.color}`}
+                    >
+                      <item.icon size={20} />
+                    </div>
+                    <span className="text-[#FAF3E1]/80 font-bold text-sm">
+                      {item.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Main Visual Display Area */}
+              <figure className="relative flex-1 bg-[#2a2a2a]/50 rounded-3xl border border-[#F5E7C6]/5 p-8 flex flex-col items-center justify-center text-center overflow-hidden">
+                {/* Decorative Grid Lines */}
+                <div
+                  className="absolute inset-0 opacity-5 pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(#FAF3E1 1px, transparent 1px)",
+                    backgroundSize: "30px 30px",
+                  }}
                 />
 
-                {/* Status Indicator */}
-                <div className="absolute top-8 left-8 z-20">
-                  <div className="flex items-center gap-3 px-5 py-2.5 bg-white border-2 border-[#222222] rounded-xl shadow-xl">
-                    <div className="w-2.5 h-2.5 bg-[#FA8112] rounded-full animate-ping"></div>
-                    <span className="text-[11px] text-[#222222] font-black uppercase tracking-widest">
-                      System Active
-                    </span>
-                  </div>
-                </div>
+                {/* Status Badge */}
+                <aside className="relative flex items-center gap-3 bg-[#222222] border border-green-500/20 px-4 py-2 rounded-full mb-6 group-hover:scale-105 transition-transform">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+                  </span>
+                  <span className="text-green-400 text-[10px] font-bold tracking-widest uppercase">
+                    System Active
+                  </span>
+                </aside>
 
-                {/* Center Action Button */}
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <button className="group relative flex items-center gap-4 bg-[#222222] hover:bg-[#FA8112] px-12 py-6 rounded-lg transition-all duration-500 shadow-2xl hover:-translate-y-1">
-                    <span className="text-[#FAF3E1] font-black uppercase text-xs tracking-[0.3em] flex items-center gap-3">
-                      <Layout size={20} /> Explore Demo
-                    </span>
+                <h3 className="text-[#FAF3E1]/40 text-sm mb-8 italic">
+                  Visualization generated from live IoT sensors...
+                </h3>
+
+                {/* Call to Action Button */}
+                <nav>
+                  <button className="group/btn relative px-8 py-4 bg-[#FA8112] text-[#222222] rounded-2xl font-bold flex items-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.4)] transition-all active:scale-95">
+                    <Layout size={20} />
+                    Explore Dashboard
+                    <MousePointer2 className="absolute -bottom-4 -right-4 text-[#FAF3E1] opacity-0 group-hover/btn:opacity-100 transition-all translate-x-4 group-hover/btn:translate-x-0" />
                   </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                </nav>
+              </figure>
+            </section>
+          </section>
+
+          {/* 3D Reflection Effect */}
+          <div className="absolute -bottom-10 left-10 right-10 h-20 bg-[#FA8112]/5 blur-[80px] rounded-full -z-10" />
+        </article>
       </div>
+
+      {/* Background Decorative Element */}
+      <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#FA8112]/[0.02] blur-[150px] rounded-full pointer-events-none" />
     </section>
   );
 };

@@ -1,89 +1,76 @@
 import React from "react";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#FAF3E1]  lg:pt-12.5 lg:pb-32">
-      {/* HUMANIZED BACKGROUND: 
-          Replaced blue tint with Beige (#F5E7C6). 
-          The grayscale image now blends into your custom Cream background. 
-      */}
-      <div className="absolute top-0 right-0 w-full lg:w-3/5 h-screen opacity-[0.15] lg:opacity-25 pointer-events-none">
+    /* 1. Changed h-screen to min-h-screen to prevent content overflow 
+       2. Added pb-32 to create a 'cushion' so StatsSection doesn't touch buttons */
+    <section className="relative min-h-screen w-full bg-[#222222] overflow-hidden flex items-center pt-55 pb-32 md:pb-40">
+      
+      {/* BACKGROUND AREA */}
+      <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&q=80&w=2000"
+          src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a"
           alt="Modern Parking"
-          className="w-full h-full object-cover grayscale brightness-75"
+          className="w-full h-full object-cover opacity-30 md:opacity-40"
         />
-        {/* Modern mask using your palette colors */}
-        <div className="absolute inset-0 bg-linear-to-l from-transparent via-[#FAF3E1]/80 to-[#FAF3E1]"></div>
+
+        {/* VIGNETTE GRADIENTS */}
+        {/* Top Fade - Blends with Navbar */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#222222] via-[#222222]/20 to-transparent h-1/3" />
+
+        {/* Bottom Fade - STRENGTHENED to prevent the 'hard cut' line */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#222222] via-[#222222]/90 to-transparent" />
+
+        {/* Left Side protection - DARKER to ensure text is readable */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#222222] via-[#222222]/60 to-transparent w-full md:w-2/3" />
       </div>
 
-      <div className="container max-w-screen mx-auto px-6 lg:px-16 xl:px-24 relative z-10">
-        <div className="max-w-screen">
-          {/* Notion-style Tag: Using Beige/Orange combo */}
-          <div className="flex items-center gap-2 mb-5">
-            <span className="inline-flex items-center rounded-lg bg-[#F5E7C6] px-4 py-1.5 text-[13px] font-bold text-[#222222] border border-[#222222]/5">
-              <span className="mr-2 flex h-2 w-2 rounded-full bg-[#FA8112] animate-pulse"></span>
-              LIVE IN 12 CITIES
-            </span>
-          </div>
+      <article className="relative z-10 max-w-6xl mx-auto px-6 w-full">
+        <div className="flex flex-col gap-8">
+          
+          <header className="max-w-2xl">
+            {/* LIVE STATUS TAG */}
+            <aside className="inline-flex items-center gap-2 bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 px-3 py-1.5 rounded-full mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FA8112] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FA8112]"></span>
+              </span>
+              <span className="text-[#FAF3E1] text-[10px] font-bold tracking-[0.2em] uppercase">
+                12 Cities Live
+              </span>
+            </aside>
 
-          {/* Typography: "Effortless" now uses your Primary Orange */}
-          <h1 className="text-5xl md:text-5xl lg:text-8xl font-black tracking-tighter text-[#222222] leading-[0.9] mb-10">
-            Parking made <br />
-            <span className="text-[#FA8112] font-serif italic font-medium tracking-normal">
-              effortless.
-            </span>
-          </h1>
+            <h1 className="text-5xl md:text-7xl font-bold text-[#FAF3E1] leading-[1.1] mb-6 tracking-tight">
+              Parking made <br />
+              <span className="text-[#FA8112]">effortless.</span>
+            </h1>
 
-          {/* Subtext: Improved contrast and width for readability */}
-          <p className="max-w-2xl text-l md:text-xl text-[#222222]/70 leading-relaxed mb-7 font-medium">
-            SmartPark helps you find, book, and navigate to the perfect spot in
-            seconds. No more driving in circles—just seamless city living.
-          </p>
+            <p className="text-[#FAF3E1]/70 text-lg md:text-xl max-w-lg leading-relaxed">
+              Find, book, and navigate to the perfect spot in seconds. No more
+              driving in circles—just seamless city living.
+            </p>
+          </header>
 
-          {/* Action Buttons: Humanized with tactile hover effects */}
-          <div className="flex flex-col sm:flex-row items-center gap-5 mb-12">
-            <button className="w-auto sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-[#222222] text-[#FAF3E1] rounded-lg font-bold text-lg transition-all hover:bg-[#FA8112] hover:-translate-y-1 active:scale-95 shadow-xl shadow-[#222222]/10">
+          <nav className="flex flex-wrap items-center gap-5">
+            <button className="bg-[#FA8112] text-[#222222] px-8 py-4 rounded-2xl font-bold text-base flex items-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.3)] hover:-translate-y-1 transition-all active:scale-95">
               Get Started
-              <ArrowRight size={20} strokeWidth={3} />
+              <ArrowRight size={20} />
             </button>
-
-            <button className="w-auto sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-[#F5E7C6] border border-[#222222]/10 text-[#222222] rounded-lg font-bold text-lg transition-all hover:bg-[#FAF3E1] active:scale-95">
-              <Play size={20} fill="#222222" />
-              Watch Demo
+            
+            <button className="group flex items-center gap-2 text-[#FAF3E1] font-semibold text-base py-4 px-2 hover:text-[#FA8112] transition-colors">
+              View Live Map
+              <ChevronRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </button>
-          </div>
-
-          {/* Simple Stats: Responsive grid with custom border color */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-10 pt-8 border-t-2 border-[#222222]/5">
-            <div className="space-y-1">
-              <p className="text-4xl md:text-5xl font-black text-[#222222] tracking-tighter">
-                500+
-              </p>
-              <p className="text-sm md:text-base font-bold text-[#222222]/50 uppercase tracking-widest">
-                Prime Spots
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-4xl md:text-5xl font-black text-[#222222] tracking-tighter">
-                10k+
-              </p>
-              <p className="text-sm md:text-base font-bold text-[#222222]/50 uppercase tracking-widest">
-                Daily Users
-              </p>
-            </div>
-            <div className="hidden md:block space-y-1">
-              <p className="text-4xl md:text-5xl font-black text-[#222222] tracking-tighter">
-                99.9%
-              </p>
-              <p className="text-sm md:text-base font-bold text-[#222222]/50 uppercase tracking-widest">
-                Success Rate
-              </p>
-            </div>
-          </div>
+          </nav>
         </div>
-      </div>
+      </article>
+
+      {/* Subtle decorative glow to bridge the gap to StatsSection */}
+      <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-t from-[#222222] to-transparent z-20" />
     </section>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+// Sub-component imports
 import ContactHero from "../components/contact/ContactHero";
 import ContactCards from "../components/contact/ContactCards";
 import ContactForm from "../components/contact/ContactForm";
@@ -9,53 +10,70 @@ import SocialLinks from "../components/contact/SocialLinks";
 import ContactCTA from "../components/contact/ContactCTA";
 
 const Contact = () => {
-  // Ensures user starts at the top of the page on navigation
+  // Reset scroll to top on page load
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <main className="bg-[#FAF3E1] min-h-screen font-sans text-[#222222] antialiased selection:bg-[#FA8112] selection:text-[#FAF3E1]">
-      {/* 1. Header & Introduction: Clean airy hero section */}
-      <ContactHero />
+    <main className="bg-[#222222] min-h-screen selection:bg-[#FA8112] selection:text-[#222222] overflow-x-hidden antialiased">
+      {/* 1. INTRODUCTION - Lightweight Hero */}
+      <header className="relative">
+        <ContactHero />
+      </header>
 
-      {/* 2. Direct Contact Channels: Using the warmer Beige background for contrast */}
-      <section className="py-20 bg-[#F5E7C6] border-y border-[#222222]/5">
-        <ContactCards />
+      {/* 2. CHANNELS - Quick Action Cards (Email, Phone, WhatsApp) */}
+      <section className="relative z-20 -mt-12 md:-mt-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <ContactCards />
+        </div>
       </section>
 
-      {/* 3. Main Interaction Area: Balanced Grid with generous whitespace */}
-      <div className="container mx-auto max-w-screen-2xl px-6 md:px-12 lg:px-24 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 py-24">
-        {/* Form Side */}
-        <div className="order-2 lg:order-1">
-          <ContactForm />
+      {/* 3. INTERACTION AREA - The Main Hub */}
+      <section className="py-24 px-6 relative z-10">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* LEFT: Contact Form (Taking up more space) */}
+          <article className="lg:col-span-7">
+            <ContactForm />
+          </article>
+
+          {/* RIGHT: Supportive Info & Socials */}
+          <aside className="lg:col-span-5 flex flex-col gap-10">
+            <div className="bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 p-8 rounded-[2.5rem]">
+              <WhyContact />
+            </div>
+
+            <div className="bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 p-8 rounded-[2.5rem]">
+              <SocialLinks />
+            </div>
+          </aside>
         </div>
-
-        {/* Content Side */}
-        <div className="order-1 lg:order-2 space-y-16">
-          <WhyContact />
-
-          {/* Social Links Box: Styled like a high-end card on beige */}
-          <div className="p-10 bg-white rounded-[2.5rem] border-2 border-[#222222]/5 shadow-sm hover:border-[#222222] transition-all duration-500">
-            <SocialLinks />
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Visual Location Integration: Simple Map Container */}
-      <section className="py-12 border-t border-[#222222]/5">
-        <ContactMap />
       </section>
 
-      {/* 5. Support & Conversion: Minimalist FAQ teaser */}
-      <section className="py-24 bg-[#F5E7C6]/30 border-t border-[#222222]/5">
-        <div className="container mx-auto max-w-4xl px-6">
+      {/* 4. LOCATION - Full Width Map with Glass Overlay */}
+      <section className="py-24 bg-[#222222] ">
+        <div className="max-w-6xl mx-auto px-6">
+          <ContactMap />
+        </div>
+      </section>
+
+      {/* 5. SUPPORT - FAQ Quick Links */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
           <FAQShortcut />
         </div>
       </section>
 
-      {/* 6. Final Call to Action: Bold signature orange footer */}
-      <ContactCTA />
+      {/* 6. CONCLUSION - Final Engagement */}
+      <footer className="relative ">
+        <div className="max-w-6xl mx-auto py-20 px-6">
+          <ContactCTA />
+        </div>
+      </footer>
+
+      {/* GLOBAL DECORATIVE GLOWS */}
+      <div className="fixed top-[10%] right-[-5%] w-[400px] h-[400px] bg-[#FA8112]/[0.03] blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="fixed bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-[#FA8112]/[0.05] blur-[120px] rounded-full pointer-events-none z-0" />
     </main>
   );
 };

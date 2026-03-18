@@ -1,106 +1,90 @@
-import React, { useState } from "react";
-import {
-  Send,
-  CheckCircle2,
-  MessageSquareText,
-  AlertCircle,
-} from "lucide-react";
+import React from "react";
+import { Send, User, Mail, MessageSquare, Terminal } from "lucide-react";
 
 const ContactForm = () => {
-  const [status, setStatus] = useState("idle");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setStatus("submitting");
-    setTimeout(() => setStatus("success"), 1500);
-  };
-
-  if (status === "success") {
-    return (
-      <div className="bg-white border-2 border-[#222222] p-16 rounded-[3rem] text-center space-y-6 shadow-2xl">
-        <CheckCircle2
-          size={80}
-          className="text-[#FA8112] mx-auto animate-bounce"
-        />
-        <h3 className="text-4xl font-black text-[#222222] tracking-tighter">
-          Message Sent!
-        </h3>
-        <p className="text-[#222222]/60 font-medium text-lg">
-          Our team in Anand will get back to you shortly.
-        </p>
-        <button
-          onClick={() => setStatus("idle")}
-          className="text-[#FA8112] font-black uppercase tracking-widest text-xs border-b-2 border-[#FA8112]"
-        >
-          Send Another
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-white p-10 md:p-14 rounded-[3rem] border-2 border-[#222222]/5 shadow-sm hover:shadow-2xl transition-all duration-700">
-      <div className="flex items-center gap-4 mb-10">
-        <div className="p-3 rounded-2xl bg-[#F5E7C6] text-[#FA8112]">
-          <MessageSquareText size={28} />
-        </div>
-        <h2 className="text-3xl font-black text-[#222222] tracking-tighter">
-          Send Us a Message
-        </h2>
-      </div>
+    <article className="relative bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 p-8 md:p-12 rounded-[3rem] shadow-2xl overflow-hidden group">
+      {/* Decorative Corner Glow */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#FA8112]/5 blur-[80px] rounded-full pointer-events-none" />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <header className="mb-10">
+        <aside className="flex items-center gap-2 mb-4">
+          <Terminal size={14} className="text-[#FA8112]" />
+          <span className="text-[#FAF3E1]/40 text-[10px] font-bold uppercase tracking-[0.3em]">
+            Direct Channel
+          </span>
+        </aside>
+        <h2 className="text-3xl font-bold text-[#FAF3E1] tracking-tight">
+          Send a <span className="text-[#FA8112]">Message.</span>
+        </h2>
+      </header>
+
+      <form
+        className="flex flex-col gap-6"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        {/* NAME & EMAIL ROW */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="relative group/input">
+            <User
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within/input:text-[#FA8112] transition-colors"
+              size={18}
+            />
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="w-full bg-[#2a2a2a]/40 border border-[#F5E7C6]/5 rounded-2xl py-4 pl-12 pr-4 text-[#FAF3E1] placeholder:text-[#FAF3E1]/20 focus:outline-none focus:border-[#FA8112]/40 focus:bg-[#2a2a2a]/60 transition-all text-sm"
+            />
+          </div>
+          <div className="relative group/input">
+            <Mail
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within/input:text-[#FA8112] transition-colors"
+              size={18}
+            />
+            <input
+              type="email"
+              placeholder="Email Address"
+              className="w-full bg-[#2a2a2a]/40 border border-[#F5E7C6]/5 rounded-2xl py-4 pl-12 pr-4 text-[#FAF3E1] placeholder:text-[#FAF3E1]/20 focus:outline-none focus:border-[#FA8112]/40 focus:bg-[#2a2a2a]/60 transition-all text-sm"
+            />
+          </div>
+        </div>
+
+        {/* SUBJECT */}
+        <div className="relative group/input">
+          <MessageSquare
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within/input:text-[#FA8112] transition-colors"
+            size={18}
+          />
           <input
             type="text"
-            placeholder="Full Name"
-            required
-            className="bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/30"
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            required
-            className="bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all placeholder:text-[#222222]/30"
+            placeholder="Subject (e.g., Booking Issue, Tech Support)"
+            className="w-full bg-[#2a2a2a]/40 border border-[#F5E7C6]/5 rounded-2xl py-4 pl-12 pr-4 text-[#FAF3E1] placeholder:text-[#FAF3E1]/20 focus:outline-none focus:border-[#FA8112]/40 focus:bg-[#2a2a2a]/60 transition-all text-sm"
           />
         </div>
-        <div className="relative">
-          <select
-            required
-            className="w-full bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all appearance-none"
-          >
-            <option value="">Select Subject</option>
-            <option value="Inquiry">General Inquiry</option>
-            <option value="Booking">Booking Issue</option>
-            <option value="Wallet">Wallet & Payment</option>
-          </select>
-          <AlertCircle
-            size={18}
-            className="absolute right-6 top-1/2 -translate-y-1/2 text-[#222222]/20"
-          />
+
+        {/* MESSAGE */}
+        <div className="relative group/input">
+          <textarea
+            rows="5"
+            placeholder="How can our MERN experts assist you today?"
+            className="w-full bg-[#2a2a2a]/40 border border-[#F5E7C6]/5 rounded-[2rem] p-6 text-[#FAF3E1] placeholder:text-[#FAF3E1]/20 focus:outline-none focus:border-[#FA8112]/40 focus:bg-[#2a2a2a]/60 transition-all text-sm resize-none"
+          ></textarea>
         </div>
-        <textarea
-          placeholder="How can we help?"
-          rows="4"
-          required
-          className="w-full bg-[#FAF3E1] border-2 border-transparent rounded-2xl px-6 py-4 text-[#222222] font-bold focus:border-[#222222] outline-none transition-all resize-none placeholder:text-[#222222]/30"
-        />
-        <button
-          type="submit"
-          disabled={status === "submitting"}
-          className="w-full py-5 bg-[#222222] text-[#FAF3E1] rounded-2xl font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 hover:bg-[#FA8112] transition-all active:scale-95 shadow-lg"
-        >
-          {status === "submitting" ? "Processing..." : "Submit Message"}
-          <Send size={18} strokeWidth={3} />
+
+        {/* SUBMIT BUTTON */}
+        <button className="relative mt-4 bg-[#FA8112] text-[#222222] font-bold py-4 rounded-2xl flex items-center justify-center gap-3 overflow-hidden group/btn hover:shadow-[0_0_30px_rgba(250,129,18,0.3)] transition-all active:scale-95">
+          <span className="relative z-10 flex items-center gap-3">
+            Dispatch Message
+            <Send
+              size={18}
+              className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+            />
+          </span>
+          {/* Animated Highlight */}
+          <div className="absolute inset-0 bg-white/10 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
         </button>
       </form>
-    </div>
+    </article>
   );
 };
 

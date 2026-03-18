@@ -1,116 +1,105 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { Menu, X, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { Menu, X, Home, Info, Phone, LogIn, Car } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "unset";
-  }, [isOpen]);
-
-  // Notion-style typography: Heavy charcoal for active, subtle for inactive
-  const linkStyles = ({ isActive }) =>
-    `relative text-[15px] font-medium transition-all duration-300 py-1 ${
+  // Styling helpers to keep the JSX clean
+  const navLinkClass = ({ isActive }) =>
+    `flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
       isActive
-        ? "text-[#222222] border-b-2 border-[#FA8112]"
-        : "text-[#222222]/60 hover:text-[#FA8112]"
+        ? "text-[#FA8112] bg-[#F5E7C6]/5"
+        : "text-[#FAF3E1]/70 hover:text-[#FA8112] hover:bg-[#FAF3E1]/[0.03]"
     }`;
 
   return (
-    <header className="sticky top-0 z-100 w-full border-b border-[#222222]/5 bg-[#FAF3E1]/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-4 md:px-12 lg:px-20">
-        {/* 1. LOGO: Using Vibrant Orange as the focal point */}
-        <div className="relative z-110">
-          <NavLink to="/" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FA8112] transition-all duration-500 group-hover:rotate-[-5deg] shadow-sm">
-              <div className="h-1.5 w-1.5 rounded-full bg-[#FAF3E1]"></div>
+    <header className="fixed top-5 left-0 w-full z-50 px-4 py-4 md:py-6">
+      <nav className="max-w-5xl mx-auto">
+        <div className="bg-[#222222]/10 backdrop-blur-md border border-[#F5E7C6]/10 rounded-2xl md:rounded-full px-7 py-4 flex items-center justify-between shadow-2xl">
+          {/* BRAND LOGO */}
+          <NavLink to="/" className="flex items-center gap-2 group">
+            <div className="bg-[#FA8112] p-2 rounded-lg transition-transform group-hover:rotate-12">
+              <Car size={20} className="text-[#222222]" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-[#222222]">
+            <span className="text-[#FAF3E1] font-bold text-lg tracking-tight">
               Smart<span className="text-[#FA8112]">Park</span>
             </span>
           </NavLink>
+
+          {/* DESKTOP LINKS */}
+          <div className="hidden md:flex items-center gap-2">
+            <NavLink to="/" className={navLinkClass}>
+              Home
+            </NavLink>
+            <NavLink to="/about" className={navLinkClass}>
+              About Us
+            </NavLink>
+            <NavLink to="/contact" className={navLinkClass}>
+              Contact Us
+            </NavLink>
+
+            <div className="h-6 w-[1px] bg-[#F5E7C6]/10 mx-2" />
+
+            <NavLink
+              to="/login"
+              className="bg-[#FA8112] text-[#222222] px-6 py-2 rounded-full font-bold text-sm hover:scale-105 hover:bg-[#F5E7C6]/5 hover:text-[#F5E7C6] transition-transform active:scale-95 flex items-center gap-2"
+            >
+              <LogIn size={16} /> Login
+            </NavLink>
+          </div>
+
+          {/* MOBILE TOGGLE */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-[#FAF3E1] p-2 hover:bg-[#FAF3E1]/10 rounded-xl transition-colors"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
-        {/* 2. DESKTOP NAV: Minimalist & Breathable */}
-        <nav className="hidden items-center gap-10 md:flex">
-          <NavLink to="/" end className={linkStyles}>
-            Home
-          </NavLink>
-          <NavLink to="/about" className={linkStyles}>
-            About
-          </NavLink>
-          <NavLink to="/contact" className={linkStyles}>
-            Contact
-          </NavLink>
-
-          <div className="h-5 w-px bg-[#222222]/10 mx-2"></div>
-
-          <NavLink
-            to="/login"
-            className="rounded-lg bg-[#222222] px-6 py-2.5 text-sm font-bold text-[#FAF3E1] transition-all hover:bg-[#FA8112] hover:-translate-y-0.5 active:translate-y-0"
-          >
-            Sign in
-          </NavLink>
-        </nav>
-
-        {/* 3. MOBILE TOGGLE */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative z-110 rounded-lg p-2 text-[#222222] hover:bg-[#F5E7C6] md:hidden transition-colors"
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
-
-        {/* 4. MOBILE MENU: Full Screen Humanized Layout */}
+        {/* MOBILE MENU PANEL */}
         <div
-          className={`fixed inset-0 z-105 h-screen w-full bg-[#FAF3E1] transition-all duration-500 ease-in-out md:hidden ${
-            isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
-          }`}
+          className={`
+          md:hidden absolute top-20 left-4 right-4 transition-all duration-300 transform
+          ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
+        `}
         >
-          <div className="flex h-full flex-col px-8 pt-32 pb-16">
-            <nav className="flex flex-col space-y-8">
-              {["Home", "About", "Contact"].map((item) => (
-                <NavLink
-                  key={item}
-                  to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                  className={({ isActive }) =>
-                    `flex items-center justify-between text-4xl font-black tracking-tighter transition-colors ${
-                      isActive ? "text-[#FA8112]" : "text-[#222222]"
-                    }`
-                  }
-                >
-                  {item}
-                  <ArrowRight
-                    size={32}
-                    className={
-                      location.pathname ===
-                      (item === "Home" ? "/" : `/${item.toLowerCase()}`)
-                        ? "opacity-100"
-                        : "opacity-10"
-                    }
-                  />
-                </NavLink>
-              ))}
-            </nav>
+          <div className="bg-[#222222] border border-[#F5E7C6]/10 rounded-3xl p-4 shadow-2xl space-y-2">
+            <NavLink
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className={navLinkClass}
+            >
+              <Home size={18} /> Home
+            </NavLink>
+            <NavLink
+              to="/about"
+              onClick={() => setIsOpen(false)}
+              className={navLinkClass}
+            >
+              <Info size={18} /> About Us
+            </NavLink>
+            <NavLink
+              to="/contact"
+              onClick={() => setIsOpen(false)}
+              className={navLinkClass}
+            >
+              <Phone size={18} /> Contact Us
+            </NavLink>
 
-            <div className="mt-auto">
+            <div className="pt-2">
               <NavLink
                 to="/login"
-                className="flex w-full items-center justify-center rounded-xl bg-[#FA8112] py-5 text-xl font-bold text-[#FAF3E1] shadow-lg shadow-[#FA8112]/20 active:scale-[0.98] transition-transform"
+                onClick={() => setIsOpen(false)}
+                className="w-full bg-[#FA8112] text-[#222222] p-4 rounded-2xl font-bold flex items-center justify-center gap-2"
               >
-                Get Started
+                <LogIn size={18} /> Login to Account
               </NavLink>
             </div>
           </div>
         </div>
-      </div>
+      </nav>
     </header>
   );
 };
