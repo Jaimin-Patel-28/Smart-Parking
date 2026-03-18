@@ -12,6 +12,23 @@
     @apply bg-slate-950 text-white antialiased overflow-x-hidden;
     background-color: #020617;
   }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  .group,
+  [role="button"] {
+    cursor: none !important;
+  }
+}
+
+/* Ensure the cursor is hidden on ALL elements for desktop */
+@media (min-width: 768px) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
 }
 
 @utility no-scrollbar {
