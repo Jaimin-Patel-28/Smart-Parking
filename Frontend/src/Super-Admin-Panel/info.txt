@@ -1,0 +1,180 @@
+src/
+│
+├── admin-panel/
+│   │
+│   ├── layout/
+│   │   ├── AdminLayout.jsx
+│   │   ├── AdminHeader.jsx
+│   │   └── AdminSidebar.jsx
+│   │
+│   ├── modules/
+│   │
+│   │   ├── dashboard/
+│   │   │   ├── pages/
+│   │   │   │   └── Dashboard.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── StatsCard.jsx
+│   │   │   │   ├── RecentBookings.jsx
+│   │   │   │   ├── SystemStatus.jsx
+│   │   │   │   └── DashboardCharts.jsx
+|   |   |   |   |- DashboardStats.jsx
+|   |   |   |   |- ErrorBoundary.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── dashboardService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useDashboardData.js
+│   │
+│   │   ├── parking/
+│   │   │   ├── pages/
+│   │   │   │   ├── ParkingList.jsx
+│   │   │   │   ├── AddParking.jsx
+│   │   │   │   ├── EditParking.jsx
+│   │   │   │   └── ParkingDetails.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── ParkingTable.jsx
+│   │   │   │   ├── ParkingForm.jsx
+│   │   │   │   └── StatusToggle.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── parkingService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useParking.js
+│   │
+│   │   ├── slots/
+│   │   │   ├── pages/
+│   │   │   │   └── SlotList.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── SlotGrid.jsx
+│   │   │   │   ├── SlotCard.jsx
+│   │   │   │   └── SlotControls.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── slotService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useSlots.js
+│   │
+│   │   ├── bookings/
+│   │   │   ├── pages/
+│   │   │   │   ├── BookingList.jsx
+│   │   │   │   └── BookingDetails.jsx      
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── BookingTable.jsx
+│   │   │   │   ├── BookingStatusBadge.jsx
+│   │   │   │   └── BookingFilters.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── bookingService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useBookings.js
+│   │
+│   │   ├── users/
+│   │   │   ├── pages/
+│   │   │   │   ├── UserList.jsx
+│   │   │   │   └── UserDetails.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── UserTable.jsx
+│   │   │   │   ├── UserStatusToggle.jsx
+│   │   │   │   └── UserSearch.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── userService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useUsers.js
+│   │
+│   │   ├── wallet/
+│   │   │   ├── pages/
+│   │   │   │   ├── WalletOverview.jsx
+│   │   │   │   └── Transactions.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── TransactionTable.jsx
+│   │   │   │   └── RevenueCard.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── transactionService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useTransactions.js
+│   │
+│   │   ├── reports/
+│   │   │   ├── pages/
+│   │   │   │   ├── BookingReports.jsx
+│   │   │   │   └── RevenueReports.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── BookingChart.jsx
+│   │   │   │   └── RevenueChart.jsx
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── reportService.js
+│   │   │   │
+│   │   │   └── hooks/
+│   │   │       └── useReports.js
+│   │
+│   │   ├── notifications/
+│   │   │   ├── pages/
+│   │   │   │   └── SendNotification.jsx
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   └── NotificationForm.jsx
+│   │   │   │
+│   │   │   └── services/
+│   │   │       └── notificationService.js
+│   │
+│   │   ├── support/
+│   │   │   ├── pages/
+│   │   │   │   ├── TicketList.jsx
+│   │   │   │   └── TicketDetails.jsx
+│   │   │   │
+│   │   │   └── services/
+│   │   │       └── supportService.js
+│   │
+│   │   ├── settings/
+│   │   │   ├── pages/
+│   │   │   │   ├── PricingSettings.jsx
+│   │   │   │   └── SystemSettings.jsx
+│   │   │   │
+│   │   │   └── services/
+│   │   │       └── settingsService.js
+│   │
+│   │   └── admin-profile/
+│   │       ├── pages/
+│   │       │   ├── AdminProfile.jsx
+│   │       │   └── ActivityLogs.jsx
+│   │       │
+│   │       └── services/
+│   │           └── adminService.js
+│
+│   └── routes/
+│       └── AdminRoutes.jsx
+│
+├── shared/
+│   ├── components/
+│   │   └── ui/
+│   │       ├── Button.jsx
+│   │       ├── Modal.jsx
+│   │       ├── Table.jsx
+│   │       └── Loader.jsx
+│   │
+│   ├── hooks/
+│   │   ├── useFetch.js
+│   │   └── usePagination.js
+│   │
+│   └── utils/
+│       ├── formatDate.js
+│       ├── constants.js
+│       └── validation.js
+│
+├── App.jsx
+└── main.jsx
