@@ -100,3 +100,6 @@ Extra charge	        Pay if needed	Collect charge	Configure rules
 
 
   new repo
+
+  new name 
+  
