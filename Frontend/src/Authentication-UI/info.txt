@@ -1,0 +1,441 @@
+AUTHENTICATION backend 
+
+Below is a complete backend authentication system (Node.js + Express + MongoDB) implementing exactly your flow:
+
+Register
+ → Send OTP Email
+ → Verify OTP
+ → Generate Unique User ID
+ → Registration Complete
+ → Login
+ → Detect Role From Email
+ → Redirect (User / Admin / SuperAdmin)
+
+Your installed packages already include:
+
+express
+
+mongoose
+
+bcryptjs
+
+jsonwebtoken
+
+dotenv
+
+cors
+
+You only need one more package:
+
+npm install nodemailer
+1. Backend Folder Structure
+backend
+│
+├── config
+│   └── db.js
+│
+├── models
+│   └── User.js
+│
+├── controllers
+│   └── authController.js
+│
+├── routes
+│   └── authRoutes.js
+│
+├── middleware
+│   └── authMiddleware.js
+│
+├── utils
+│   ├── sendOTP.js
+│   ├── generateUserId.js
+│   └── detectRole.js
+│
+├── server.js
+└── .env
+2. .env File
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/parking_system
+JWT_SECRET=mysecretkey
+
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+
+Use Gmail App Password.
+
+3. Database Connection
+config/db.js
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected");
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
+4. User Model
+models/User.js
+const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+    },
+
+    fullName: {
+      type: String,
+      required: true,
+    },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
+    mobile: {
+      type: String,
+      required: true,
+    },
+
+    vehicleNumber: {
+      type: String,
+      required: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["user", "admin", "superadmin"],
+      default: "user",
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    otp: String,
+    otpExpire: Date,
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("User", userSchema);
+5. Role Detection
+utils/detectRole.js
+const detectRole = (email) => {
+  if (email.includes("@superadmin")) return "superadmin";
+  if (email.includes("@admin")) return "admin";
+  return "user";
+};
+
+module.exports = detectRole;
+6. Unique User ID Generator
+utils/generateUserId.js
+const User = require("../models/User");
+
+const generateUserId = async () => {
+  const count = await User.countDocuments();
+  const id = count + 1;
+
+  return `USR-2026-${id.toString().padStart(4, "0")}`;
+};
+
+module.exports = generateUserId;
+
+Example IDs:
+
+USR-2026-0001
+USR-2026-0002
+7. Send OTP Email
+utils/sendOTP.js
+const nodemailer = require("nodemailer");
+
+const sendOTP = async (email, otp) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Email Verification OTP",
+    html: `<h2>Your OTP is: ${otp}</h2>
+           <p>Valid for 5 minutes</p>`,
+  });
+};
+
+module.exports = sendOTP;
+8. Auth Controller
+controllers/authController.js
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const sendOTP = require("../utils/sendOTP");
+const generateUserId = require("../utils/generateUserId");
+const detectRole = require("../utils/detectRole");
+
+
+// REGISTER
+exports.registerUser = async (req, res) => {
+  try {
+    const { fullName, email, mobile, vehicleNumber, password } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const otpExpire = Date.now() + 5 * 60 * 1000;
+
+    const role = detectRole(email);
+
+    user = new User({
+      fullName,
+      email,
+      mobile,
+      vehicleNumber,
+      password: hashedPassword,
+      role,
+      otp,
+      otpExpire,
+    });
+
+    await user.save();
+
+    await sendOTP(email, otp);
+
+    res.json({ message: "OTP sent to email" });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+// VERIFY OTP
+exports.verifyOTP = async (req, res) => {
+  try {
+
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (user.otpExpire < Date.now()) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    user.isVerified = true;
+    user.otp = null;
+
+    user.userId = await generateUserId();
+
+    await user.save();
+
+    res.json({
+      message: "Registration complete",
+      userId: user.userId,
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+// LOGIN
+exports.loginUser = async (req, res) => {
+  try {
+
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.isVerified) {
+      return res.status(400).json({ message: "Verify your email first" });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      message: "Login successful",
+      token,
+      role: user.role,
+      userId: user.userId,
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+9. Auth Routes
+routes/authRoutes.js
+const express = require("express");
+const router = express.Router();
+
+const {
+  registerUser,
+  verifyOTP,
+  loginUser,
+} = require("../controllers/authController");
+
+router.post("/register", registerUser);
+router.post("/verify-otp", verifyOTP);
+router.post("/login", loginUser);
+
+module.exports = router;
+10. Auth Middleware (Protected Routes)
+middleware/authMiddleware.js
+const jwt = require("jsonwebtoken");
+
+const authMiddleware = (req, res, next) => {
+
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: "No token" });
+  }
+
+  try {
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = decoded;
+
+    next();
+
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+module.exports = authMiddleware;
+11. Server Setup
+server.js
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+
+const connectDB = require("./config/db");
+
+const authRoutes = require("./routes/authRoutes");
+
+const app = express();
+
+connectDB();
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+12. API Testing
+Register
+POST /api/auth/register
+{
+ "fullName":"Jaimin Patel",
+ "email":"test@gmail.com",
+ "mobile":"9876543210",
+ "vehicleNumber":"GJ01AB1234",
+ "password":"123456"
+}
+Verify OTP
+POST /api/auth/verify-otp
+{
+ "email":"test@gmail.com",
+ "otp":"123456"
+}
+Login
+POST /api/auth/login
+{
+ "email":"test@gmail.com",
+ "password":"123456"
+}
+
+Response
+
+{
+ "token":"JWT_TOKEN",
+ "role":"user",
+ "userId":"USR-2026-0001"
+}
+13. Frontend Redirect Logic
+
+After login:
+
+if role === user
+ → /user/dashboard
+
+if role === admin
+ → /admin/dashboard
+
+if role === superadmin
+ → /superadmin/dashboard
+14. Your Authentication System Now Supports
+
+✔ Register
+✔ Email OTP verification
+✔ Unique User ID
+✔ Role detection from email
+✔ Login system
+✔ JWT authentication
+✔ Role-based redirection
+
+
+for super admin provide unique email and password for direct login which is already store in database. super admin can add admin and super admin can store unique email and password store in database and provide to admin for direct login.
+
+those provided unique email id and password are direct write in login form and backend detect role according to email and redirect according to the email 
+
+important thing which is for all roles use single login form 
+
+
+
+Payment gateway not configured. Please contact support.
