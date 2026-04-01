@@ -3,8 +3,8 @@ const User = require("../Authentication/models/User");
 
 const createSuperAdmin = async () => {
   try {
-    const email = "jaimin@superadmin.gmail.com";
-    const password = "SuperAdmin123";
+    const email = "owner@superadmin.gmail.com";
+    const password = "OWNER@SA123";
 
     const existing = await User.findOne({ email });
 
