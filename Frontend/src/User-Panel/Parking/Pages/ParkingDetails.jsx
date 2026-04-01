@@ -31,7 +31,20 @@ const ParkingDetails = () => {
   const fetchDetails = async (start, end) => {
     try {
       const res = await parkingService.getParkingDetails(id, start, end);
-      setData(res.data);
+      const newData = res.data;
+
+      // ✅ Check if selected slot still valid
+      if (selectedSlot) {
+        const updatedSlot = newData.slots.find(
+          (s) => s._id === selectedSlot._id,
+        );
+
+        if (!updatedSlot || !updatedSlot.isAvailableForTime) {
+          setSelectedSlot(null); // ❌ remove invalid selection
+        }
+      }
+
+      setData(newData);
       setIsTimeFiltered(!!(start && end));
     } catch (err) {
       toast.error("Could not load parking details");
@@ -75,6 +88,11 @@ const ParkingDetails = () => {
   const handleProceed = async () => {
     if (!selectedSlot || !bookingTime.start || !bookingTime.end) {
       return toast.error("Select a slot and verify times");
+    }
+
+    // ✅ NEW CHECK
+    if (!selectedSlot.isAvailableForTime) {
+      return toast.error("This slot is no longer available");
     }
     setIsLocking(true);
     try {
@@ -217,9 +235,10 @@ const ParkingDetails = () => {
                   type="datetime-local"
                   className="w-full bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded-2xl p-4 text-sm font-bold text-[#FAF3E1] focus:border-[#FA8112] focus:outline-none transition-all"
                   value={bookingTime.start}
-                  onChange={(e) =>
-                    setBookingTime({ ...bookingTime, start: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setBookingTime({ ...bookingTime, start: e.target.value });
+                    setSelectedSlot(null); // ✅ reset old slot
+                  }}
                 />
               </div>
 
@@ -231,9 +250,10 @@ const ParkingDetails = () => {
                   type="datetime-local"
                   className="w-full bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded-2xl p-4 text-sm font-bold text-[#FAF3E1] focus:border-[#FA8112] focus:outline-none transition-all"
                   value={bookingTime.end}
-                  onChange={(e) =>
-                    setBookingTime({ ...bookingTime, end: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setBookingTime({ ...bookingTime, end: e.target.value });
+                    setSelectedSlot(null); // ✅ reset old slot
+                  }}
                 />
               </div>
 

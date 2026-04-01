@@ -9,34 +9,38 @@ const SlotGrid = ({ slots, selectedSlot, onSelect, isTimeSelected }) => {
         const hasValidTime = slot.isAvailableForTime !== undefined;
         const slotStatus = slot.status?.toLowerCase();
 
-        // Logical Checks
+        // ✅ Only real physical states
         const isOccupied =
-          slotStatus === "occupied" ||
-          slotStatus === "maintenance" ||
-          (hasValidTime && !slot.isAvailableForTime);
-        const isLocked =
-          slotStatus === "locked" ||
-          slot.status === "temporary_locked" ||
-          (hasValidTime &&
-            !slot.isAvailableForTime &&
-            slotStatus !== "occupied");
+          slotStatus === "occupied" || slotStatus === "maintenance";
+
+        // ✅ Time-based availability (MAIN FIX)
+        const isUnavailable = hasValidTime && !slot.isAvailableForTime;
+
+        // ✅ Time selection check
         const timeSelected = isTimeSelected || hasValidTime;
-        const displayLocked = !timeSelected || isLocked;
+
+        // ✅ Final UI states
+        const displayLocked = !timeSelected;
+        const displayUnavailable =
+          timeSelected && (isOccupied || isUnavailable);
 
         const getButtonStyles = () => {
           if (isSelected)
             return "bg-[#FA8112] border-[#FA8112] text-[#222222] shadow-[0_0_20px_rgba(250,129,18,0.3)] scale-105 z-10 ring-2 ring-[#FA8112]/20";
-          if (isOccupied)
+
+          if (displayUnavailable)
             return "bg-red-500/5 border-red-500/20 opacity-40 cursor-not-allowed";
+
           if (displayLocked)
             return "bg-amber-500/5 border-amber-500/10 opacity-30 cursor-not-allowed grayscale";
+
           return "bg-[#FAF3E1]/[0.02] border-[#F5E7C6]/10 hover:border-[#FA8112]/50 hover:bg-[#FAF3E1]/[0.05] group/slot";
         };
 
         return (
           <button
             key={slot._id}
-            disabled={!timeSelected || isOccupied || isLocked}
+            disabled={displayLocked || displayUnavailable}
             onClick={() => onSelect(slot)}
             className={`relative h-20 flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${getButtonStyles()}`}
           >
@@ -51,9 +55,8 @@ const SlotGrid = ({ slots, selectedSlot, onSelect, isTimeSelected }) => {
               {slot.label}
             </span>
 
-            {/* Dynamic Status Icon */}
             <div className="relative">
-              {isOccupied ? (
+              {displayUnavailable ? (
                 <Ban size={14} className="text-red-500/40" />
               ) : displayLocked ? (
                 <Lock size={14} className="text-amber-500/20" />
@@ -71,13 +74,13 @@ const SlotGrid = ({ slots, selectedSlot, onSelect, isTimeSelected }) => {
               )}
             </div>
 
-            {/* Bottom Cyber-Indicator */}
+            {/* Bottom Indicator */}
             <div className="absolute bottom-2 left-3 right-3 h-[1.5px] rounded-full overflow-hidden bg-white/5">
               <div
                 className={`h-full transition-all duration-500 ${
                   isSelected
                     ? "bg-[#222222] w-full"
-                    : isOccupied
+                    : displayUnavailable
                       ? "bg-red-500 w-full"
                       : displayLocked
                         ? "bg-amber-500 w-1/3"

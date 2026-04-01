@@ -21,12 +21,12 @@ const generateBookingNumber = () => {
 /*
 🔄 Automatic Slot Status Manager - Runs every 1 minute
 Logic:
-1. LOCK: confirmed/active bookings → now >= start-10min && now < start → "locked"
-2. OCCUPY: locked slots → now >= start → "occupied"
-3. RELEASE: any booking → now > end+10min → "available" + "completed"
-4. TEMP LOCK: release temporary_locked after expires
+1. OCCUPY: start time reached → "occupied"
+2. RELEASE: end time + buffer passed → "available" + "completed"
+3. TEMP LOCK: release temporary_locked after expires
+NOTE: No pre-locking! Only time-based logic.
 */
-const BUFFER_MINS = 10;
+const BUFFER_MINS = 15;
 setInterval(async () => {
   try {
     const now = new Date();
@@ -34,66 +34,55 @@ setInterval(async () => {
 
     console.log(`[${now.toISOString()}] Running slot status check...`);
 
-    // 1. LOCK upcoming bookings (pre-start buffer)
-    const upcomingBookings = await Booking.find({
+    // 1. OCCUPY slots when booking start time reached
+    const bookingsToOccupy = await Booking.find({
       status: { $in: ["confirmed", "active"] },
-      startTime: { $gt: now },
-      $expr: { $lte: [{ $subtract: ["$startTime", bufferMs] }, now] }
-    }).populate("slot");
-
-    for (let booking of upcomingBookings) {
-      if (booking.slot.status !== "locked") {
-        await Slot.findByIdAndUpdate(booking.slot._id, {
-          status: "locked",
-          lockExpiresAt: booking.startTime
-        });
-        console.log(`Locked slot ${booking.slot.label} for booking ${booking._id}`);
-      }
-    }
-
-    // 2. OCCUPY locked slots when start time reached
-    const lockedToOccupy = await Booking.find({
-      status: { $in: ["confirmed", "active"] },
-      startTime: { $lte: now }
+      startTime: { $lte: now },
+      endTime: { $gt: now },
     }).populate("slot", "status label _id");
 
-    for (let booking of lockedToOccupy) {
-      if (booking.slot.status === "locked") {
+    for (let booking of bookingsToOccupy) {
+      if (booking.slot.status !== "occupied") {
         await Slot.findByIdAndUpdate(booking.slot._id, {
           status: "occupied",
-          bookedAt: now
+          bookedAt: now,
         });
-        console.log(`Occupied slot ${booking.slot.label} - booking started`);
+        console.log(
+          `[AUTO] Occupied slot ${booking.slot.label} - booking active`,
+        );
       }
     }
 
-    // 3. RELEASE completed bookings (post-end buffer)
+    // 2. RELEASE completed bookings (end time + buffer passed)
     const completedBookings = await Booking.find({
       status: { $nin: ["completed", "cancelled"] },
-      $expr: { $lt: [{ $add: ["$endTime", bufferMs] }, now] }
-    }).populate('slot');
+      endTime: { $lt: now },
+      $expr: { $lt: [{ $add: ["$endTime", bufferMs] }, now] },
+    }).populate("slot", "label _id");
 
     for (let booking of completedBookings) {
       await Slot.findByIdAndUpdate(booking.slot._id, {
         status: "available",
         vehicleNumber: null,
         bookedAt: null,
-        lockExpiresAt: null
+        lockExpiresAt: null,
       });
       await Booking.findByIdAndUpdate(booking._id, { status: "completed" });
-      console.log(`Released slot ${booking.slot.label} + completed booking ${booking._id}`);
+      console.log(
+        `[AUTO] Released slot ${booking.slot.label} + completed booking`,
+      );
     }
 
-    // 4. Release temporary locks
+    // 3. Release temporary locks (hold expired)
     await Slot.updateMany(
       {
         status: "temporary_locked",
-        lockExpiresAt: { $lt: now }
+        lockExpiresAt: { $lt: now },
       },
       {
         status: "available",
-        lockExpiresAt: null
-      }
+        lockExpiresAt: null,
+      },
     );
 
     console.log(`✅ Status check complete. Buffer: ${BUFFER_MINS}min`);
@@ -103,17 +92,23 @@ setInterval(async () => {
 }, 60000); // Every 1 minute
 
 /*
-1. Temporary Slot Lock (5 minutes)
+1. Temporary Slot Lock (5 minutes hold without confirming)
+Used to reserve slot while user completes payment/booking confirmation
 */
 exports.lockSlot = async (req, res) => {
   try {
     const { slotId } = req.body;
 
-    console.log("Slot ID:", slotId);
+    console.log("[LOCK SLOT] Slot ID:", slotId);
 
     const slot = await Slot.findById(slotId);
 
-    console.log("Slot Found:", slot);
+    console.log(
+      "[LOCK SLOT] Slot Found:",
+      slot?.label,
+      "Status:",
+      slot?.status,
+    );
 
     if (!slot) {
       return res.status(400).json({
@@ -121,19 +116,26 @@ exports.lockSlot = async (req, res) => {
       });
     }
 
-    if (slot.status !== "available") {
+    // ✅ FIXED: Only reject if occupied or already temporary locked
+    // Allow locking even if status is "available" (ignoring "locked" status)
+    if (slot.status === "occupied" || slot.status === "temporary_locked") {
       return res.status(400).json({
         message: `Slot not available, current status: ${slot.status}`,
+        currentStatus: slot.status,
       });
     }
 
+    // Lock slot for 5 minutes (user has 5 minutes to complete booking)
     slot.status = "temporary_locked";
     slot.lockExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
     await slot.save();
 
+    console.log(`[LOCK SLOT] ✅ Locked ${slot.label} for 5 minutes`);
+
     res.json({
-      message: "Slot locked",
+      message: "Slot locked for 5 minutes (confirmBooking within this time)",
+      slotId: slot._id,
       expiresAt: slot.lockExpiresAt,
     });
   } catch (error) {
@@ -143,74 +145,99 @@ exports.lockSlot = async (req, res) => {
 };
 
 /*
-2. Confirm Booking
-Check 30 minute buffer rule
+2. Confirm Booking - with 15min buffer conflict check
+Buffer Logic: Booking blocks slot for 15 minutes BEFORE and AFTER the actual booking time
+Example: 2:00 PM - 2:15 PM booking → Slot locked 1:45 PM - 2:30 PM
+Conflict Check: Allow ONLY IF (newStart >= blockedEnd) OR (newEnd <= blockedStart)
 */
 exports.confirmBooking = async (req, res) => {
   try {
-    const { userId, parkingId, slotId, startTime, endTime, hourlyRate, vehicleNumber, paymentMethod } = req.body;
+    const {
+      userId,
+      parkingId,
+      slotId,
+      startTime,
+      endTime,
+      hourlyRate,
+      vehicleNumber,
+      paymentMethod,
+    } = req.body;
 
-    const buffer = 30 * 60 * 1000;
+    const buffer = 15 * 60 * 1000;
 
     const start = new Date(startTime);
     const end = new Date(endTime);
 
-    const reservedStart = new Date(start.getTime() - buffer);
-    const reservedEnd = new Date(end.getTime() + buffer);
+    // ✅ Apply buffer to NEW booking
+    const newBlockedStart = new Date(start.getTime() - buffer);
+    const newBlockedEnd = new Date(end.getTime() + buffer);
 
-    console.log("Checking slot:", slotId);
-    console.log("Start:", start);
-    console.log("End:", end);
+    console.log("\n=== CONFIRM BOOKING ===");
+    console.log(`Slot: ${slotId}`);
+    console.log(`Requested: ${start.toISOString()} → ${end.toISOString()}`);
+    console.log(
+      `Buffered: ${newBlockedStart.toISOString()} → ${newBlockedEnd.toISOString()}`,
+    );
 
-    console.log("Reserved Start:", reservedStart);
-    console.log("Reserved End:", reservedEnd);
-
-    const conflict = await Booking.findOne({
-      slot: new mongoose.Types.ObjectId(slotId),
-      startTime: { $lt: reservedEnd },
-      endTime: { $gt: reservedStart },
+    // ✅ Get all existing bookings for this slot
+    const existingBookings = await Booking.find({
+      slot: slotId,
+      status: { $in: ["confirmed", "active"] }, // ❗ removed completed
     });
 
-    console.log("Conflict Found:", conflict);
+    let conflictFound = false;
 
+    for (let booking of existingBookings) {
+      // ✅ Apply buffer to EXISTING booking
+      const existingBlockedStart = new Date(
+        new Date(booking.startTime).getTime() - buffer,
+      );
+
+      const existingBlockedEnd = new Date(
+        new Date(booking.endTime).getTime() + buffer,
+      );
+
+      const overlap =
+        newBlockedStart < existingBlockedEnd &&
+        newBlockedEnd > existingBlockedStart;
+
+      if (overlap) {
+        conflictFound = true;
+
+        console.log(
+          `❌ Conflict with booking ${booking._id} (${booking.startTime} → ${booking.endTime})`,
+        );
+
+        break;
+      }
+    }
+
+    if (conflictFound) {
+      return res.status(400).json({
+        message: "Slot not available for selected time (15 min buffer applied)",
+      });
+    }
+
+    // ✅ OPTIONAL: allow temporary_locked OR available
     const slot = await Slot.findById(slotId);
 
-    if (
-      !slot ||
-      !["available", "temporary_locked"].includes(
-        slot.status.trim().toLowerCase(),
-      )
-    ) {
+    if (!slot || !["available", "temporary_locked"].includes(slot.status)) {
       return res.status(400).json({
-        message: `Slot is not available, current status: ${slot?.status}`,
+        message: `Slot not available, current status: ${slot?.status}`,
       });
     }
 
-    if (conflict !== null) {
-      return res.status(400).json({
-        message: "Slot not available",
-      });
-    }
-
+    // 💰 Calculate price
     const duration = (end - start) / (1000 * 60 * 60);
-
-    if (!userId) {
-      return res.status(400).json({ message: "userId is required" });
-    }
-    if (!hourlyRate || isNaN(Number(hourlyRate)) ) {
-      return res.status(400).json({ message: "hourlyRate is required and must be numeric" });
-    }
-
     const totalAmount = duration * Number(hourlyRate);
 
     const normalizedPaymentMethod =
-      paymentMethod === "cash"
-        ? "cash_on_counter"
-        : paymentMethod || "upi";
+      paymentMethod === "cash" ? "cash_on_counter" : paymentMethod || "upi";
 
     const paymentStatus =
       normalizedPaymentMethod === "cash_on_counter" ? "pending" : "paid";
 
+    // ✅ Create booking
     const booking = await Booking.create({
       user: userId,
       parking: parkingId,
@@ -225,28 +252,37 @@ exports.confirmBooking = async (req, res) => {
       status: "confirmed",
     });
 
-    // Set initial slot status based on startTime
-    const now = new Date();
-    const initialStatus = (start > now) ? "locked" : "occupied";
-    const lockUntil = (start > now) ? start : end;
+    console.log(`✅ Booking created: ${booking._id}`);
 
-    await Slot.findByIdAndUpdate(slotId, {
-      status: initialStatus,
-      lockExpiresAt: lockUntil
-    });
+    // 🔥 IMPORTANT CHANGE HERE
+
+    const now = new Date();
+
+    if (start <= now && end >= now) {
+      // Only mark occupied if currently active
+      await Slot.findByIdAndUpdate(slotId, {
+        status: "occupied",
+      });
+    } else {
+      // Otherwise keep slot available
+      await Slot.findByIdAndUpdate(slotId, {
+        status: "available",
+      });
+    }
 
     res.json({
-      message: "Booking confirmed",
+      message: "Booking confirmed successfully",
       booking,
+      bufferInfo: "15 minutes before & after applied",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Confirm booking error:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 /*
-3. Smart Buffer Booking (lock startTime-buffer, release endTime+buffer)
+3. Quick Slot Booking - with 15min buffer conflict check
+Instant booking for X hours from now with 15min buffer before & after
 */
 exports.bookSlot = async (req, res) => {
   try {
@@ -257,33 +293,48 @@ exports.bookSlot = async (req, res) => {
     }
 
     const hoursNum = parseInt(hours);
-    const buffer = 30 * 60 * 1000;
+    const buffer = 15 * 60 * 1000; // 15 minutes
     const start = new Date();
     const end = new Date(start.getTime() + hoursNum * 60 * 60 * 1000);
 
-    // Lock from start-buffer
-    const lockStart = new Date(start.getTime() - buffer);
-    const lockEnd = new Date(end.getTime() + buffer);
+    // Calculate blocked period with 15min buffer
+    const blockedStart = new Date(start.getTime() - buffer);
+    const blockedEnd = new Date(end.getTime() + buffer);
 
-    // Check conflicts including buffer
+    console.log(`[QUICK BOOK] Checking availability for slot ${slotId}`);
+    console.log(`Requested: ${start.toISOString()} to ${end.toISOString()}`);
+    console.log(
+      `With buffer - Blocked: ${blockedStart.toISOString()} to ${blockedEnd.toISOString()}`,
+    );
+
+    // Check conflicts (status must be confirmed, active, or completed to block)
     const conflict = await Booking.findOne({
       slot: slotId,
-      $or: [
-        { startTime: { $lt: lockEnd }, endTime: { $gt: lockStart } }
-      ]
+      status: { $in: ["confirmed", "active", "completed"] },
+      startTime: { $lt: blockedEnd },
+      endTime: { $gt: blockedStart },
     });
 
     if (conflict) {
-      return res.status(400).json({ 
-        message: "Slot booked during this time (30min buffer applied)",
-        conflictTime: conflict.startTime
+      console.log(`❌ Conflict found: ${conflict._id}`);
+      return res.status(400).json({
+        message:
+          "Slot booked during this time (15min buffer applied before and after)",
+        conflictTime: conflict.startTime.toISOString(),
+        bufferInfo: {
+          buffer: "15 minutes",
+          blockedPeriod: `${blockedStart.toISOString()} to ${blockedEnd.toISOString()}`,
+        },
       });
     }
 
     // Physical slot check
     const slot = await Slot.findById(slotId);
     if (!slot || slot.status !== "available") {
-      return res.status(400).json({ message: "Slot not available" });
+      return res.status(400).json({
+        message: "Slot not available",
+        slotStatus: slot?.status,
+      });
     }
 
     // Get price
@@ -300,29 +351,30 @@ exports.bookSlot = async (req, res) => {
       duration: hoursNum,
       totalAmount,
       status: "confirmed",
-      paymentStatus: "paid"
+      paymentStatus: "paid",
     });
 
-    // Set status based on start time
-    const now = new Date();
-    if (start > now) {
-      slot.status = "locked";
-      slot.lockExpiresAt = start; // Will auto-occupy at start
-    } else {
-      slot.status = "occupied";
-      slot.lockExpiresAt = lockEnd;
-    }
+    console.log(`✅ Booking created: ${booking._id}`);
+
+    // Set status - instant booking is "occupied" (already started)
+    slot.status = "occupied";
+    slot.lockExpiresAt = blockedEnd; // Release after end + 15min buffer
     await slot.save();
 
-    await booking.populate(['parking', 'slot']);
+    console.log(`Slot status: occupied until ${blockedEnd.toISOString()}`);
+
+    await booking.populate(["parking", "slot"]);
 
     const bookingId = `BK${booking._id.toString().slice(-6).toUpperCase()}`;
 
     res.json({
-      message: "Booked! Slot locked until end+30min buffer.",
+      message: "Booked successfully! Slot locked until end+15min buffer",
       bookingId,
-      bufferLockUntil: lockEnd.toLocaleString(),
-      booking
+      bufferInfo: {
+        buffer: "15 minutes before and after",
+        blockedUntil: blockedEnd.toISOString(),
+      },
+      booking,
     });
   } catch (error) {
     console.error("Booking error:", error);
@@ -360,9 +412,9 @@ exports.getCurrentBookings = async (req, res) => {
 
     const bookings = await Booking.find({
       user: userId,
-      status: { $in: ['confirmed', 'active'] },
+      status: { $in: ["confirmed", "active"] },
       startTime: { $lte: now },
-      endTime: { $gte: now }
+      endTime: { $gte: now },
     })
       .populate("parking", "name location basePrice")
       .populate("slot", "label")
@@ -384,8 +436,8 @@ exports.getUpcomingBookings = async (req, res) => {
 
     const bookings = await Booking.find({
       user: userId,
-      status: { $in: ['confirmed', 'active'] },
-      startTime: { $gt: now }
+      status: { $in: ["confirmed", "active"] },
+      startTime: { $gt: now },
     })
       .populate("parking", "name location basePrice")
       .populate("slot", "label")
@@ -408,7 +460,7 @@ exports.getPastBookings = async (req, res) => {
     const bookings = await Booking.find({
       user: userId,
       status: "completed",
-      endTime: { $lt: now }
+      endTime: { $lt: now },
     })
       .populate("parking", "name location")
       .populate("slot", "label")
@@ -422,7 +474,8 @@ exports.getPastBookings = async (req, res) => {
 };
 
 /*
-8. Extend Active Booking
+8. Extend Active Booking - with 15min buffer conflict check
+Buffer Logic: Check if extended booking (with 15min before & after) conflicts with other bookings
 */
 exports.extendBooking = async (req, res) => {
   try {
@@ -434,15 +487,19 @@ exports.extendBooking = async (req, res) => {
       return res.status(400).json({ message: "extraHours must be 1-24" });
     }
 
-    const booking = await Booking.findOne({ _id: id, user: userId })
-      .populate("parking", "basePrice");
+    const booking = await Booking.findOne({ _id: id, user: userId }).populate(
+      "parking",
+      "basePrice",
+    );
 
     if (!booking) {
       return res.status(400).json({ message: "Booking not found" });
     }
 
-    if (booking.status !== 'active' && booking.status !== 'confirmed') {
-      return res.status(400).json({ message: "Can only extend active/confirmed bookings" });
+    if (booking.status !== "active" && booking.status !== "confirmed") {
+      return res
+        .status(400)
+        .json({ message: "Can only extend active/confirmed bookings" });
     }
 
     const now = new Date();
@@ -450,25 +507,39 @@ exports.extendBooking = async (req, res) => {
       return res.status(400).json({ message: "Booking has expired" });
     }
 
-    const buffer = 30 * 60 * 1000;
-    const oldEnd = booking.endTime;
-    const newEnd = new Date(oldEnd.getTime() + extraHours * 60 * 60 * 1000);
-    const reservedStart = new Date(oldEnd.getTime() - buffer);
+    const buffer = 15 * 60 * 1000;
+    const newEnd = new Date(
+      booking.endTime.getTime() + extraHours * 60 * 60 * 1000,
+    );
+
+    // Extended booking period: from startTime to newEnd, with 15min buffer on both sides
+    const reservedStart = new Date(booking.startTime.getTime() - buffer);
     const reservedEnd = new Date(newEnd.getTime() + buffer);
 
-    // Check conflicts with other bookings on same slot
+    console.log(
+      `[EXTEND] Checking conflict for slot ${booking.slot} from ${reservedStart} to ${reservedEnd}`,
+    );
+
+    // Check conflicts with OTHER bookings on same slot (with buffer applied)
     const conflict = await Booking.findOne({
       slot: booking.slot,
       _id: { $ne: id },
-      $or: [
-        { startTime: { $lt: reservedEnd, $gte: reservedStart } },
-        { endTime: { $gt: reservedStart, $lte: reservedEnd } },
-        { startTime: { $lte: reservedStart }, endTime: { $gte: reservedEnd } }
-      ]
+      status: { $in: ["confirmed", "active", "completed"] },
+      startTime: { $lt: reservedEnd },
+      endTime: { $gt: reservedStart },
     });
 
+    console.log(`[EXTEND] Conflict found: ${conflict ? conflict._id : "None"}`);
+
     if (conflict) {
-      return res.status(400).json({ message: "Slot not available for extension (conflict)" });
+      return res.status(400).json({
+        message:
+          "Slot not available for extension (conflicts with another booking including 15min buffer)",
+        conflictDetails: {
+          conflictStart: conflict.startTime,
+          conflictEnd: conflict.endTime,
+        },
+      });
     }
 
     // Update
@@ -483,7 +554,11 @@ exports.extendBooking = async (req, res) => {
 
     res.json({
       message: "Booking extended successfully",
-      booking
+      bufferApplied: {
+        buffer: "15 minutes before and after",
+        extendedUntil: newEnd.toISOString(),
+      },
+      booking,
     });
   } catch (error) {
     console.error("Extend error:", error);
@@ -492,7 +567,7 @@ exports.extendBooking = async (req, res) => {
 };
 
 /*
-9. Edit Booking Date/Time (upcoming only)
+9. Edit Booking Date/Time (confirmed upcoming only) - with 15min buffer conflict check
 */
 exports.editBooking = async (req, res) => {
   try {
@@ -501,51 +576,80 @@ exports.editBooking = async (req, res) => {
     const userId = req.user?.id || req.user?._id;
 
     if (!startTime || !endTime) {
-      return res.status(400).json({ message: "startTime and endTime required" });
+      return res
+        .status(400)
+        .json({ message: "startTime and endTime required" });
     }
 
-    const booking = await Booking.findOne({ _id: id, user: userId }).populate('slot parking');
+    const booking = await Booking.findOne({ _id: id, user: userId }).populate(
+      "slot parking",
+    );
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    if (booking.status !== 'confirmed') {
-      return res.status(400).json({ message: "Can only edit confirmed upcoming bookings" });
+    if (booking.status !== "confirmed") {
+      return res
+        .status(400)
+        .json({ message: "Can only edit confirmed upcoming bookings" });
     }
 
     const newStart = new Date(startTime);
     const newEnd = new Date(endTime);
-    const buffer = 30 * 60 * 1000;
-    const reservedStart = new Date(newStart.getTime() - buffer);
-    const reservedEnd = new Date(newEnd.getTime() + buffer);
+    const buffer = 15 * 60 * 1000;
 
-    // Check conflicts (same slot, overlapping time)
+    // Calculate blocked time with 15min buffer
+    const blockedStart = new Date(newStart.getTime() - buffer);
+    const blockedEnd = new Date(newEnd.getTime() + buffer);
+
+    console.log(
+      `[EDIT BOOKING] Checking conflict for slot ${booking.slot._id}`,
+    );
+    console.log(
+      `New Time: ${newStart.toISOString()} to ${newEnd.toISOString()}`,
+    );
+    console.log(
+      `With Buffer - Blocked: ${blockedStart.toISOString()} to ${blockedEnd.toISOString()}`,
+    );
+
+    // Check conflicts (OTHER bookings on same slot, excluding cancelled/rejected)
     const conflict = await Booking.findOne({
       slot: booking.slot._id,
       _id: { $ne: id },
-      $or: [
-        { startTime: { $lt: reservedEnd, $gte: reservedStart } },
-        { endTime: { $gt: reservedStart, $lte: reservedEnd } },
-        { startTime: { $lte: reservedStart }, endTime: { $gte: reservedEnd } }
-      ]
+      status: { $in: ["confirmed", "active", "completed"] },
+      startTime: { $lt: blockedEnd },
+      endTime: { $gt: blockedStart },
     });
 
+    console.log(`Conflict: ${conflict ? "YES ❌" : "NO ✅"}`);
+
     if (conflict) {
-      return res.status(400).json({ message: "Slot unavailable for new times (conflict found)" });
+      return res.status(400).json({
+        message:
+          "Slot unavailable for new times (conflicts with another booking including 15min buffer)",
+        bufferInfo: {
+          buffer: "15 minutes before and after",
+          newBlockedPeriod: `${blockedStart.toISOString()} to ${blockedEnd.toISOString()}`,
+        },
+      });
     }
 
     // Update booking
+    const durationHours = (newEnd - newStart) / (1000 * 60 * 60);
     booking.startTime = newStart;
     booking.endTime = newEnd;
-    booking.duration = (newEnd - newStart) / (1000 * 60 * 60);
-    booking.totalAmount = booking.duration * booking.parking.basePrice;
+    booking.duration = durationHours;
+    booking.totalAmount = durationHours * booking.parking.basePrice;
 
     await booking.save();
 
+    console.log(`✅ Booking ${id} updated successfully`);
+
     res.json({
       message: "Booking updated successfully",
-      booking
+      bufferApplied: "15 minutes before and after new time",
+      booking,
     });
   } catch (error) {
     console.error("Edit booking error:", error);
@@ -558,39 +662,49 @@ exports.editBooking = async (req, res) => {
 */
 exports.cancelBooking = async (req, res) => {
   try {
-    console.log('🧑 User from token:', req.user);
-    
+    console.log("🧑 User from token:", req.user);
+
     const { id } = req.params;
     const userId = req.user.id;
 
-    console.log('🔍 Looking for booking:', id, 'by user:', userId);
-    
-    const booking = await Booking.findOne({ _id: id, user: userId }).populate('slot');
+    console.log("🔍 Looking for booking:", id, "by user:", userId);
+
+    const booking = await Booking.findOne({ _id: id, user: userId }).populate(
+      "slot",
+    );
 
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found or not owned by user" });
+      return res
+        .status(404)
+        .json({ message: "Booking not found or not owned by user" });
     }
 
-    console.log('📋 Booking found:', booking.status, booking.user.toString() === userId);
+    console.log(
+      "📋 Booking found:",
+      booking.status,
+      booking.user.toString() === userId,
+    );
 
-    if (!['confirmed', 'active'].includes(booking.status)) {
-      return res.status(400).json({ message: "Can only cancel confirmed or active bookings" });
+    if (!["confirmed", "active"].includes(booking.status)) {
+      return res
+        .status(400)
+        .json({ message: "Can only cancel confirmed or active bookings" });
     }
 
     // Cancel & release slot
-    booking.status = 'cancelled';
+    booking.status = "cancelled";
     await booking.save();
 
     await Slot.findByIdAndUpdate(booking.slot._id, {
-      status: 'available',
+      status: "available",
       lockExpiresAt: null,
       bookedAt: null,
-      vehicleNumber: null
+      vehicleNumber: null,
     });
 
     res.json({
       message: "Booking cancelled successfully",
-      booking
+      booking,
     });
   } catch (error) {
     console.error("Cancel booking error:", error);
