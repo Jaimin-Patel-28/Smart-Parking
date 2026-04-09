@@ -27,7 +27,7 @@ ChartJS.register(
   Filler,
 );
 
-const DashboardCharts = ({ stats, recentBookings }) => {
+const DashboardCharts = ({ stats, recentBookings, statusCounts }) => {
   // 1. Spending Trend - Sleek Area Chart
   const trendData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
@@ -77,17 +77,17 @@ const DashboardCharts = ({ stats, recentBookings }) => {
   };
 
   // 2. Status Breakdown - Modern Doughnut
-  const statusCounts = recentBookings?.reduce((acc, b) => {
-    if (b.status) acc[b.status] = (acc[b.status] || 0) + 1;
+  const statusObj = statusCounts?.reduce((acc, item) => {
+    acc[item._id] = item.count;
     return acc;
-  }, {}) || { confirmed: 1, active: 1, pending: 1 };
+  }, {}) || {};
 
   const pieData = {
-    labels: Object.keys(statusCounts),
+    labels: Object.keys(statusObj),
     datasets: [
       {
-        data: Object.values(statusCounts),
-        backgroundColor: ["#FA8112", "#FAF3E1", "#444444"],
+        data: Object.values(statusObj),
+        backgroundColor: ["#FA8112", "#FAF3E1", "#444444", "#888888", "#AAAAAA"],
         hoverOffset: 10,
         borderWidth: 0,
         borderRadius: 20,
@@ -148,7 +148,7 @@ const DashboardCharts = ({ stats, recentBookings }) => {
           {/* Center Stat */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-3xl font-black text-[#FAF3E1] italic">
-              {recentBookings?.length || 0}
+              {stats?.totalBookings || 0}
             </span>
             <span className="text-[10px] font-black uppercase tracking-widest text-[#FAF3E1]/20">
               Total

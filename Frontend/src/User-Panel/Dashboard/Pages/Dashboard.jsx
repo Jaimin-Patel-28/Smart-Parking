@@ -98,7 +98,7 @@ const Dashboard = () => {
               </h3>
               <TrendingUp size={20} className="text-[#FA8112]" />
             </div>
-            <DashboardCharts stats={data?.stats} />
+            <DashboardCharts stats={data?.stats} recentBookings={data?.recentBookings} statusCounts={data?.statusCounts} />
           </div>
         </div>
 
