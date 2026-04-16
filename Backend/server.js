@@ -38,13 +38,30 @@ const supportRoutes = require("./Shared/routes/supportRoutes");
 const app = express();
 app.use(morgan("dev"));
 
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOptions = {
+  origin(origin, callback) {
+    // Allow non-browser clients (Postman, server-to-server) and configured frontends.
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+};
+
 // Connect to Database
 connectDB().then(() => {
   createSuperAdmin();
 });
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Webhook routes (must be before auth middleware)
