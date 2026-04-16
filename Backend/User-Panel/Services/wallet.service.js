@@ -2,7 +2,7 @@ const Transaction = require("../../Super-Admin-Panel/models/Transaction");
 const {
   createWalletIfNotExists,
 } = require("../../Super-Admin-Panel/Services/walletService");
-const transactionService = require("../../Super-Admin-Panel/services/transactionService");
+const transactionService = require("../../Super-Admin-Panel/Services/transactionService");
 
 const getWalletSummary = async (userId) => {
   const wallet = await createWalletIfNotExists(userId);

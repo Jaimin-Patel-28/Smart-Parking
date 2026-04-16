@@ -8,7 +8,7 @@ const {
 const {
   deductMoney,
   refundMoney,
-} = require("../../Super-Admin-Panel/services/transactionService");
+} = require("../../Super-Admin-Panel/Services/transactionService");
 const {
   sendNotification,
 } = require("../../Shared/services/notification.service");

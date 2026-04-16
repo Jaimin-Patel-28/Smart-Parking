@@ -7,7 +7,7 @@ const User = require("../../Authentication/models/User");
 const {
   createWalletIfNotExists,
 } = require("../../Super-Admin-Panel/Services/walletService");
-const transactionService = require("../../Super-Admin-Panel/services/transactionService");
+const transactionService = require("../../Super-Admin-Panel/Services/transactionService");
 
 let razorpayClient = null;
 
