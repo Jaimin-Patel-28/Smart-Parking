@@ -1,4 +1,4 @@
-const walletService = require("../services/walletService");
+const walletService = require("../Services/walletService");
 const Transaction = require("../models/Transaction");
 const User = require("../../Authentication/models/User");
 const Wallet = require("../models/Wallet");

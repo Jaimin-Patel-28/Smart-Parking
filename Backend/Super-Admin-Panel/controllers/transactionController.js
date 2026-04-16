@@ -1,5 +1,5 @@
 const Transaction = require("../models/Transaction");
-const transactionService = require("../services/transactionService");
+const transactionService = require("../Services/transactionService");
 const {
   sendNotification,
 } = require("../../Shared/services/notification.service");
