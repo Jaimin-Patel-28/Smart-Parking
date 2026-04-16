@@ -38,18 +38,60 @@ const supportRoutes = require("./Shared/routes/supportRoutes");
 const app = express();
 app.use(morgan("dev"));
 
+const normalizeOrigin = (value) => {
+  if (!value) return "";
+
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+
+  try {
+    // Supports values like https://example.com/public/home in env.
+    return new URL(trimmed).origin;
+  } catch {
+    // Fallback if someone stores a bare origin string.
+    return trimmed.replace(/\/$/, "");
+  }
+};
+
 const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
   .split(",")
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
+
+const allowedVercelProject = (process.env.ALLOWED_VERCEL_PROJECT || "smart-parking")
+  .trim()
+  .toLowerCase();
+
+const isAllowedOrigin = (origin) => {
+  const normalizedOrigin = normalizeOrigin(origin);
+  if (!normalizedOrigin) return true;
+
+  if (allowedOrigins.includes(normalizedOrigin)) {
+    return true;
+  }
+
+  // Allow Vercel deployment URLs for this project (preview + production aliases).
+  try {
+    const url = new URL(normalizedOrigin);
+    const host = url.hostname.toLowerCase();
+    if (host.endsWith(".vercel.app") && host.includes(allowedVercelProject)) {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+
+  return false;
+};
 
 const corsOptions = {
   origin(origin, callback) {
     // Allow non-browser clients (Postman, server-to-server) and configured frontends.
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (isAllowedOrigin(origin)) {
       return callback(null, true);
     }
 
+    console.warn(`Blocked by CORS: ${origin}`);
     return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
@@ -105,5 +147,5 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/support", supportRoutes);
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

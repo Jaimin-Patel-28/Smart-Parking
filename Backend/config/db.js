@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/smart-parking");
+    const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/smart-parking";
+    await mongoose.connect(mongoUri);
     console.log("✅ MongoDB Connected...");
   } catch (err) {
     console.error(err.message);
