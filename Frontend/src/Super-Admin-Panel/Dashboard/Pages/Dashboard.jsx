@@ -7,7 +7,6 @@ import DashboardCharts from "../Components/DashboardCharts";
 import { Car, Zap, Plus, FileDown, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Authentication-UI/Context/AuthContext";
-import { jsPDF } from "jspdf";
 import toast from "react-hot-toast";
 
 const Dashboard = () => {
@@ -22,8 +21,9 @@ const Dashboard = () => {
     navigate(isStaffAdmin ? "/admin/bookings" : "/super-admin/slots");
   };
 
-  const handleExportDashboardPDF = () => {
+  const handleExportDashboardPDF = async () => {
     try {
+      const { jsPDF } = await import("jspdf");
       const doc = new jsPDF();
       let y = 16;
 

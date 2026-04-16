@@ -9,11 +9,10 @@ import {
   RefreshCw,
   MapPin,
 } from "lucide-react";
-import { jsPDF } from "jspdf";
 import toast from "react-hot-toast";
 import { useReports } from "../hooks/useReports";
-import ReportCard from "../Components/ReportCard";
-import ReportFilters from "../Components/ReportFilters";
+import ReportCard from "../components/ReportCard";
+import ReportFilters from "../components/ReportFilters";
 
 const Reports = () => {
   const { comprehensiveReport, revenueReport, occupancyReport, userReport, systemHealthReport, loading, error, refresh } =
@@ -29,8 +28,9 @@ const Reports = () => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     try {
+      const { jsPDF } = await import("jspdf");
       const doc = new jsPDF();
       let y = 16;
 
