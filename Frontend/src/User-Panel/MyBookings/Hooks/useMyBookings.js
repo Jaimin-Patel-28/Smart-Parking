@@ -24,7 +24,7 @@ export const useMyBookings = () => {
     setLoadingCurrent(true);
     setError(null);
     try {
-      const { data } = await bookingService.getCurrentBookings(userId);
+      const { data } = await bookingService.getCurrentBookings();
       setCurrentBookings(data);
     } catch (err) {
       console.error("Current fetch error:", err);
@@ -40,7 +40,7 @@ export const useMyBookings = () => {
     setLoadingUpcoming(true);
     setError(null);
     try {
-      const { data } = await bookingService.getUpcomingBookings(userId);
+      const { data } = await bookingService.getUpcomingBookings();
       setUpcomingBookings(data);
     } catch (err) {
       console.error("Upcoming fetch error:", err);
@@ -56,7 +56,7 @@ export const useMyBookings = () => {
     setLoadingHistory(true);
     setError(null);
     try {
-      const { data } = await bookingService.getPastBookings(userId);
+      const { data } = await bookingService.getPastBookings();
       setHistoryBookings(data);
     } catch (err) {
       console.error("History fetch error:", err);

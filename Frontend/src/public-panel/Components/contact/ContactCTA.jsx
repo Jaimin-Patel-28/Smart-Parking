@@ -1,7 +1,10 @@
 import React from "react";
 import { Headphones, ArrowRight, LifeBuoy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ContactCTA = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative w-full py-16 px-6 overflow-hidden bg-[#222222]">
       {/* SOFT AMBIENT GLOW */}
@@ -29,7 +32,10 @@ const ContactCTA = () => {
 
         {/* ACTION BUTTONS */}
         <nav className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="bg-[#FA8112] text-[#222222] px-8 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.3)] hover:-translate-y-1 transition-all active:scale-95 group/btn">
+          <button 
+            onClick={() => navigate('/public/contact')}
+            className="bg-[#FA8112] text-[#222222] px-8 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.3)] hover:-translate-y-1 transition-all active:scale-95 group/btn"
+          >
             Open Support Ticket
             <ArrowRight
               size={18}
@@ -37,7 +43,10 @@ const ContactCTA = () => {
             />
           </button>
 
-          <button className="bg-[#FAF3E1]/[0.03] text-[#FAF3E1] border border-[#F5E7C6]/10 px-8 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-[#FAF3E1]/[0.08] transition-all">
+          <button 
+            onClick={() => navigate('/public/about')}
+            className="bg-[#FAF3E1]/[0.03] text-[#FAF3E1] border border-[#F5E7C6]/10 px-8 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-[#FAF3E1]/[0.08] transition-all"
+          >
             <LifeBuoy size={18} className="text-[#FA8112]" />
             Documentation
           </button>

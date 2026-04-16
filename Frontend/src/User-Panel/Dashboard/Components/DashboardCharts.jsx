@@ -35,7 +35,7 @@ const DashboardCharts = ({ stats, recentBookings, statusCounts }) => {
       {
         fill: true,
         label: "Spent",
-        data: [150, 230, 180, 320, 280, stats?.totalSpent || 450],
+        data: [0, 0, 0, 0, 0, stats?.totalSpent || 0],
         borderColor: "#FA8112",
         backgroundColor: "rgba(250, 129, 18, 0.05)",
         borderWidth: 3,

@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   MapPin,
   Bell,
+  Wallet,
   User as UserIcon,
   LogOut,
   Settings,
@@ -19,6 +20,8 @@ const Navbar = () => {
     { name: "Dashboard", path: "/user/dashboard" },
     { name: "Find Parking", path: "/user/find-parking" },
     { name: "My Bookings", path: "/user/bookings" },
+    { name: "Wallet", path: "/user/wallet" },
+    // { name: "Notifications", path: "/user/notifications" },
     { name: "Support", path: "/user/support" },
   ];
 
@@ -56,7 +59,10 @@ const Navbar = () => {
 
         {/* User Profile & Actions */}
         <div className="flex items-center gap-4">
-          <button className="relative p-2 text-[#FAF3E1]/40 hover:text-[#FA8112] transition-colors">
+          <button
+            onClick={() => navigate("/user/notifications")}
+            className="relative p-2 text-[#FAF3E1]/40 hover:text-[#FA8112] transition-colors"
+          >
             <Bell size={22} />
             <span className="absolute top-2 right-2.5 w-2 h-2 bg-[#FA8112] rounded-full border-2 border-[#222222]"></span>
           </button>
@@ -104,6 +110,20 @@ const Navbar = () => {
                 >
                   <Settings size={18} /> Settings
                 </NavLink>
+                {/* <NavLink
+                  to="/user/wallet"
+                  onClick={() => setIsProfileOpen(false)}
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#FAF3E1]/60 hover:text-[#FA8112] hover:bg-[#FAF3E1]/5 rounded-xl transition-all"
+                >
+                  <Wallet size={18} /> Wallet
+                </NavLink>
+                <NavLink
+                  to="/user/notifications"
+                  onClick={() => setIsProfileOpen(false)}
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#FAF3E1]/60 hover:text-[#FA8112] hover:bg-[#FAF3E1]/5 rounded-xl transition-all"
+                >
+                  <Bell size={18} /> Notifications
+                </NavLink> */}
 
                 <div className="h-px bg-[#F5E7C6]/5 my-2" />
 

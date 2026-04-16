@@ -11,11 +11,20 @@ import {
   Hash,
   ArrowRight,
 } from "lucide-react";
+import { format } from "date-fns";
 
 const BookingSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { booking } = location.state || {};
+
+  const start = booking?.startTime ? new Date(booking.startTime) : null;
+  const end = booking?.endTime ? new Date(booking.endTime) : null;
+  const durationHours =
+    booking?.duration ||
+    (start && end
+      ? Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60)))
+      : null);
 
   // Guard clause for direct URL access
   if (!booking) {
@@ -61,7 +70,7 @@ const BookingSuccess = () => {
       {/* 2. The Digital Permit (Pass Style) */}
       <div className="relative mb-10">
         {/* Pass Top Section */}
-        <div className="bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-t-[2.5rem] p-8 pb-10 border-b-0">
+        <div className="bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-t-[2.5rem] p-8 pb-10 border-b-0">
           <div className="flex flex-col items-center space-y-8">
             {/* High-Contrast QR Area */}
             <div className="relative group">
@@ -79,8 +88,8 @@ const BookingSuccess = () => {
               <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FAF3E1]/20">
                 Authorized Entry Pass
               </p>
-              <h2 className="text-3xl font-black text-[#FAF3E1] tracking-[0.1em] italic">
-                {booking.qrNumber || "PRK-9902"}
+              <h2 className="text-3xl font-black text-[#FAF3E1] tracking-widest italic">
+                {booking.bookingCode || "PRK-0000"}
               </h2>
             </div>
           </div>
@@ -94,7 +103,7 @@ const BookingSuccess = () => {
         </div>
 
         {/* Pass Bottom Section */}
-        <div className="bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-b-[2.5rem] p-8 pt-10 border-t-0">
+        <div className="bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-b-[2.5rem] p-8 pt-10 border-t-0">
           <div className="grid grid-cols-2 gap-y-6 gap-x-4">
             <div className="space-y-1">
               <p className="text-[8px] font-black uppercase tracking-widest text-[#FA8112]">
@@ -102,7 +111,7 @@ const BookingSuccess = () => {
               </p>
               <p className="text-sm font-black text-[#FAF3E1] uppercase flex items-center gap-2 italic">
                 <Car size={14} className="opacity-30" />{" "}
-                {booking.vehicleNumber || "GJ-01-AB-1234"}
+                {booking.vehicleNumber || booking.user?.vehicleNumber || "N/A"}
               </p>
             </div>
             <div className="space-y-1 text-right">
@@ -111,7 +120,7 @@ const BookingSuccess = () => {
               </p>
               <p className="text-sm font-black text-[#FAF3E1] uppercase flex items-center justify-end gap-2 italic">
                 <Hash size={14} className="opacity-30" />{" "}
-                {booking.slot?.label || "A-12"}
+                {booking.slot?.label || "N/A"}
               </p>
             </div>
             <div className="col-span-2 space-y-1 pt-2">
@@ -120,7 +129,34 @@ const BookingSuccess = () => {
               </p>
               <p className="text-sm font-black text-[#FAF3E1] uppercase flex items-center gap-2 italic truncate">
                 <MapPin size={14} className="opacity-30" />{" "}
-                {booking.parking?.name || "Premium Underground"}
+                {booking.parking?.name || "N/A"}
+              </p>
+            </div>
+            <div className="col-span-2 space-y-1 pt-2">
+              <p className="text-[8px] font-black uppercase tracking-widest text-[#FA8112]">
+                Time Window
+              </p>
+              <p className="text-sm font-black text-[#FAF3E1] italic">
+                {start && end
+                  ? `${format(start, "dd MMM yyyy, hh:mm a")} - ${format(end, "hh:mm a")}`
+                  : "N/A"}
+              </p>
+            </div>
+            <div className="col-span-2 space-y-1 pt-2">
+              <p className="text-[8px] font-black uppercase tracking-widest text-[#FA8112]">
+                Duration & Amount
+              </p>
+              <p className="text-sm font-black text-[#FAF3E1] italic">
+                {durationHours ? `${durationHours} hour(s)` : "N/A"} • ₹
+                {Number(booking.totalAmount || 0).toFixed(2)}
+              </p>
+            </div>
+            <div className="col-span-2 space-y-1 pt-2">
+              <p className="text-[8px] font-black uppercase tracking-widest text-[#FA8112]">
+                User
+              </p>
+              <p className="text-sm font-black text-[#FAF3E1] italic truncate">
+                {booking.user?.fullName || "N/A"}
               </p>
             </div>
           </div>

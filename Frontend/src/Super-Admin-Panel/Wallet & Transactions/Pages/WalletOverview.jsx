@@ -92,7 +92,7 @@ const WalletOverview = () => {
                 {item.parkingName}
               </p>
               <p className="text-2xl font-black text-[#FAF3E1] mt-2 tracking-tighter">
-                ${item.totalRevenue.toLocaleString()}
+                ₹{item.totalRevenue.toLocaleString()}
               </p>
 
               {/* Progress Bar Container */}

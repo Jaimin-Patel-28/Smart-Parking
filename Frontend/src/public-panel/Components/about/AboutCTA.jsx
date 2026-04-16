@@ -1,11 +1,14 @@
 import React from "react";
 import { ArrowRight, Github, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AboutCTA = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative w-full py-16 px-6 bg-[#222222]">
       {/* COMPACT CARD CONTAINER */}
-      <article className="relative max-w-4xl mx-auto rounded-3xl border border-[#F5E7C6]/5 bg-[#FAF3E1]/[0.01] p-8 md:p-12 text-center overflow-hidden hover:border-[#FA8112]/20 transition-all duration-500">
+      <article className="relative max-w-4xl mx-auto rounded-3xl border border-[#F5E7C6]/5 bg-[#FAF3E1]/1 p-8 md:p-12 text-center overflow-hidden hover:border-[#FA8112]/20 transition-all duration-500">
         {/* SUBTLE GLOW OVERLAY */}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#FA8112]/5 to-transparent pointer-events-none" />
 
@@ -36,7 +39,10 @@ const AboutCTA = () => {
 
         {/* COMPACT ACTION BUTTONS */}
         <nav className="relative z-10 flex flex-wrap items-center justify-center gap-4">
-          <button className="bg-[#FA8112] text-[#222222] px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(250,129,18,0.2)] hover:-translate-y-0.5 transition-all active:scale-95 group">
+          <button 
+            onClick={() => navigate('/auth/login')}
+            className="bg-[#FA8112] text-[#222222] px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(250,129,18,0.2)] hover:-translate-y-0.5 transition-all active:scale-95 group"
+          >
             Get Started
             <ArrowRight
               size={18}
@@ -44,7 +50,10 @@ const AboutCTA = () => {
             />
           </button>
 
-          <button className="bg-[#FAF3E1]/[0.03] text-[#FAF3E1] border border-[#F5E7C6]/10 px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#FAF3E1]/[0.08] transition-all group">
+          <button 
+            onClick={() => navigate('/user/find-parking')}
+            className="bg-[#FAF3E1]/[0.03] text-[#FAF3E1] border border-[#F5E7C6]/10 px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#FAF3E1]/[0.08] transition-all group"
+          >
             <ExternalLink size={16} className="text-[#FA8112]" />
             Live Demo
           </button>

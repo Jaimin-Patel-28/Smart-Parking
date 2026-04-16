@@ -8,8 +8,10 @@ import {
   Zap,
   Heart,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -60,20 +62,20 @@ const Footer = () => {
             </h3>
             <ul className="flex flex-col gap-4 list-none p-0">
               {[
-                "Home",
-                "About Us",
-                "Contact",
-                "Parking Slots",
-                "Admin Portal",
+                { name: "Home", path: "/public/home" },
+                { name: "About Us", path: "/public/about" },
+                { name: "Contact", path: "/public/contact" },
+                { name: "Parking Slots", path: "/user/find-parking" },
+                { name: "Admin Portal", path: "/auth/login" },
               ].map((link) => (
-                <li key={link}>
-                  <a
-                    href={`/${link.toLowerCase().replace(" ", "")}`}
+                <li key={link.name}>
+                  <button
+                    onClick={() => navigate(link.path)}
                     className="text-[#FAF3E1]/40 text-sm hover:text-[#FA8112] transition-colors flex items-center gap-2 group"
                   >
                     <div className="w-1 h-1 rounded-full bg-[#FA8112] scale-0 group-hover:scale-100 transition-transform" />
-                    {link}
-                  </a>
+                    {link.name}
+                  </button>
                 </li>
               ))}
             </ul>

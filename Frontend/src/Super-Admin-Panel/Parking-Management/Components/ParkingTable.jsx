@@ -2,33 +2,26 @@ import React from "react";
 import { Edit2, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ParkingTable = ({ data, onRefresh, onDelete }) => {
+const ParkingTable = ({ data, onDelete }) => {
   const navigate = useNavigate();
 
+  // Color Mapping:
+  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left border-collapse">
+    <div className="overflow-x-auto bg-[#222222]">
+      <table className="w-full text-left border-separate border-spacing-y-2">
         <thead>
-          <tr className="bg-slate-50/50 border-b border-slate-200">
-            <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase">
-              Parking Info
-            </th>
-            <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase">
-              Capacity
-            </th>
-            <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase">
-              Pricing
-            </th>
-            <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase">
-              Status
-            </th>
-            <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase text-right">
-              Actions
-            </th>
+          <tr className="text-[#FAF3E1]/30 text-[10px] uppercase tracking-[0.2em] font-black">
+            <th className="px-6 py-5">Parking Info</th>
+            <th className="px-6 py-5">Capacity</th>
+            <th className="px-6 py-5">Pricing</th>
+            <th className="px-6 py-5">Status</th>
+            <th className="px-6 py-5 text-right">Actions</th>
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="">
           {data.map((parking) => {
             const occupancyRate =
               (parking.occupiedSlots / parking.totalSlots) * 100 || 0;
@@ -39,43 +32,43 @@ const ParkingTable = ({ data, onRefresh, onDelete }) => {
                 onClick={() =>
                   navigate(`/super-admin/parking/details/${parking._id}`)
                 }
-                className="hover:bg-slate-50 cursor-pointer transition-colors"
+                className="bg-[#FAF3E1]/[0.02] hover:bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 cursor-pointer transition-all duration-300 group shadow-sm"
               >
                 {/* Parking Info */}
-                <td className="px-6 py-4">
+                <td className="px-6 py-5 first:rounded-l-2xl">
                   <div className="flex flex-col">
-                    <span className="font-bold text-slate-700">
+                    <span className="font-black text-[#FAF3E1] text-sm tracking-tight">
                       {parking.name}
                     </span>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-[10px] font-bold text-[#FAF3E1]/40 uppercase tracking-wider mt-0.5">
                       {parking.location}
                     </span>
                   </div>
                 </td>
 
-                {/* Capacity */}
-                <td className="px-6 py-4">
-                  <div className="w-full max-w-[100px]">
-                    <div className="flex justify-between text-[10px] mb-1 font-bold">
-                      <span className="text-slate-400">
+                {/* Capacity Progress */}
+                <td className="px-6 py-5">
+                  <div className="w-full max-w-[120px]">
+                    <div className="flex justify-between text-[9px] mb-2 font-black uppercase tracking-tighter">
+                      <span className="text-[#FAF3E1]/30">
                         {parking.occupiedSlots}/{parking.totalSlots}
                       </span>
 
                       <span
                         className={
                           occupancyRate > 90
-                            ? "text-red-500"
-                            : "text-emerald-500"
+                            ? "text-rose-400"
+                            : "text-[#FA8112]"
                         }
                       >
                         {Math.round(occupancyRate)}%
                       </span>
                     </div>
 
-                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-1 w-full bg-[#FAF3E1]/[0.05] rounded-full overflow-hidden">
                       <div
-                        className={`h-full transition-all ${
-                          occupancyRate > 90 ? "bg-red-500" : "bg-emerald-500"
+                        className={`h-full transition-all duration-700 ${
+                          occupancyRate > 90 ? "bg-rose-500" : "bg-[#FA8112]"
                         }`}
                         style={{ width: `${occupancyRate}%` }}
                       />
@@ -84,18 +77,24 @@ const ParkingTable = ({ data, onRefresh, onDelete }) => {
                 </td>
 
                 {/* Pricing */}
-                <td className="px-6 py-4 text-sm font-bold text-slate-700">
-                  ${parking.basePrice}
-                  <span className="text-[10px] text-slate-400 ml-1">/hr</span>
+                <td className="px-6 py-5">
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="text-sm font-black text-[#FAF3E1]">
+                      ₹{parking.basePrice}
+                    </span>
+                    <span className="text-[9px] font-black text-[#FAF3E1]/20 uppercase tracking-tighter">
+                      /hr
+                    </span>
+                  </div>
                 </td>
 
                 {/* Status */}
-                <td className="px-6 py-4">
+                <td className="px-6 py-5">
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                    className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${
                       parking.status === "Active"
-                        ? "bg-emerald-50 text-emerald-600"
-                        : "bg-amber-50 text-amber-600"
+                        ? "bg-[#FA8112]/10 text-[#FA8112] border-[#FA8112]/20"
+                        : "bg-amber-400/10 text-amber-400 border-amber-400/20"
                     }`}
                   >
                     {parking.status}
@@ -103,26 +102,24 @@ const ParkingTable = ({ data, onRefresh, onDelete }) => {
                 </td>
 
                 {/* Actions */}
-                <td className="px-6 py-4">
-                  <div className="flex justify-end gap-2">
-                    {/* Edit */}
+                <td className="px-6 py-5 text-right last:rounded-r-2xl">
+                  <div className="flex justify-end gap-1">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate(`/super-admin/parking/edit/${parking._id}`);
                       }}
-                      className="p-2 text-slate-400 hover:text-emerald-600"
+                      className="p-2 text-[#FAF3E1]/20 hover:text-[#FA8112] hover:bg-[#FA8112]/10 rounded-xl transition-all"
                     >
                       <Edit2 size={16} />
                     </button>
 
-                    {/* Delete */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onDelete(parking._id);
                       }}
-                      className="p-2 text-slate-400 hover:text-red-600"
+                      className="p-2 text-[#FAF3E1]/20 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
                     >
                       <Trash2 size={16} />
                     </button>

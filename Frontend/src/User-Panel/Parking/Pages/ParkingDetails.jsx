@@ -27,6 +27,7 @@ const ParkingDetails = () => {
   const [isLocking, setIsLocking] = useState(false);
   const [isTimeFiltered, setIsTimeFiltered] = useState(false);
   const [timeError, setTimeError] = useState("");
+  const availabilitySummary = data?.availabilitySummary || data?.summary;
 
   const fetchDetails = async (start, end) => {
     try {
@@ -146,14 +147,14 @@ const ParkingDetails = () => {
         </div>
 
         {/* Availability Summary Chips */}
-        {data.availabilitySummary && isTimeFiltered && (
+        {availabilitySummary && isTimeFiltered && (
           <div className="flex gap-3">
             <div className="bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-xl text-center">
               <p className="text-[8px] font-black uppercase text-emerald-500/50 leading-none mb-1">
                 Available
               </p>
               <p className="text-sm font-black text-emerald-500 italic leading-none">
-                {data.availabilitySummary.available}
+                {availabilitySummary.available}
               </p>
             </div>
             <div className="bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 px-4 py-2 rounded-xl text-center">
@@ -161,7 +162,7 @@ const ParkingDetails = () => {
                 Total
               </p>
               <p className="text-sm font-black text-[#FAF3E1] italic leading-none">
-                {data.availabilitySummary.total}
+                {availabilitySummary.total}
               </p>
             </div>
           </div>
@@ -288,7 +289,7 @@ const ParkingDetails = () => {
               <div className="bg-[#FA8112]/5 p-4 rounded-2xl flex gap-3 text-[10px] text-[#FA8112] font-bold leading-relaxed border border-[#FA8112]/10">
                 <Info size={16} className="shrink-0" />
                 <p>
-                  10-minute automated buffer included in all reservations for
+                  15-minute automated buffer included in all reservations for
                   driver safety.
                 </p>
               </div>

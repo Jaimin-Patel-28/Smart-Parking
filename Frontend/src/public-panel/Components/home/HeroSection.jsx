@@ -1,7 +1,10 @@
 import React from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     /* 1. Changed h-screen to min-h-screen to prevent content overflow 
        2. Added pb-32 to create a 'cushion' so StatsSection doesn't touch buttons */
@@ -53,12 +56,18 @@ const HeroSection = () => {
           </header>
 
           <nav className="flex flex-wrap items-center gap-5">
-            <button className="bg-[#FA8112] text-[#222222] px-8 py-4 rounded-2xl font-bold text-base flex items-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.3)] hover:-translate-y-1 transition-all active:scale-95">
+            <button 
+              onClick={() => navigate('/auth/login')}
+              className="bg-[#FA8112] text-[#222222] px-8 py-4 rounded-2xl font-bold text-base flex items-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.3)] hover:-translate-y-1 transition-all active:scale-95"
+            >
               Get Started
               <ArrowRight size={20} />
             </button>
             
-            <button className="group flex items-center gap-2 text-[#FAF3E1] font-semibold text-base py-4 px-2 hover:text-[#FA8112] transition-colors">
+            <button 
+              onClick={() => navigate('/user/find-parking')}
+              className="group flex items-center gap-2 text-[#FAF3E1] font-semibold text-base py-4 px-2 hover:text-[#FA8112] transition-colors"
+            >
               View Live Map
               <ChevronRight
                 size={18}

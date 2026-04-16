@@ -102,16 +102,26 @@ const MyBookings = () => {
           </p>
         </div>
 
-        <button
-          onClick={handleRefresh}
-          disabled={loading}
-          className="flex items-center gap-3 bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 px-6 py-3 rounded-2xl text-[#FAF3E1] font-bold text-xs uppercase tracking-widest hover:bg-[#FAF3E1]/[0.08] transition-all disabled:opacity-50"
-        >
-          <RefreshCw
-            className={`h-4 w-4 text-[#FA8112] ${loading ? "animate-spin" : ""}`}
-          />
-          Sync Data
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/user/booking-history")}
+            className="flex items-center gap-2 bg-[#FA8112]/10 border border-[#FA8112]/20 px-5 py-3 rounded-2xl text-[#FA8112] font-bold text-xs uppercase tracking-widest hover:bg-[#FA8112]/20 transition-all"
+          >
+            <Hash className="h-4 w-4" />
+            Ledger View
+          </button>
+
+          <button
+            onClick={handleRefresh}
+            disabled={loading}
+            className="flex items-center gap-3 bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 px-6 py-3 rounded-2xl text-[#FAF3E1] font-bold text-xs uppercase tracking-widest hover:bg-[#FAF3E1]/[0.08] transition-all disabled:opacity-50"
+          >
+            <RefreshCw
+              className={`h-4 w-4 text-[#FA8112] ${loading ? "animate-spin" : ""}`}
+            />
+            Sync Data
+          </button>
+        </div>
       </header>
 
       {/* 2. Glass Tabs Section */}

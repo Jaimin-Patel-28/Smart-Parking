@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import ConfirmDialog from "../../../app/Components/ConfirmDialog";
 
 const UserList = () => {
-  const { users, loading, searchTerm, setSearchTerm, refresh } = useUsers();
+  const { users, loading, error, searchTerm, setSearchTerm, refresh } = useUsers();
   const [processingId, setProcessingId] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
@@ -84,11 +84,17 @@ const UserList = () => {
         isLoading={loading}
       />
 
+      {error ? (
+        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 text-rose-300 text-sm font-semibold">
+          {error}
+        </div>
+      ) : null}
+
       {/* User Table Container */}
-      <div className="bg-[#FAF3E1]/[0.02] p-2 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm min-h-[500px]">
+      <div className="bg-[#FAF3E1]/2 p-2 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm min-h-125">
         {!loading && users.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-24 text-center">
-            <div className="bg-[#FAF3E1]/[0.05] p-10 rounded-full border border-[#F5E7C6]/5 mb-6 text-[#FAF3E1]/10">
+            <div className="bg-[#FAF3E1]/5 p-10 rounded-full border border-[#F5E7C6]/5 mb-6 text-[#FAF3E1]/10">
               <Users size={64} />
             </div>
             <p className="text-[#FAF3E1]/40 font-black uppercase tracking-[0.2em] text-sm">

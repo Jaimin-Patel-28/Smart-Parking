@@ -5,24 +5,24 @@ const ContactCards = () => {
   const channels = [
     {
       title: "Email Support",
-      value: "support@smartpark.io",
+      value: "smartpark.spms@gmail.com",
       desc: "Response within 24 hours",
       icon: Mail,
-      link: "mailto:support@smartpark.io",
+      link: "mailto:smartpark.spms@gmail.com",
     },
     {
       title: "Direct Call",
-      value: "+91 98765 43210",
+      value: "+91 8320883374",
       desc: "Mon-Fri, 9am - 6pm",
       icon: Phone,
-      link: "tel:+919876543210",
+      link: "tel:+918320883374",
     },
     {
       title: "WhatsApp Chat",
       value: "Chat with us live",
       desc: "Instant tech support",
       icon: MessageCircle,
-      link: "https://wa.me/919876543210",
+      link: "https://wa.me/918320883374",
     },
   ];
 

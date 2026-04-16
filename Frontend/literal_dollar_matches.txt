@@ -1,0 +1,2 @@
+﻿C:\Smart-Parking-Final\Frontend\src\public-panel\Components\auth\RegisterForm.jsx:28: const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+C:\Smart-Parking-Final\Frontend\src\public-panel\Components\auth\RegisterForm.jsx:29: const vehicleRegex = /^[A-Z]{2}-\d{2}-[A-Z]{2}-\d{4}$/;

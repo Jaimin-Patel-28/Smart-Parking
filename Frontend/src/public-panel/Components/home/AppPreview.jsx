@@ -7,8 +7,11 @@ import {
   Activity,
   MousePointer2,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AppPreview = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative w-full bg-[#222222] py-24 overflow-hidden">
       <div className="relative z-10 max-w-6xl mx-auto px-6">
@@ -129,7 +132,10 @@ const AppPreview = () => {
 
                 {/* Call to Action Button */}
                 <nav>
-                  <button className="group/btn relative px-8 py-4 bg-[#FA8112] text-[#222222] rounded-2xl font-bold flex items-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.4)] transition-all active:scale-95">
+                  <button 
+                    onClick={() => navigate('/user/dashboard')}
+                    className="group/btn relative px-8 py-4 bg-[#FA8112] text-[#222222] rounded-2xl font-bold flex items-center gap-3 hover:shadow-[0_0_30px_rgba(250,129,18,0.4)] transition-all active:scale-95"
+                  >
                     <Layout size={20} />
                     Explore Dashboard
                     <MousePointer2 className="absolute -bottom-4 -right-4 text-[#FAF3E1] opacity-0 group-hover/btn:opacity-100 transition-all translate-x-4 group-hover/btn:translate-x-0" />

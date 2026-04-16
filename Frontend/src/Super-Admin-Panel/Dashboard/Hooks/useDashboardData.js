@@ -3,17 +3,19 @@ import {
   getDashboardStats,
   getRecentBookings,
   getSystemStatus
-} from "../services/dashboardService";
+} from "../Services/dashboardService";
 
 const useDashboardData = () => {
   const [stats, setStats] = useState({});
   const [bookings, setBookings] = useState([]);
   const [systemStatus, setSystemStatus] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
+        setError("");
         const statsData = await getDashboardStats();
         const bookingsData = await getRecentBookings();
         const systemData = await getSystemStatus();
@@ -23,6 +25,7 @@ const useDashboardData = () => {
         setSystemStatus(systemData);
       } catch (error) {
         console.error("Dashboard fetch error:", error);
+        setError(error?.response?.data?.message || "Failed to load dashboard data");
       } finally {
         setLoading(false);
       }
@@ -35,7 +38,8 @@ const useDashboardData = () => {
     stats,
     bookings,
     systemStatus,
-    loading
+    loading,
+    error,
   };
 };
 

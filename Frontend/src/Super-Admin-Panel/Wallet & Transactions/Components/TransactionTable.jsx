@@ -40,16 +40,16 @@ const TransactionTable = ({ transactions, loading }) => {
           {transactions.map((tx) => (
             <tr
               key={tx._id}
-              className="bg-[#FAF3E1]/[0.02] hover:bg-[#FAF3E1]/[0.04] transition-all duration-300 group border border-[#F5E7C6]/10 shadow-sm"
+              className="bg-[#FAF3E1]/2 hover:bg-[#FAF3E1]/4 transition-all duration-300 group border border-[#F5E7C6]/10 shadow-sm"
             >
               {/* Profile & ID */}
-              <td className="py-5 px-6 rounded-l-[1.5rem]">
+              <td className="py-5 px-6 rounded-l-3xl">
                 <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-xl bg-[#FAF3E1]/[0.05] flex items-center justify-center text-[#FA8112] border border-[#F5E7C6]/5">
+                  <div className="h-10 w-10 rounded-xl bg-[#FAF3E1]/5 flex items-center justify-center text-[#FA8112] border border-[#F5E7C6]/5">
                     <User size={18} />
                   </div>
                   <div>
-                    <p className="font-black text-[#FAF3E1] text-sm tracking-tight truncate max-w-[150px]">
+                    <p className="font-black text-[#FAF3E1] text-sm tracking-tight truncate max-w-37.5">
                       {tx.user?.fullName || "System Node"}
                     </p>
                     <p className="text-[10px] font-mono text-[#FAF3E1]/20 uppercase tracking-widest mt-0.5">
@@ -126,10 +126,10 @@ const TransactionTable = ({ transactions, loading }) => {
               </td>
 
               {/* Action Button */}
-              <td className="py-5 px-6 text-right rounded-r-[1.5rem]">
+              <td className="py-5 px-6 text-right rounded-r-3xl">
                 <button
-                  onClick={() => navigate(`/admin/transactions/${tx._id}`)}
-                  className="p-3 bg-[#FAF3E1]/[0.05] hover:bg-[#FA8112] text-[#FAF3E1]/20 hover:text-[#222222] rounded-xl transition-all border border-[#F5E7C6]/5"
+                  onClick={() => navigate(`/super-admin/transactions/${tx._id}`)}
+                  className="p-3 bg-[#FAF3E1]/5 hover:bg-[#FA8112] text-[#FAF3E1]/20 hover:text-[#222222] rounded-xl transition-all border border-[#F5E7C6]/5"
                 >
                   <ExternalLink size={16} />
                 </button>

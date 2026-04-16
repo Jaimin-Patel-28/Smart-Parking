@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Home, Map, Ticket, User } from "lucide-react";
+import { Home, Map, Ticket, User, Wallet2Icon, LifeBuoy } from "lucide-react";
 
 const BottomNavigation = () => {
   return (
@@ -28,7 +28,25 @@ const BottomNavigation = () => {
         }
       >
         <Ticket size={22} />{" "}
-        <span className="text-[10px] font-bold">Passes</span>
+        <span className="text-[10px] font-bold">Bookings</span>
+      </NavLink>
+      <NavLink
+        to="/user/wallet"
+        className={({ isActive }) =>
+          `flex flex-col items-center gap-1 ${isActive ? "text-[#FA8112]" : "text-[#FAF3E1]/30"}`
+        }
+      >
+        <Wallet2Icon size={22} />{" "}
+        <span className="text-[10px] font-bold">Wallet</span>
+      </NavLink>
+      <NavLink
+        to="/user/support"
+        className={({ isActive }) =>
+          `flex flex-col items-center gap-1 ${isActive ? "text-[#FA8112]" : "text-[#FAF3E1]/30"}`
+        }
+      >
+        <LifeBuoy size={22} />{" "}
+        <span className="text-[10px] font-bold">Support</span>
       </NavLink>
       <NavLink
         to="/user/profile"

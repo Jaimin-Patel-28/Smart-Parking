@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const User = require("../Authentication/models/User");
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   const authHeader = req.header('Authorization');
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -12,9 +13,20 @@ const authMiddleware = (req, res, next) => {
     console.log('🔍 Verifying token:', token.substring(0, 20) + '...');
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('✅ Decoded user:', decoded.id, decoded.role);
+    const user = await User.findById(decoded.id).select("_id role parking status");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    console.log('✅ Decoded user:', user._id.toString(), user.role);
     
-    req.user = { id: decoded.id, role: decoded.role };
+    req.user = {
+      id: user._id.toString(),
+      role: user.role,
+      parking: user.parking ? user.parking.toString() : null,
+      status: user.status,
+    };
     
     next();
 

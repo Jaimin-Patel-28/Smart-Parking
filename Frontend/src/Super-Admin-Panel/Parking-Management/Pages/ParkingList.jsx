@@ -9,7 +9,7 @@ import ConfirmDialog from "../../../app/Components/ConfirmDialog";
 
 const ParkingList = () => {
   const navigate = useNavigate();
-  const { parkings, loading, refresh } = useParking();
+  const { parkings, loading, error, refresh } = useParking();
   const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [parkingToDelete, setParkingToDelete] = useState(null);
@@ -72,7 +72,7 @@ const ParkingList = () => {
       </div>
 
       {/* --- Search & Filters Bar --- */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-[#FAF3E1]/[0.02] p-2 rounded-[2rem] border border-[#F5E7C6]/10 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-[#FAF3E1]/2 p-2 rounded-4xl border border-[#F5E7C6]/10 shadow-sm">
         <div className="sm:col-span-3 relative">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20"
@@ -86,22 +86,28 @@ const ParkingList = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <button className="flex items-center justify-center gap-2 px-6 py-4 bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] font-black uppercase tracking-widest text-[10px] hover:bg-[#FAF3E1]/[0.1] transition-all">
+        <button className="flex items-center justify-center gap-2 px-6 py-4 bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] font-black uppercase tracking-widest text-[10px] hover:bg-[#FAF3E1]/10 transition-all">
           <Filter size={16} className="text-[#FA8112]" />
           Filters
         </button>
       </div>
 
+      {error ? (
+        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 text-rose-300 text-sm font-semibold">
+          {error}
+        </div>
+      ) : null}
+
       {/* --- Table / Content Section --- */}
       {loading ? (
-        <div className="min-h-[500px] flex flex-col items-center justify-center bg-[#FAF3E1]/[0.01] rounded-[2.5rem] border border-dashed border-[#F5E7C6]/10">
+        <div className="min-h-125 flex flex-col items-center justify-center bg-[#FAF3E1]/1 rounded-[2.5rem] border border-dashed border-[#F5E7C6]/10">
           <Loader2 className="h-10 w-10 animate-spin text-[#FA8112] mb-4" />
           <p className="text-[#FAF3E1]/20 font-black uppercase tracking-[0.3em] text-[10px]">
             Syncing parking database...
           </p>
         </div>
       ) : filteredParkings.length > 0 ? (
-        <div className="bg-[#FAF3E1]/[0.01] rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm overflow-hidden p-2">
+        <div className="bg-[#FAF3E1]/1 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm overflow-hidden p-2">
           <ParkingTable
             data={filteredParkings}
             onRefresh={refresh}
@@ -109,8 +115,8 @@ const ParkingList = () => {
           />
         </div>
       ) : (
-        <div className="min-h-[500px] flex flex-col items-center justify-center bg-[#FAF3E1]/[0.01] rounded-[2.5rem] border border-[#F5E7C6]/10 text-center p-12 relative overflow-hidden">
-          <div className="bg-[#FAF3E1]/[0.03] p-8 rounded-full mb-6 text-[#FAF3E1]/10">
+        <div className="min-h-125 flex flex-col items-center justify-center bg-[#FAF3E1]/1 rounded-[2.5rem] border border-[#F5E7C6]/10 text-center p-12 relative overflow-hidden">
+          <div className="bg-[#FAF3E1]/3 p-8 rounded-full mb-6 text-[#FAF3E1]/10">
             <MapPin size={48} />
           </div>
           <h3 className="text-xl font-black text-[#FAF3E1] uppercase tracking-tight">

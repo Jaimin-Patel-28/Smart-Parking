@@ -1,17 +1,20 @@
 import api from "../../../Shared/Services/api";
 
 const bookingService = {
-  // Get all user bookings (history)
-  getUserBookings: (userId) => api.get(`/bookings/${userId}`),
+  // Get a single booking by id
+  getBookingDetails: (bookingId) => api.get(`/booking/${bookingId}`),
 
-  // Get current/active bookings
-  getCurrentBookings: (userId) => api.get(`/current-bookings/${userId}`),
+  // Get all user bookings (history) for logged-in user
+  getUserBookings: () => api.get(`/bookings`),
 
-  // Get upcoming bookings
-  getUpcomingBookings: (userId) => api.get(`/upcoming-bookings/${userId}`),
+  // Get current/active bookings for logged-in user
+  getCurrentBookings: () => api.get(`/current-bookings`),
 
-  // Get past/history bookings  
-  getPastBookings: (userId) => api.get(`/past-bookings/${userId}`),
+  // Get upcoming bookings for logged-in user
+  getUpcomingBookings: () => api.get(`/upcoming-bookings`),
+
+  // Get past/history bookings for logged-in user
+  getPastBookings: () => api.get(`/past-bookings`),
 
   // Extend active booking
   extendBooking: (bookingId, extraHours) => 

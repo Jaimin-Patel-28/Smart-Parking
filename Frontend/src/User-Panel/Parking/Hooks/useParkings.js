@@ -19,6 +19,11 @@ export const useParkings = () => {
 
   useEffect(() => {
     fetchParkings();
+
+    // Keep card availability fresh as bookings become active/inactive over time.
+    const intervalId = setInterval(fetchParkings, 30000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return { parkings, loading, refresh: fetchParkings };

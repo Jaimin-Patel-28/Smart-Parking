@@ -63,7 +63,7 @@ const TopUsersList = ({ users, loading }) => {
 
               <div className="text-right">
                 <p className="text-[#FA8112] font-black text-base tracking-tighter">
-                  ${user.totalSpent.toLocaleString()}
+                  ₹{user.totalSpent.toLocaleString()}
                 </p>
                 <p className="text-[9px] font-black text-[#FAF3E1]/20 uppercase tracking-[0.1em] mt-0.5">
                   Volume

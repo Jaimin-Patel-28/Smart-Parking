@@ -18,6 +18,19 @@ import BookingDetails from "../../Super-Admin-Panel/Booking-Management/Pages/Boo
 // User Management
 import UserList from "../../Super-Admin-Panel/User-Management/Pages/UserList";
 import UserDetails from "../../Super-Admin-Panel/User-Management/Pages/UserDetails";
+import AddAdmin from "../../Super-Admin-Panel/User-Management/Pages/AddAdmin";
+import Profile from "../../Super-Admin-Panel/User-Management/Pages/Profile";
+
+// Wallet & Transaction Management
+import WalletOverview from "../../Super-Admin-Panel/Wallet & Transactions/Pages/WalletOverview";
+import UserWallets from "../../Super-Admin-Panel/Wallet & Transactions/Pages/UserWallets";
+import TransactionHistory from "../../Super-Admin-Panel/Wallet & Transactions/Pages/TransactionHistory";
+import TransactionDetails from "../../Super-Admin-Panel/Wallet & Transactions/Pages/TransactionDetails";
+import Support from "../../Super-Admin-Panel/Support-Management/Pages/Support";
+import Reports from "../../Super-Admin-Panel/Reports/pages/Reports";
+import Settings from "../../Super-Admin-Panel/Settings/Pages/Settings";
+import Notifications from "../../Super-Admin-Panel/Notifications/Pages/Notifications";
+import AuditTrail from "../../Super-Admin-Panel/Audit-Trail/Pages/AuditTrail";
 
 const AdminRoutes = () => {
   return (
@@ -33,7 +46,7 @@ const AdminRoutes = () => {
         <Route path="parking/details/:id" element={<ParkingDetails />} />
 
         {/* Slot Management */}
-        <Route path="slots" element={<ParkingList />} />
+        <Route path="slots" element={<SlotList />} />
         <Route path="slots/:parkingId" element={<SlotList />} />
 
         {/* Booking Management */}
@@ -43,11 +56,22 @@ const AdminRoutes = () => {
         {/* User Management */}
         <Route path="users" element={<UserList />} />
         <Route path="users/:id" element={<UserDetails />} />
+        <Route path="create-admin" element={<AddAdmin />} />
+        <Route path="profile" element={<Profile />} />
 
-        {/* Static placeholders for other modules */}
-        <Route path="wallet" element={<div>Wallet Page</div>} />
-        <Route path="reports" element={<div>Reports Page</div>} />
-        <Route path="settings" element={<div>Settings Page</div>} />
+        {/* Wallet & Transaction Management */}
+        {/* Main Dashboard for Revenue & Analytics */}
+        <Route path="wallet" element={<WalletOverview />} />
+        <Route path="wallet/users" element={<UserWallets />} />
+        <Route path="wallet/transactions" element={<TransactionHistory />} />
+        <Route path="transactions/:id" element={<TransactionDetails />} />
+
+        {/* Additional modules */}
+        <Route path="reports" element={<Reports />} />
+        <Route path="notifications" element={<Notifications />} />
+        <Route path="audit-trail" element={<AuditTrail />} />
+        <Route path="support" element={<Support />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

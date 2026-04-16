@@ -9,6 +9,7 @@ import AdminRoutes from "./Routes/AdminRoutes";
 import PublicRoutes from "./Routes/PublicRoutes"; // Updated path
 import ProtectedRoute from "./Components/ProtectedRoute";
 import AuthGuard from "./Components/AuthGuard";
+import StaffAdminRoutes from "./Routes/StaffAdminRoutes";
 
 const App = () => {
   return (
@@ -34,12 +35,22 @@ const App = () => {
           }
         />
 
-        {/* 3. Admin / Super Admin Module - Protected for admins and super-admins */}
+        {/* Super Admin */}
         <Route
           path="/super-admin/*"
           element={
-            <ProtectedRoute allowedRoles={["admin", "super-admin"]}>
+            <ProtectedRoute allowedRoles={["super-admin"]}>
               <AdminRoutes />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin (Parking Staff) */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <StaffAdminRoutes />
             </ProtectedRoute>
           }
         />

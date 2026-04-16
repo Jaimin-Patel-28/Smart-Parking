@@ -3,22 +3,23 @@ const User = require("../Authentication/models/User");
 
 const createSuperAdmin = async () => {
   try {
-    const email = "owner@superadmin.gmail.com";
-    const password = "OWNER@SA123";
+    const email = "jaimin@superadmin.gmail.com";
+    const password = "SuperAdmin123";
 
     const existing = await User.findOne({ email });
 
     if (existing) {
-      console.log("Super Admin already exists");
-      return;
+      console.log("Super Admin exists, deleting and recreating");
+      await User.deleteOne({ email });
     }
+  
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10); // Remove this
 
     const superAdmin = new User({
       fullName: "Super Admin",
       email,
-      password: hashedPassword,
+      password, // Set plain text, pre-save will hash
       role: "super-admin", // ✅ FIXED
       vehicleNumber: "SUPERADMIN", // ✅ FIXED
       isVerified: true,

@@ -25,8 +25,46 @@ exports.getActiveParkings = async (req, res) => {
       ];
     }
 
-    const parkings = await Parking.find(query).sort({ name: 1 });
-    res.json(parkings);
+    const parkings = await Parking.find(query).sort({ name: 1 }).lean();
+
+    const now = new Date();
+    const activeBookingCounts = await Booking.aggregate([
+      {
+        $match: {
+          status: { $in: ["confirmed", "active"] },
+          startTime: { $lte: now },
+          endTime: { $gte: now },
+        },
+      },
+      {
+        $group: {
+          _id: "$parking",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const bookingCountMap = new Map(
+      activeBookingCounts.map((item) => [item._id.toString(), item.count]),
+    );
+
+    const parkingsWithLiveAvailability = parkings.map((parking) => {
+      const activeBookings = bookingCountMap.get(parking._id.toString()) || 0;
+      const liveOccupiedSlots = Math.min(activeBookings, parking.totalSlots);
+      const liveAvailableSlots = Math.max(
+        parking.totalSlots - liveOccupiedSlots,
+        0,
+      );
+
+      return {
+        ...parking,
+        activeBookings,
+        occupiedSlots: liveOccupiedSlots,
+        liveAvailableSlots,
+      };
+    });
+
+    res.json(parkingsWithLiveAvailability);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -135,6 +173,11 @@ exports.getParkingDetails = async (req, res) => {
       parking,
       slots: updatedSlots,
       summary: {
+        total: updatedSlots.length,
+        available: availableCount,
+        unavailable: updatedSlots.length - availableCount,
+      },
+      availabilitySummary: {
         total: updatedSlots.length,
         available: availableCount,
         unavailable: updatedSlots.length - availableCount,

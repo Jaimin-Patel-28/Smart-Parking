@@ -1,0 +1,100 @@
+Phase 0: Stabilize Core (1-2 days)
+Goal: make Admin side reliable before adding new pages.
+
+Fix route ownership and wiring.
+Ensure Admin routes are mounted and protected with role checks.
+Remove/replace broken Shared booking service dependencies.
+Normalize slot status values and booking lifecycle transitions.
+Validate Admin parking scoping using authenticated user context.
+Exit criteria:
+
+Admin can fetch only their parking bookings.
+Admin entry/exit APIs return correct responses.
+No unauthorized access to booking APIs.
+
+
+Phase 1: Ticket-Code Gate Operations MVP (3-5 days)
+Goal: support real gate entry/exit using booking unique number from ticket.
+
+Add API flow for verify by bookingCode.
+Add API flow for mark entry by bookingCode.
+Add API flow for mark exit by bookingCode.
+Add validation matrix:
+wrong code
+wrong parking
+cancelled/expired
+already entered
+already exited
+Add activity logging (admin, timestamp, action, reason).
+Frontend MVP pages:
+
+Ticket Verification
+Entry Desk
+Exit Desk
+Exit criteria:
+
+Admin can complete full gate flow with only bookingCode.
+Every action is logged and visible.
+Errors are clear for operations team.
+
+
+Phase 2: Admin Booking Experience (4-6 days)
+Goal: make daily operations fast and safe.
+
+Upgrade Booking List:
+filters by bookingCode, status, vehicle, date
+quick actions for entry/exit
+row navigation to Admin Booking Detail (not super-admin path)
+Add Booking Detail page:
+status timeline
+payment and slot info
+audit trail
+Add optimistic UI feedback + retry handling.
+Add proper empty, error, and loading states.
+Exit criteria:
+
+Gate actions can be done from list + detail.
+No dead links in sidebar/header.
+Admin UX has no super-admin route leakage.
+
+
+Phase 3: Operational Control & Exceptions (4-5 days)
+Goal: handle real-world edge cases.
+
+Add Exceptions page:
+invalid code attempts
+no-show bookings
+overstays
+pending payment at exit
+Add override actions with mandatory reason.
+Add alerting badges in header/sidebar.
+Add shift notes and handover comments.
+Exit criteria:
+
+Team can resolve blocked gate scenarios without developer help.
+All overrides are traceable.
+
+
+Phase 4: Admin Essentials Pages (2-3 days)
+Goal: complete missing navigation pages already exposed in UI.
+
+Support page (incident/ticket logging).
+Admin Profile page.
+Admin Settings page (basic operational preferences).
+Exit criteria:
+
+No route redirects caused by missing pages.
+Sidebar/header links are fully functional.
+
+
+Phase 5: Metrics & Hardening (3-4 days)
+Goal: improve quality, monitoring, and scale readiness.
+
+Add Shift Summary page (entries, exits, exceptions, average processing time).
+Add API monitoring and security checks.
+Add role-based test coverage for all admin endpoints.
+Add smoke tests for gate flow.
+Exit criteria:
+
+Measurable gate KPIs available daily.
+Regression-safe release process.

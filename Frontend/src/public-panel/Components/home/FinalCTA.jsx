@@ -1,7 +1,10 @@
 import React from "react";
 import { ArrowRight, Map, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const FinalCTA = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative w-full bg-[#222222] py-24 px-6 overflow-hidden">
       {/* THE CONTENT CARD */}
@@ -34,7 +37,10 @@ const FinalCTA = () => {
 
         {/* ACTION BUTTONS */}
         <nav className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-6">
-          <button className="w-full sm:w-auto bg-[#FA8112] text-[#222222] px-10 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:shadow-[0_0_40px_rgba(250,129,18,0.4)] hover:-translate-y-1 transition-all active:scale-95 group">
+          <button 
+            onClick={() => navigate('/auth/login')}
+            className="w-full sm:w-auto bg-[#FA8112] text-[#222222] px-10 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:shadow-[0_0_40px_rgba(250,129,18,0.4)] hover:-translate-y-1 transition-all active:scale-95 group"
+          >
             Register Now
             <ArrowRight
               size={22}
@@ -42,7 +48,10 @@ const FinalCTA = () => {
             />
           </button>
 
-          <button className="w-full sm:w-auto bg-[#FAF3E1]/[0.05] text-[#FAF3E1] border border-[#F5E7C6]/10 px-10 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-[#FAF3E1]/10 transition-all group">
+          <button 
+            onClick={() => navigate('/user/find-parking')}
+            className="w-full sm:w-auto bg-[#FAF3E1]/[0.05] text-[#FAF3E1] border border-[#F5E7C6]/10 px-10 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-[#FAF3E1]/10 transition-all group"
+          >
             <Map size={20} className="text-[#FA8112]" />
             Explore Parking
           </button>

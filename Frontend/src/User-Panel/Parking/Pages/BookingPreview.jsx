@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Clock,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import VehicleSelector from "../Components/VehicleSelector";
 import parkingService from "../Services/parkingService";
+import profileService from "../../Profile/Services/profileService";
 import { useAuth } from "../../../Authentication-UI/Context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -26,8 +27,33 @@ const BookingPreview = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(
     user?.vehicleNumber || "",
   );
+  const [registeredVehicles, setRegisteredVehicles] = useState(
+    user?.vehicleNumber ? [user.vehicleNumber] : [],
+  );
   const [paymentMethod, setPaymentMethod] = useState("upi");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const { data } = await profileService.getProfile();
+        const profileVehicles = (data?.vehicles || [])
+          .filter((vehicle) => vehicle?.isActive !== false && vehicle?.vehicleNumber)
+          .map((vehicle) => vehicle.vehicleNumber);
+
+        const fallbackVehicle = user?.vehicleNumber ? [user.vehicleNumber] : [];
+        const uniqueVehicles = [...new Set([...profileVehicles, ...fallbackVehicle])];
+
+        setRegisteredVehicles(uniqueVehicles);
+        setSelectedVehicle((prev) => prev || uniqueVehicles[0] || "");
+      } catch (err) {
+        const fallbackVehicle = user?.vehicleNumber ? [user.vehicleNumber] : [];
+        setRegisteredVehicles(fallbackVehicle);
+      }
+    };
+
+    fetchVehicles();
+  }, [user?.vehicleNumber]);
 
   const start = new Date(startTime);
   const end = new Date(endTime);
@@ -38,7 +64,7 @@ const BookingPreview = () => {
   const totalAmount = durationHours * parking?.basePrice;
 
   const handleConfirm = async () => {
-    if (!user?.vehicleNumber)
+    if (registeredVehicles.length === 0)
       return toast.error("Update vehicle in profile first");
     if (!selectedVehicle || selectedVehicle === "Add New")
       return toast.error("Select a vehicle");
@@ -55,7 +81,7 @@ const BookingPreview = () => {
         duration: durationHours,
         hourlyRate: parking?.basePrice,
         totalAmount,
-        paymentMethod: paymentMethod === "cash" ? "cash_on_counter" : paymentMethod,
+        paymentMethod,
       };
 
       const { data } = await parkingService.confirmBooking(bookingData);
@@ -76,9 +102,10 @@ const BookingPreview = () => {
     );
 
   const paymentOptions = [
+    { key: "wallet", label: "Wallet", icon: <Wallet size={18} /> },
     { key: "upi", label: "UPI", icon: <Smartphone size={18} /> },
     { key: "credit_debit_card", label: "Card", icon: <CreditCard size={18} /> },
-    { key: "net_banking", label: "Net Bank", icon: <Wallet size={18} /> },
+    { key: "net_banking", label: "Net Bank", icon: <Banknote size={18} /> },
     { key: "cash_on_counter", label: "Counter", icon: <Banknote size={18} /> },
   ];
 
@@ -102,9 +129,9 @@ const BookingPreview = () => {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-[2.5rem] border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] shadow-2xl">
+      <div className="overflow-hidden rounded-[2.5rem] border border-[#F5E7C6]/10 bg-[#FAF3E1]/2 shadow-2xl">
         {/* Pass Branding */}
-        <div className="bg-gradient-to-r from-[#FA8112] to-[#ff9d42] p-8 text-[#222222] relative overflow-hidden">
+        <div className="bg-linear-to-r from-[#FA8112] to-[#ff9d42] p-8 text-[#222222] relative overflow-hidden">
           <div className="relative z-10">
             <h2 className="text-2xl font-black italic uppercase tracking-tighter">
               Secure Entry Pass
@@ -173,8 +200,8 @@ const BookingPreview = () => {
                 </p>
               </div>
             </div>
-            <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 bg-[#1a1a1a] rounded-full border border-[#F5E7C6]/10" />
-            <div className="absolute left-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 bg-[#1a1a1a] rounded-full border border-[#F5E7C6]/10" />
+            <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 h-5 w-5 bg-[#1a1a1a] rounded-full border border-[#F5E7C6]/10" />
+            <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 h-5 w-5 bg-[#1a1a1a] rounded-full border border-[#F5E7C6]/10" />
           </div>
 
           {/* Vehicle Selection */}
@@ -185,7 +212,7 @@ const BookingPreview = () => {
             <VehicleSelector
               selectedVehicle={selectedVehicle}
               onSelect={setSelectedVehicle}
-              vehicles={user?.vehicleNumber ? [user.vehicleNumber] : []}
+              vehicles={registeredVehicles}
             />
           </div>
 
@@ -202,7 +229,7 @@ const BookingPreview = () => {
                   className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all ${
                     paymentMethod === option.key
                       ? "border-[#FA8112] bg-[#FA8112]/10 text-[#FA8112]"
-                      : "border-[#F5E7C6]/5 bg-[#FAF3E1]/[0.02] text-[#FAF3E1]/30 hover:bg-[#FAF3E1]/[0.05]"
+                      : "border-[#F5E7C6]/5 bg-[#FAF3E1]/2 text-[#FAF3E1]/30 hover:bg-[#FAF3E1]/5"
                   }`}
                 >
                   {option.icon}
@@ -227,8 +254,8 @@ const BookingPreview = () => {
 
             <button
               onClick={handleConfirm}
-              disabled={isSubmitting || !user?.vehicleNumber}
-              className="w-full md:w-auto bg-[#FA8112] text-[#222222] px-10 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-[#FA8112]/20 disabled:opacity-20"
+              disabled={isSubmitting || registeredVehicles.length === 0}
+              className="w-full md:w-auto bg-[#FA8112] text-[#222222] px-10 py-5 rounded-3xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-[#FA8112]/20 disabled:opacity-20"
             >
               {isSubmitting ? "Processing..." : "Confirm Booking"}
               <ArrowRight size={18} />

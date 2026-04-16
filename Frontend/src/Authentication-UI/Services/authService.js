@@ -7,11 +7,14 @@ const authService = {
   register: (userData) => axios.post(`${API_URL}/register`, userData),
 
   // VERIFY OTP
-  verifyOTP: (email, otp) =>
-    axios.post(`${API_URL}/verify-otp`, { email, otp }),
+  verifyOTP: (email, otp, purpose = "register") =>
+    axios.post(`${API_URL}/verify-otp`, { email, otp, purpose }),
 
   // RESEND OTP
   resendOTP: (email) => axios.post(`${API_URL}/resend-otp`, { email }),
+
+  // FORGOT PASSWORD
+  forgotPassword: (email) => axios.post(`${API_URL}/forgot-password`, { email }),
 
   // LOGIN
   login: async (credentials) => {
@@ -23,8 +26,8 @@ const authService = {
     if (data.accessToken) {
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("role", data?.user?.role || "");
+      localStorage.setItem("userId", data?.user?._id || "");
     }
 
     return data;

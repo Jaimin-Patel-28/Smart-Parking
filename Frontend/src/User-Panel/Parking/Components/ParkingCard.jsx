@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 const ParkingCard = ({ parking }) => {
   const navigate = useNavigate();
-  const available = parking.totalSlots - parking.occupiedSlots;
+  const available =
+    parking.liveAvailableSlots ?? parking.totalSlots - parking.occupiedSlots;
+  const occupied = parking.totalSlots - available;
   const occupancyPercentage =
-    (parking.occupiedSlots / parking.totalSlots) * 100;
+    parking.totalSlots > 0 ? (occupied / parking.totalSlots) * 100 : 0;
 
   return (
     <div className="group relative overflow-hidden bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/5 rounded-[2.5rem] p-6 transition-all hover:bg-[#FAF3E1]/[0.06] hover:border-[#FA8112]/30 flex flex-col justify-between h-full">

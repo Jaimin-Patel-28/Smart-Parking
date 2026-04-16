@@ -19,5 +19,20 @@ router.patch("/", authMiddleware, profileController.updateProfile);
 router.post("/vehicles", authMiddleware, profileController.addVehicle);
 router.patch("/vehicles/:id", authMiddleware, profileController.updateVehicle);
 router.delete("/vehicles/:id", authMiddleware, profileController.deleteVehicle);
+router.post(
+  "/send-delete-otp",
+  authMiddleware,
+  profileController.sendDeleteOTP,
+);
+router.post(
+  "/verify-delete-otp",
+  authMiddleware,
+  profileController.verifyDeleteOTP,
+);
+router.delete(
+  "/delete-account",
+  authMiddleware,
+  profileController.deleteAccount,
+);
 
 module.exports = router;

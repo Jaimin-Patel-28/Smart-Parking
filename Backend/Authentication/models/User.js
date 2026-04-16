@@ -43,6 +43,16 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
+    parking: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Parking",
+    },
+
+    isDeleteVerified: {
+      type: Boolean,
+      default: false,
+    },
+
     status: {
       type: String,
       enum: ["active", "inactive"],
@@ -52,6 +62,7 @@ const userSchema = new mongoose.Schema(
     // OTP
     otpHash: String,
     otpExpire: Date,
+    passwordResetVerifiedUntil: Date,
 
     isVerified: {
       type: Boolean,

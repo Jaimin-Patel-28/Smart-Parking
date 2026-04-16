@@ -7,7 +7,7 @@ exports.getUserDashboard = async (req, res) => {
 
     const now = new Date();
 
-    const [totalBookings, activeBookings, totalSpentResult, recentBookings] = await Promise.all([
+    const [totalBookings, activeBookings, totalSpentResult, recentBookings, statusCounts] = await Promise.all([
       Booking.countDocuments({ user: new mongoose.Types.ObjectId(userId) }),
       Booking.countDocuments({
         user: new mongoose.Types.ObjectId(userId),
@@ -23,7 +23,11 @@ exports.getUserDashboard = async (req, res) => {
         .populate('parking', 'name location')
         .populate('slot', 'label')
         .sort({ createdAt: -1 })
-        .limit(10)
+        .limit(10),
+      Booking.aggregate([
+        { $match: { user: new mongoose.Types.ObjectId(userId) } },
+        { $group: { _id: '$status', count: { $sum: 1 } } }
+      ])
     ]);
 
     const stats = {
@@ -36,7 +40,8 @@ exports.getUserDashboard = async (req, res) => {
 
     res.json({
       stats,
-      recentBookings
+      recentBookings,
+      statusCounts
     });
   } catch (error) {
     console.error('Dashboard error:', error);

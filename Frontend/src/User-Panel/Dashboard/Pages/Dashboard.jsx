@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   TrendingUp,
   Car,
@@ -17,6 +17,7 @@ import RecentBookings from "../Components/RecentBookings";
 const Dashboard = () => {
   const { user } = useAuth();
   const { data, loading, error } = useDashboardData();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -138,7 +139,10 @@ const Dashboard = () => {
                 </p>
               </div>
             </div>
-            <button className="bg-[#222222] text-[#FAF3E1] px-8 py-3 rounded-xl font-bold text-sm">
+            <button
+              onClick={() => navigate("/user/wallet")}
+              className="bg-[#222222] text-[#FAF3E1] px-8 py-3 rounded-xl font-bold text-sm"
+            >
               Top Up Now
             </button>
           </div>

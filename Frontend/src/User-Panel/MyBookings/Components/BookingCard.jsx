@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   MapPin,
   Hash,
@@ -20,13 +21,14 @@ const BookingCard = ({
   extendingId = null,
 }) => {
   const [showEdit, setShowEdit] = useState(false);
+  const navigate = useNavigate();
 
   const remaining = formatDistanceToNow(new Date(booking.endTime), {
     addSuffix: true,
   });
 
   return (
-    <div className="group relative overflow-hidden bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-[2rem] p-6 transition-all hover:bg-[#FAF3E1]/[0.06] hover:border-[#FA8112]/30">
+    <div className="group relative overflow-hidden bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-4xl p-6 transition-all hover:bg-[#FAF3E1]/6 hover:border-[#FA8112]/30">
       {/* 1. Ticket Header: Status & Price */}
       <div className="flex justify-between items-start mb-6">
         <div
@@ -98,6 +100,13 @@ const BookingCard = ({
 
       {/* 5. Conditional Actions */}
       <div className="mt-8 pt-6 border-t border-[#F5E7C6]/5 flex flex-col gap-3">
+        <button
+          onClick={() => navigate(`/user/bookings/${booking._id}`)}
+          className="w-full text-xs font-black uppercase tracking-widest text-[#FAF3E1] border border-[#F5E7C6]/10 py-3 rounded-xl hover:bg-[#FAF3E1]/5 transition-all"
+        >
+          View Booking Details
+        </button>
+
         {isCurrent && (
           <>
             <ExtendForm
@@ -144,7 +153,7 @@ const BookingCard = ({
       </div>
 
       {/* Background Decorative Element */}
-      <ShieldCheck className="absolute -right-4 -top-4 w-24 h-24 text-[#FAF3E1]/[0.02] -rotate-12 pointer-events-none" />
+      <ShieldCheck className="absolute -right-4 -top-4 w-24 h-24 text-[#FAF3E1]/2 -rotate-12 pointer-events-none" />
     </div>
   );
 };

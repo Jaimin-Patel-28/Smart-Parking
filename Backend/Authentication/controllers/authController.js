@@ -5,10 +5,10 @@ const jwt = require("jsonwebtoken");
 const generateOTP = require("../../utils/generateOTP");
 const hashOTP = require("../../utils/hashOTP");
 const sendOTP = require("../../utils/sendOTP");
-const detectRole = require("../../utils/detectRole");
 const generateTokens = require("../../utils/generateTokens");
 const generateUserId = require("../../utils/generateUserId");
-// REGISTER
+
+// ================= REGISTER (USER ONLY) =================
 exports.registerUser = async (req, res) => {
   try {
     const { fullName, email, mobile, vehicleNumber, password } = req.body;
@@ -21,15 +21,14 @@ exports.registerUser = async (req, res) => {
 
     const otp = generateOTP();
     const otpHash = hashOTP(otp);
-    const role = detectRole(email);
 
     user = new User({
       fullName,
       email,
       mobile,
       vehicleNumber,
-      password: password,
-      role,
+      password,
+      role: "user", // ✅ FIXED
       otpHash,
       otpExpire: Date.now() + 5 * 60 * 1000,
     });
@@ -46,15 +45,14 @@ exports.registerUser = async (req, res) => {
       message: "OTP sent to email",
     });
   } catch (err) {
-    console.error("REGISTER ERROR:", err); // ✅ VERY IMPORTANT
+    console.error("REGISTER ERROR:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
-// Verify OTP
-
+// ================= VERIFY OTP =================
 exports.verifyOTP = async (req, res) => {
-  const { email, otp } = req.body;
+  const { email, otp, purpose = "register" } = req.body;
 
   const user = await User.findOne({ email });
 
@@ -68,19 +66,25 @@ exports.verifyOTP = async (req, res) => {
   if (user.otpExpire < Date.now())
     return res.status(400).json({ message: "OTP expired" });
 
-  user.isVerified = true;
-
-  user.userId = await generateUserId();
+  if (purpose === "register") {
+    user.isVerified = true;
+    user.userId = await generateUserId();
+  } else if (purpose === "reset") {
+    // Permit password reset only for a short window after OTP verification.
+    user.passwordResetVerifiedUntil = new Date(Date.now() + 10 * 60 * 1000);
+  }
 
   user.otpHash = null;
+  user.otpExpire = null;
 
   await user.save();
 
-  res.json({ message: "Registration complete" });
+  res.json({
+    message: purpose === "register" ? "Registration complete" : "OTP verified",
+  });
 };
 
-// Resend OTP
-
+// ================= RESEND OTP =================
 exports.resendOTP = async (req, res) => {
   const { email } = req.body;
 
@@ -91,7 +95,6 @@ exports.resendOTP = async (req, res) => {
   const otp = generateOTP();
 
   user.otpHash = hashOTP(otp);
-
   user.otpExpire = Date.now() + 5 * 60 * 1000;
 
   await user.save();
@@ -101,8 +104,7 @@ exports.resendOTP = async (req, res) => {
   res.json({ message: "OTP resent" });
 };
 
-// Login
-
+// ================= LOGIN =================
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -111,19 +113,28 @@ exports.loginUser = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // ✅ Check OTP verification
-    if (!user.isVerified) {
+    if (user.role === "user" && !user.isVerified) {
       return res.status(400).json({ message: "Please verify OTP first" });
     }
 
-    // ✅ Check if blocked
     if (user.status === "inactive") {
       return res.status(403).json({ message: "User is blocked by admin" });
     }
 
     const match = await user.matchPassword(password);
 
-    if (!match) return res.status(400).json({ message: "Invalid password" });
+    if (!match) {
+      // 🔥 try fixing double-hash case
+      const singleHash = await bcrypt.hash(password, 10);
+
+      if (await bcrypt.compare(singleHash, user.password)) {
+        // fix password
+        user.password = password;
+        await user.save();
+      } else {
+        return res.status(400).json({ message: "Invalid password" });
+      }
+    }
 
     const { accessToken, refreshToken } = generateTokens(user);
 
@@ -134,38 +145,55 @@ exports.loginUser = async (req, res) => {
       message: "Login successful",
       accessToken,
       refreshToken,
-
-      // ✅ ADD THIS
       user: {
         _id: user._id,
-        name: user.fullName, // ⚠️ you used fullName
+        name: user.fullName,
         email: user.email,
         role: user.role,
         vehicleNumber: user.vehicleNumber,
+        parking: user.parking, // ✅ IMPORTANT
       },
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-// Refresh Token
 
+// ================= REFRESH TOKEN =================
 exports.refreshToken = async (req, res) => {
-  const { refreshToken } = req.body;
+  try {
+    const { refreshToken } = req.body;
 
-  if (!refreshToken) return res.status(401).json({ message: "Token missing" });
+    if (!refreshToken) return res.status(401).json({ message: "Token missing" });
 
-  const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const user = await User.findById(decoded.id);
 
-  const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
 
-  const tokens = generateTokens(user);
+    if (!user.refreshToken || user.refreshToken !== refreshToken) {
+      return res.status(403).json({ message: "Refresh token is invalid" });
+    }
 
-  res.json(tokens);
+    const tokens = generateTokens(user);
+    user.refreshToken = tokens.refreshToken;
+    await user.save();
+
+    res.json(tokens);
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Refresh token expired" });
+    }
+    if (err.name === "JsonWebTokenError") {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
+    return res.status(500).json({ message: "Failed to refresh token" });
+  }
 };
 
-// Forgot Password
-
+// ================= FORGOT PASSWORD =================
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -176,8 +204,8 @@ exports.forgotPassword = async (req, res) => {
   const otp = generateOTP();
 
   user.otpHash = hashOTP(otp);
-
   user.otpExpire = Date.now() + 5 * 60 * 1000;
+  user.passwordResetVerifiedUntil = null;
 
   await user.save();
 
@@ -186,31 +214,61 @@ exports.forgotPassword = async (req, res) => {
   res.json({ message: "Password reset OTP sent" });
 };
 
-//Admin
+// ================= RESET PASSWORD =================
+exports.resetPassword = async (req, res) => {
+  const { email, password } = req.body;
 
+  const user = await User.findOne({ email });
+
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  if (!user.passwordResetVerifiedUntil) {
+    return res.status(403).json({ message: "OTP verification required" });
+  }
+
+  if (user.passwordResetVerifiedUntil < new Date()) {
+    user.passwordResetVerifiedUntil = null;
+    await user.save();
+    return res.status(403).json({ message: "OTP verification expired" });
+  }
+
+  user.password = password;
+  user.passwordResetVerifiedUntil = null;
+  await user.save();
+
+  res.json({ message: "Password reset successful" });
+};
+
+// ================= CREATE ADMIN (SUPER ADMIN ONLY) =================
 exports.createAdmin = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    if (!req.user || req.user.role !== "super-admin") {
+      return res.status(403).json({ message: "Super Admin access required" });
+    }
+
+    const { fullName, email, password, parking } = req.body;
 
     const existing = await User.findOne({ email });
 
     if (existing)
       return res.status(400).json({ message: "Email already exists" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const admin = new User({
+    const admin = await User.create({
       fullName,
       email,
-      password: hashedPassword,
+      password: password.trim(),
       role: "admin",
+      parking, // ✅ ASSIGN PARKING
       isVerified: true,
       createdBy: req.user.id,
     });
 
     await admin.save();
 
-    res.json({ message: "Admin created successfully" });
+    res.status(201).json({
+      message: "Admin created successfully",
+      admin,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

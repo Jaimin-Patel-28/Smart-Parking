@@ -4,6 +4,7 @@ import { transactionService } from "../Services/transactionService";
 export const useTransactions = (initialFilters = {}) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -24,6 +25,7 @@ export const useTransactions = (initialFilters = {}) => {
   const fetchTransactions = useCallback(async () => {
     try {
       setLoading(true);
+      setError("");
       const res = await transactionService.getTransactions(filters);
 
       // Based on your backend: { success: true, page, totalPages, totalRecords, data }
@@ -35,6 +37,7 @@ export const useTransactions = (initialFilters = {}) => {
       });
     } catch (err) {
       console.error("Transaction fetch error:", err);
+      setError(err?.response?.data?.message || "Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
@@ -55,6 +58,7 @@ export const useTransactions = (initialFilters = {}) => {
   return {
     transactions,
     loading,
+    error,
     pagination,
     filters,
     updateFilters,

@@ -28,8 +28,13 @@ const UserDetails = () => {
     const fetchUser = async () => {
       try {
         const res = await userService.getUserById(id);
-        setUser(res.data);
-        setFormData(res.data);
+        const userData = res.data;
+        setUser(userData);
+        setFormData({
+          ...userData,
+          fullName: userData.fullName || userData.name || "",
+          mobile: userData.mobile || userData.phone || "",
+        });
       } catch (err) {
         console.error("Error fetching user", err);
       } finally {
@@ -79,7 +84,7 @@ const UserDetails = () => {
           className={`flex items-center gap-3 px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all shadow-lg active:scale-95 ${
             isEditing
               ? "bg-[#FA8112] text-[#222222] shadow-[#FA8112]/10"
-              : "bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 text-[#FAF3E1] hover:bg-[#FAF3E1]/[0.1]"
+              : "bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 text-[#FAF3E1] hover:bg-[#FAF3E1]/10"
           }`}
         >
           {isEditing ? (
@@ -95,15 +100,15 @@ const UserDetails = () => {
       <div className="grid md:grid-cols-3 gap-8">
         {/* Left Card: Profile Overview */}
         <div className="md:col-span-1 space-y-8">
-          <div className="bg-[#FAF3E1]/[0.02] rounded-[2.5rem] border border-[#F5E7C6]/10 p-10 text-center shadow-sm relative overflow-hidden">
+          <div className="bg-[#FAF3E1]/2 rounded-[2.5rem] border border-[#F5E7C6]/10 p-10 text-center shadow-sm relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#FA8112]/5 blur-3xl pointer-events-none" />
 
             <div
-              className={`h-24 w-24 mx-auto rounded-[2rem] flex items-center justify-center mb-6 border transition-colors ${
+              className={`h-24 w-24 mx-auto rounded-4xl flex items-center justify-center mb-6 border transition-colors ${
                 user.role === "admin"
                   ? "bg-[#FA8112]/10 text-[#FA8112] border-[#FA8112]/20"
-                  : "bg-[#FAF3E1]/[0.05] text-[#FAF3E1] border-[#F5E7C6]/10"
+                  : "bg-[#FAF3E1]/5 text-[#FAF3E1] border-[#F5E7C6]/10"
               }`}
             >
               {user.role === "admin" ? (
@@ -113,7 +118,7 @@ const UserDetails = () => {
               )}
             </div>
             <h2 className="text-2xl font-black text-[#FAF3E1] tracking-tighter uppercase">
-              {user.name}
+              {user.fullName || user.name}
             </h2>
             <p className="text-[10px] font-black text-[#FAF3E1]/30 uppercase tracking-[0.25em] mt-2">
               System {user.role}
@@ -148,8 +153,8 @@ const UserDetails = () => {
 
         {/* Right Card: Detailed Information */}
         <div className="md:col-span-2">
-          <div className="bg-[#FAF3E1]/[0.02] rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm overflow-hidden h-full">
-            <div className="p-8 border-b border-[#F5E7C6]/5 bg-[#FAF3E1]/[0.02]">
+          <div className="bg-[#FAF3E1]/2 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm overflow-hidden h-full">
+            <div className="p-8 border-b border-[#F5E7C6]/5 bg-[#FAF3E1]/2">
               <h3 className="text-xs font-black text-[#FAF3E1] uppercase tracking-[0.2em] flex items-center gap-3">
                 <div className="h-5 w-1 bg-[#FA8112] rounded-full" />
                 Account Intelligence
@@ -164,16 +169,16 @@ const UserDetails = () => {
                 </label>
                 {isEditing ? (
                   <input
-                    className="w-full p-4 bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] focus:border-[#FA8112] outline-none transition-all"
-                    value={formData.name}
+                    className="w-full p-4 bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] focus:border-[#FA8112] outline-none transition-all"
+                    value={formData.fullName || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
+                      setFormData({ ...formData, fullName: e.target.value })
                     }
                   />
                 ) : (
                   <p className="font-black text-[#FAF3E1] text-sm flex items-center gap-3">
                     <UserIcon size={16} className="text-[#FA8112]" />{" "}
-                    {user.name}
+                    {user.fullName || user.name}
                   </p>
                 )}
               </div>
@@ -195,16 +200,16 @@ const UserDetails = () => {
                 </label>
                 {isEditing ? (
                   <input
-                    className="w-full p-4 bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] focus:border-[#FA8112] outline-none transition-all"
-                    value={formData.phone}
+                    className="w-full p-4 bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] focus:border-[#FA8112] outline-none transition-all"
+                    value={formData.mobile || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
+                      setFormData({ ...formData, mobile: e.target.value })
                     }
                   />
                 ) : (
                   <p className="font-black text-[#FAF3E1] text-sm flex items-center gap-3">
                     <Phone size={16} className="text-[#FA8112]" />{" "}
-                    {user.phone || "UNREGISTERED"}
+                    {user.mobile || user.phone || "UNREGISTERED"}
                   </p>
                 )}
               </div>
@@ -216,7 +221,7 @@ const UserDetails = () => {
                 </label>
                 {isEditing ? (
                   <select
-                    className="w-full p-4 bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] outline-none focus:border-[#FA8112] appearance-none cursor-pointer"
+                    className="w-full p-4 bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-2xl text-[#FAF3E1] outline-none focus:border-[#FA8112] appearance-none cursor-pointer"
                     value={formData.role}
                     onChange={(e) =>
                       setFormData({ ...formData, role: e.target.value })

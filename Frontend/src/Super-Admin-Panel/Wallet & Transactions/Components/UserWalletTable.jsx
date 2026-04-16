@@ -63,7 +63,7 @@ const UserWalletTable = ({ wallets, loading }) => {
                     }`}
                   />
                   <p className="font-black text-[#FAF3E1] text-lg tracking-tighter">
-                    ${item.balance.toLocaleString()}
+                    ₹{item.balance.toLocaleString()}
                   </p>
                 </div>
               </td>
@@ -81,7 +81,7 @@ const UserWalletTable = ({ wallets, loading }) => {
               {/* Actions */}
               <td className="py-5 px-6 text-right rounded-r-[1.5rem]">
                 <button
-                  onClick={() => navigate(`/admin/users/${item.user?._id}`)}
+                  onClick={() => navigate(`/super-admin/users/${item.user?._id}`)}
                   className="inline-flex items-center gap-3 px-6 py-3 bg-[#FAF3E1]/[0.05] text-[#FAF3E1] text-[10px] font-black uppercase tracking-widest rounded-xl border border-[#F5E7C6]/10 hover:bg-[#FA8112] hover:text-[#222222] transition-all shadow-lg active:scale-95 group/btn"
                 >
                   Inspect Profile

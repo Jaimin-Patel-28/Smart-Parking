@@ -6,9 +6,14 @@ export const useBookings = (userId) => {
   const [loading, setLoading] = useState(true);
 
   const fetchBookings = async () => {
-    if (!userId) return;
+    if (!userId) {
+      setBookings([]);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const { data } = await parkingService.getUserBookings(userId);
+      const { data } = await parkingService.getUserBookings();
       setBookings(data);
     } catch (err) {
       console.error("Failed to fetch bookings", err);

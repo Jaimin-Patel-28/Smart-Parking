@@ -57,7 +57,7 @@ const RevenueChart = ({ data, viewType, setViewType, loading }) => {
             >
               {/* Tooltip - Styled as Dark Badge */}
               <div className="absolute -top-10 bg-[#FAF3E1] text-[#222222] text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 whitespace-nowrap font-black shadow-xl pointer-events-none z-20 uppercase tracking-tighter">
-                ${item.amount.toLocaleString()}
+                ₹{item.amount.toLocaleString()}
               </div>
 
               {/* Bar - Tangerine Accent */}

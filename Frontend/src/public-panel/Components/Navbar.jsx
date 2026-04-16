@@ -29,13 +29,13 @@ const Navbar = () => {
 
           {/* DESKTOP LINKS */}
           <div className="hidden md:flex items-center gap-2">
-            <NavLink to="home" className={navLinkClass}>
+            <NavLink to="/public/home" className={navLinkClass}>
               Home
             </NavLink>
-            <NavLink to="about" className={navLinkClass}>
+            <NavLink to="/public/about" className={navLinkClass}>
               About Us
             </NavLink>
-            <NavLink to="contact" className={navLinkClass}>
+            <NavLink to="/public/contact" className={navLinkClass}>
               Contact Us
             </NavLink>
 
@@ -67,21 +67,21 @@ const Navbar = () => {
         >
           <div className="bg-[#222222] border border-[#F5E7C6]/10 rounded-3xl p-4 shadow-2xl space-y-2">
             <NavLink
-              to="home"
+              to="/public/home"
               onClick={() => setIsOpen(false)}
               className={navLinkClass}
             >
               <Home size={18} /> Home
             </NavLink>
             <NavLink
-              to="about"
+              to="/public/about"
               onClick={() => setIsOpen(false)}
               className={navLinkClass}
             >
               <Info size={18} /> About Us
             </NavLink>
             <NavLink
-              to="contact"
+              to="/public/contact"
               onClick={() => setIsOpen(false)}
               className={navLinkClass}
             >

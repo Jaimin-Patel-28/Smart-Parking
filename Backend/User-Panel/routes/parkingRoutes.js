@@ -22,25 +22,59 @@ router.get("/slots", parkingController.getSlots);
 */
 
 // Lock slot temporarily (5 minutes)
-router.post("/slot/lock", bookingController.lockSlot);
+router.post("/slot/lock", authMiddleware, bookingController.lockSlot);
 
 // Confirm booking with detailed info
-router.post("/booking/confirm", bookingController.confirmBooking);
+router.post("/booking/confirm", authMiddleware, bookingController.confirmBooking);
 
 // Simple booking endpoint
-router.post("/book", bookingController.bookSlot);
+router.post("/book", authMiddleware, bookingController.bookSlot);
 
-// Get user bookings history
-router.get("/bookings/:userId", bookingController.getUserBookings);
+// Get logged-in user bookings history
+router.get("/bookings", authMiddleware, bookingController.getUserBookings);
 
-// Get current/active bookings
-router.get("/current-bookings/:userId", bookingController.getCurrentBookings);
+// Backwards-compatible alias (userId ignored; token user is always enforced)
+router.get("/bookings/:userId", authMiddleware, bookingController.getUserBookings);
 
-// Get upcoming bookings
-router.get("/upcoming-bookings/:userId", bookingController.getUpcomingBookings);
+// Get a single booking by id for the logged-in user
+router.get("/booking/:id", authMiddleware, bookingController.getBookingDetails);
 
-// Get past/history bookings
-router.get("/past-bookings/:userId", bookingController.getPastBookings);
+// Backwards-compatible alias for detail pages
+router.get(
+  "/bookings/detail/:id",
+  authMiddleware,
+  bookingController.getBookingDetails,
+);
+
+// Get current/active bookings for logged-in user
+router.get("/current-bookings", authMiddleware, bookingController.getCurrentBookings);
+
+// Backwards-compatible alias (userId ignored; token user is always enforced)
+router.get(
+  "/current-bookings/:userId",
+  authMiddleware,
+  bookingController.getCurrentBookings,
+);
+
+// Get upcoming bookings for logged-in user
+router.get("/upcoming-bookings", authMiddleware, bookingController.getUpcomingBookings);
+
+// Backwards-compatible alias (userId ignored; token user is always enforced)
+router.get(
+  "/upcoming-bookings/:userId",
+  authMiddleware,
+  bookingController.getUpcomingBookings,
+);
+
+// Get past/history bookings for logged-in user
+router.get("/past-bookings", authMiddleware, bookingController.getPastBookings);
+
+// Backwards-compatible alias (userId ignored; token user is always enforced)
+router.get(
+  "/past-bookings/:userId",
+  authMiddleware,
+  bookingController.getPastBookings,
+);
 
 // Extend booking (requires auth)
 router.patch("/bookings/:id/extend", authMiddleware, bookingController.extendBooking);

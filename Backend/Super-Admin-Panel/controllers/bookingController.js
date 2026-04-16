@@ -52,6 +52,35 @@ const getBookingDetails = async (req, res) => {
   }
 };
 
+// Get Booking Details by Booking Code (e.g. PRK-1234)
+const getBookingByCode = async (req, res) => {
+  try {
+    const { bookingCode } = req.params;
+
+    const booking = await Booking.findOne({
+      bookingCode: String(bookingCode || "").toUpperCase(),
+    })
+      .populate("user", "fullName email mobile vehicleNumber")
+      .populate("parking", "name location basePrice")
+      .populate("slot", "label status");
+
+    if (!booking) {
+      return res.status(404).json({
+        message: "Booking not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 // Update Booking Status
 const updateBookingStatus = async (req, res) => {
   try {
@@ -77,5 +106,6 @@ const updateBookingStatus = async (req, res) => {
 module.exports = {
   getAllBookings,
   getBookingDetails,
+  getBookingByCode,
   updateBookingStatus,
 };

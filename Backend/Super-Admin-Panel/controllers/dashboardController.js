@@ -10,8 +10,8 @@ exports.getDashboardStats = async (req, res) => {
   try {
     // total revenue from bookings
     const revenueResult = await Booking.aggregate([
-      { $match: { status: "Completed" } },
-      { $group: { _id: null, total: { $sum: "$amount" } } },
+      { $match: { status: "completed" } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } },
     ]);
 
     const totalRevenue = revenueResult[0]?.total || 0;
@@ -25,32 +25,65 @@ exports.getDashboardStats = async (req, res) => {
 
     // completed bookings
     const completedBookings = await Booking.countDocuments({
-      status: "Completed",
+      status: "completed",
     });
 
-    // weekly bookings (Mon-Sun)
+    // Current week bookings (Mon-Sun), auto-rolls every new week.
+    const now = new Date();
+    const currentDay = now.getDay(); // 0=Sun, 1=Mon ... 6=Sat
+    const diffToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+
+    const weekStart = new Date(now);
+    weekStart.setHours(0, 0, 0, 0);
+    weekStart.setDate(now.getDate() + diffToMonday);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 7);
+
     const weeklyData = await Booking.aggregate([
       {
         $match: {
           createdAt: {
-            $gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+            $gte: weekStart,
+            $lt: weekEnd,
           },
         },
       },
       {
         $group: {
-          _id: { $dayOfWeek: "$createdAt" },
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt",
+              timezone: "Asia/Kolkata",
+            },
+          },
           total: { $sum: 1 },
         },
       },
     ]);
 
-    const weeklyBookings = [0, 0, 0, 0, 0, 0, 0];
-
+    const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const weeklyMap = {};
     weeklyData.forEach((day) => {
-      const index = day._id - 1;
-      weeklyBookings[index] = day.total;
+      weeklyMap[day._id] = day.total;
     });
+
+    const weeklyBookings = [];
+    const weeklyLabels = [];
+
+    for (let i = 0; i < 7; i += 1) {
+      const date = new Date(weekStart);
+      date.setDate(weekStart.getDate() + i);
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const key = `${year}-${month}-${day}`;
+
+      weeklyLabels.push(dayNames[i]);
+      weeklyBookings.push(weeklyMap[key] || 0);
+    }
 
     res.json({
       totalRevenue,
@@ -59,6 +92,7 @@ exports.getDashboardStats = async (req, res) => {
       occupiedSlots,
       completedBookings,
       weeklyBookings,
+      weeklyLabels,
 
       // trend placeholders
       revenueTrend: 12,
@@ -77,15 +111,15 @@ exports.getDashboardStats = async (req, res) => {
 exports.getRecentBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
-      .populate("user", "name")
-      .populate("slot", "slotNumber")
+      .populate("user", "fullName")
+      .populate("slot", "label")
       .sort({ createdAt: -1 })
       .limit(5);
 
     const formatted = bookings.map((b) => ({
       id: b._id,
-      user: b.user?.name || "Unknown",
-      slot: b.slot?.slotNumber || "N/A",
+      user: b.user?.fullName || "Unknown",
+      slot: b.slot?.label || "N/A",
       status: b.status,
       time: new Date(b.createdAt).toLocaleTimeString(),
     }));

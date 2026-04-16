@@ -38,14 +38,13 @@ const vehicleSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Ensure only one primary vehicle per user
-vehicleSchema.pre("save", async function(next) {
+vehicleSchema.pre("save", async function () {
   if (this.isPrimary && this.isModified("isPrimary")) {
     await this.constructor.updateMany(
       { user: this.user, _id: { $ne: this._id } },
       { isPrimary: false }
     );
   }
-  next();
 });
 
 module.exports = mongoose.model("Vehicle", vehicleSchema);

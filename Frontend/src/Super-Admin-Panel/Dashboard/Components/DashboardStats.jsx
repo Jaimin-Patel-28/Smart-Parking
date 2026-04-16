@@ -1,21 +1,24 @@
 import React from "react";
 import StatsCard from "./StatsCard";
-import { Car, Users, Wallet, CheckCircle } from "lucide-react";
+import { Car, Users, IndianRupee, CheckCircle } from "lucide-react";
 
 // Destructure 'data' from props, default to empty object to prevent errors
 const DashboardStats = ({ data = {} }) => {
-  // Mapping API data to our UI structure
+  // Theme Variables Applied via StatsCard:
+  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112
+
   const stats = [
     {
       title: "Total Revenue",
-      // If data.totalRevenue is 12840, we format it. If undefined, show $0
+      // Formatting the value from your API logic
       value: data.totalRevenue
-        ? `$${data.totalRevenue.toLocaleString()}`
-        : "$0",
-      icon: Wallet,
+        ? `₹${data.totalRevenue.toLocaleString()}`
+        : "₹0",
+      icon: IndianRupee, // Using IndianRupee for currency consistency
       trend: data.revenueTrend || "0",
       isUp: (data.revenueTrend || 0) >= 0,
-      color: "bg-emerald-500",
+      // We pass a consistent color key, StatsCard handles the #FA8112 mapping
+      color: "bg-[#FA8112]",
     },
     {
       title: "Active Users",
@@ -23,16 +26,16 @@ const DashboardStats = ({ data = {} }) => {
       icon: Users,
       trend: data.usersTrend || "0",
       isUp: (data.usersTrend || 0) >= 0,
-      color: "bg-blue-500",
+      color: "bg-[#FA8112]",
     },
     {
       title: "Parking Slots",
-      // Displaying Occupied / Total
+      // Occupied / Total
       value: `${data.occupiedSlots || 0}/${data.totalSlots || 0}`,
       icon: Car,
       trend: data.occupancyRate || "0",
-      isUp: false, // In parking, occupancy going up is often a warning (red/orange)
-      color: "bg-orange-500",
+      isUp: false, // Occupancy rising is a warning in parking context
+      color: "bg-[#FA8112]",
     },
     {
       title: "Completed",
@@ -40,12 +43,13 @@ const DashboardStats = ({ data = {} }) => {
       icon: CheckCircle,
       trend: data.completionTrend || "0",
       isUp: (data.completionTrend || 0) >= 0,
-      color: "bg-purple-500",
+      color: "bg-[#FA8112]",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    // Grid container remains responsive, spacing adjusted for [2rem] rounded cards
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
       {stats.map((s, i) => (
         <StatsCard key={i} {...s} />
       ))}

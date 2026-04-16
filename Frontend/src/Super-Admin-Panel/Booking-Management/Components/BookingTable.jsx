@@ -1,81 +1,101 @@
 import React from "react";
-import { Eye, Clock, User, Car } from "lucide-react";
+import { Eye, Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BookingStatusBadge from "./BookingStatusBadge";
 
 const BookingTable = ({ bookings }) => {
   const navigate = useNavigate();
 
+  // Theme Variables:
+  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
+
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto bg-[#222222]">
       <table className="w-full text-left border-separate border-spacing-y-3">
         <thead>
-          <tr className="text-slate-400 text-xs uppercase tracking-widest font-black px-4">
-            <th className="py-3 px-4">User & Vehicle</th>
-            <th className="py-3 px-4">Location</th>
-            <th className="py-3 px-4">Time Period</th>
-            <th className="py-3 px-4">Amount</th>
-            <th className="py-3 px-4">Status</th>
-            <th className="py-3 px-4 text-right">Actions</th>
+          <tr className="text-[#FAF3E1]/30 text-[10px] uppercase tracking-[0.2em] font-black px-4">
+            <th className="py-4 px-6">User & Vehicle</th>
+            <th className="py-4 px-6">Location</th>
+            <th className="py-4 px-6">Time Period</th>
+            <th className="py-4 px-6">Amount</th>
+            <th className="py-4 px-6">Status</th>
+            <th className="py-4 px-6 text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
           {bookings.map((booking) => (
             <tr
               key={booking._id}
-              className="bg-white hover:bg-slate-50 transition-colors group border border-slate-100 shadow-sm rounded-2xl"
+              className="bg-[#FAF3E1]/[0.02] hover:bg-[#FAF3E1]/[0.04] transition-all duration-300 group border border-[#F5E7C6]/10 shadow-sm"
             >
-              <td className="py-4 px-4 rounded-l-2xl">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+              {/* User & Vehicle Info */}
+              <td className="py-5 px-6 rounded-l-[1.5rem]">
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 rounded-xl bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/5 flex items-center justify-center text-[#FA8112]">
                     <User size={18} />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-800 text-sm">
-                      {booking.user?.fullName || "Deleted User"}
+                    <p className="font-black text-[#FAF3E1] text-sm tracking-tight">
+                      {booking.user?.fullName || "System User"}
                     </p>
-                    <p className="text-[11px] font-mono text-emerald-600 bg-emerald-50 px-1 rounded inline-block uppercase">
-                      {booking.vehicleNumber || "N/A"}
+                    <p className="text-[10px] font-mono font-black text-[#FA8112] bg-[#FA8112]/10 px-2 py-0.5 rounded-md inline-block uppercase mt-1 tracking-tighter border border-[#FA8112]/10">
+                      {booking.vehicleNumber || "NO-PLATE"}
                     </p>
                   </div>
                 </div>
               </td>
-              <td className="py-4 px-4">
-                <p className="font-bold text-slate-700 text-sm">
+
+              {/* Location Info */}
+              <td className="py-5 px-6">
+                <p className="font-bold text-[#FAF3E1]/90 text-sm">
                   {booking.parking?.name}
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-[10px] font-black text-[#FAF3E1]/30 uppercase tracking-widest mt-0.5">
                   {booking.parking?.location}
                 </p>
               </td>
-              <td className="py-4 px-4">
-                <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                  <Clock size={14} className="text-slate-400" />
+
+              {/* Time Period */}
+              <td className="py-5 px-6">
+                <div className="flex items-center gap-2 text-xs text-[#FAF3E1]/70 font-bold">
+                  <Clock size={14} className="text-[#FA8112]" />
                   {new Date(booking.startTime).toLocaleDateString()}
                 </div>
-                <p className="text-[10px] text-slate-400">
+                <p className="text-[10px] font-black text-[#FAF3E1]/30 uppercase mt-1 tracking-tighter">
                   Duration: {booking.duration} hrs
                 </p>
               </td>
-              <td className="py-4 px-4">
-                <p className="font-black text-slate-800">
-                  ${booking.totalAmount}
+
+              {/* Amount & Payment Status */}
+              <td className="py-5 px-6">
+                <p className="font-black text-[#FAF3E1] text-lg tracking-tighter">
+                  ₹{booking.totalAmount}
                 </p>
                 <p
-                  className={`text-[10px] font-bold ${booking.paymentStatus === "paid" ? "text-emerald-500" : "text-amber-500"}`}
+                  className={`text-[9px] font-black uppercase tracking-widest mt-1 ${
+                    booking.paymentStatus === "paid"
+                      ? "text-[#FA8112]"
+                      : "text-amber-400"
+                  }`}
                 >
-                  {booking.paymentStatus.toUpperCase()}
+                  {booking.paymentStatus}
                 </p>
               </td>
-              <td className="py-4 px-4">
+
+              {/* Status Badge */}
+              <td className="py-5 px-6">
                 <BookingStatusBadge status={booking.status} />
               </td>
-              <td className="py-4 px-4 text-right rounded-r-2xl">
+
+              {/* Action Button */}
+              <td className="py-5 px-6 text-right rounded-r-[1.5rem]">
                 <button
-                  onClick={() => navigate(`/super-admin/bookings/${booking._id}`)}
-                  className="p-2 hover:bg-emerald-50 rounded-xl text-slate-400 hover:text-emerald-600 transition-all"
+                  onClick={() =>
+                    navigate(`/super-admin/bookings/${booking._id}`)
+                  }
+                  className="p-3 bg-[#FAF3E1]/[0.05] hover:bg-[#FA8112] text-[#FAF3E1]/20 hover:text-[#222222] rounded-xl transition-all border border-[#F5E7C6]/5"
                 >
-                  <Eye size={20} />
+                  <Eye size={18} />
                 </button>
               </td>
             </tr>

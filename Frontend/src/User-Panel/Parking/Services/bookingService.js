@@ -1,13 +1,12 @@
-import axios from "axios";
-const API_URL = "http://localhost:5000/api";
+import api from "../../../Shared/Services/api";
 
 const bookingService = {
   // Confirm the final booking (Backend: parkingController.confirmBooking)
   confirm: (bookingData) =>
-    axios.post(`${API_URL}/booking/confirm`, bookingData),
+    api.post(`/booking/confirm`, bookingData),
 
-  // Get user's personal bookings
-  getUserBookings: (userId) => axios.get(`${API_URL}/my-bookings/${userId}`),
+  // Get logged-in user's bookings
+  getUserBookings: () => api.get(`/bookings`),
 };
 
 export default bookingService;

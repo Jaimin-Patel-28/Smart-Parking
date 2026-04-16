@@ -151,7 +151,7 @@ const BookingDetails = () => {
                   Settlement Amount
                 </p>
                 <h3 className="text-4xl font-black tracking-tighter">
-                  ${booking.totalAmount}
+                  ₹{booking.totalAmount}
                 </h3>
               </div>
               <div className="text-right relative z-10">

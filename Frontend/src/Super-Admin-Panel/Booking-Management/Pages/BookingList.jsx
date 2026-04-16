@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from "react";
 import { useBookings } from "../Hooks/useBookings";
 import BookingTable from "../Components/BookingTable";
-import BookingFilters from "../Components/BookingFilters"; // Import new component
+import BookingFilters from "../Components/BookingFilters";
 import { RefreshCw, LayoutList } from "lucide-react";
 
 const BookingList = () => {
-  const { bookings, loading, status, setStatus, refresh } = useBookings();
+  const { bookings, loading, error, status, setStatus, refresh } = useBookings();
 
-  // Local state for search filters
+  // Theme Variables:
+  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
+
   const [filters, setFilters] = useState({
     vehicleNumber: "",
     date: "",
@@ -21,10 +23,11 @@ const BookingList = () => {
     setFilters({ vehicleNumber: "", date: "" });
   };
 
-  // Logic to filter the bookings list based on search and date
   const filteredBookings = useMemo(() => {
     return bookings.filter((booking) => {
-      const vehicleText = (booking.vehicleNumber || "").toString().toLowerCase();
+      const vehicleText = (booking.vehicleNumber || "")
+        .toString()
+        .toLowerCase();
       const matchesVehicle = vehicleText.includes(
         (filters.vehicleNumber || "").toLowerCase(),
       );
@@ -45,80 +48,99 @@ const BookingList = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-10 bg-[#222222]">
+      {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-slate-800">
-            Booking Management
+          <h1 className="text-3xl font-black text-[#FAF3E1] uppercase tracking-tighter">
+            Booking <span className="text-[#FA8112]">Intelligence</span>
           </h1>
-          <p className="text-slate-500 text-sm font-medium">
-            Manage reservations and check-in status.
+          <p className="text-[#FAF3E1]/40 text-xs font-black uppercase tracking-[0.2em] mt-1">
+            Archive & Real-time Reservation Logs
           </p>
         </div>
         <button
           onClick={refresh}
-          className="p-3 bg-white border border-slate-200 rounded-2xl shadow-sm hover:bg-slate-50"
+          className="p-3 bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 rounded-2xl shadow-sm hover:bg-[#FA8112] hover:text-[#222222] transition-all group"
         >
           <RefreshCw
             size={20}
-            className={
-              loading ? "animate-spin text-emerald-500" : "text-slate-400"
-            }
+            className={`transition-colors ${
+              loading
+                ? "animate-spin text-[#FA8112] group-hover:text-[#222222]"
+                : "text-[#FAF3E1]/40 group-hover:text-[#222222]"
+            }`}
           />
         </button>
       </div>
 
-      {/* SEARCH & DATE FILTERS */}
+      {/* SEARCH & DATE FILTERS - Inherits theme from component */}
       <BookingFilters
         filters={filters}
         onFilterChange={handleFilterChange}
         onClear={clearFilters}
       />
 
-      {/* STATUS TABS */}
-      <div className="flex flex-wrap gap-2">
+      {error ? (
+        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 text-rose-300 text-sm font-semibold">
+          {error}
+        </div>
+      ) : null}
+
+      {/* STATUS TABS - Replaced Emerald with Tangerine */}
+      <div className="flex flex-wrap gap-3">
         <button
           onClick={() => setStatus("")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-black transition-all border ${status === "" ? "bg-slate-800 text-white border-slate-800" : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"}`}
+          className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-[0.15em] transition-all border ${
+            status === ""
+              ? "bg-[#FAF3E1] text-[#222222] border-[#FAF3E1]"
+              : "bg-[#FAF3E1]/5 text-[#FAF3E1]/40 border-[#F5E7C6]/10 hover:border-[#FAF3E1]/40"
+          }`}
         >
-          ALL
+          ALL RECORDS
         </button>
         {statusOptions.map((opt) => (
           <button
             key={opt}
             onClick={() => setStatus(opt)}
-            className={`px-5 py-2.5 rounded-2xl text-xs font-black transition-all border uppercase ${status === opt ? "bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-200" : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"}`}
+            className={`px-6 py-3 rounded-2xl text-[10px] font-black transition-all border uppercase tracking-[0.15em] ${
+              status === opt
+                ? "bg-[#FA8112] text-[#222222] border-[#FA8112] shadow-lg shadow-[#FA8112]/20"
+                : "bg-[#FAF3E1]/5 text-[#FAF3E1]/40 border-[#F5E7C6]/10 hover:border-[#FA8112]/40"
+            }`}
           >
             {opt}
           </button>
         ))}
       </div>
 
-      {/* DATA TABLE */}
-      <div className="bg-white p-2 rounded-[2.5rem] border border-slate-100 shadow-sm">
+      {/* DATA TABLE CONTAINER */}
+      <div className="bg-[#FAF3E1]/2 p-2 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm min-h-125">
         {loading ? (
-          <div className="h-96 flex flex-col items-center justify-center gap-4 text-slate-300">
-            <RefreshCw size={40} className="animate-spin" />
-            <p className="font-bold uppercase tracking-widest text-xs">
-              Fetching Records...
+          <div className="h-125 flex flex-col items-center justify-center gap-4">
+            <RefreshCw size={40} className="animate-spin text-[#FA8112]" />
+            <p className="font-black uppercase tracking-[0.3em] text-[10px] text-[#FAF3E1]/20">
+              Synchronizing Ledger...
             </p>
           </div>
         ) : filteredBookings.length > 0 ? (
           <BookingTable bookings={filteredBookings} />
         ) : (
-          <div className="h-96 flex flex-col items-center justify-center gap-2">
-            <div className="bg-slate-50 p-6 rounded-full text-slate-200 mb-2">
-              <LayoutList size={48} />
+          <div className="h-125 flex flex-col items-center justify-center gap-4">
+            <div className="bg-[#FAF3E1]/3 p-10 rounded-full text-[#FAF3E1]/10 border border-[#F5E7C6]/5 mb-2">
+              <LayoutList size={64} />
             </div>
-            <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-              No match found
-            </p>
-            <button
-              onClick={clearFilters}
-              className="text-emerald-600 font-bold text-sm underline underline-offset-4"
-            >
-              Reset Search
-            </button>
+            <div className="text-center space-y-2">
+              <p className="text-[#FAF3E1]/40 font-black uppercase text-[11px] tracking-[0.2em]">
+                No matching sequences found
+              </p>
+              <button
+                onClick={clearFilters}
+                className="text-[#FA8112] font-black text-xs uppercase tracking-widest hover:text-[#FAF3E1] transition-colors underline underline-offset-8"
+              >
+                Clear Search Queries
+              </button>
+            </div>
           </div>
         )}
       </div>

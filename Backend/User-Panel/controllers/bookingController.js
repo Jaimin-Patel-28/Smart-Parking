@@ -1,6 +1,17 @@
 const Booking = require("../../Super-Admin-Panel/models/Booking");
 const Slot = require("../../Super-Admin-Panel/models/Slot");
 const Parking = require("../../Super-Admin-Panel/models/Parking");
+const Transaction = require("../../Super-Admin-Panel/models/Transaction");
+const {
+  createWalletIfNotExists,
+} = require("../../Super-Admin-Panel/Services/walletService");
+const {
+  deductMoney,
+  refundMoney,
+} = require("../../Super-Admin-Panel/services/transactionService");
+const {
+  sendNotification,
+} = require("../../Shared/services/notification.service");
 const mongoose = require("mongoose");
 
 /*
@@ -8,11 +19,15 @@ Generate Unique Booking Number
 Example: PKR-A7F3K9
 */
 const generateBookingNumber = () => {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let code = "PKR-";
+  const value = Math.floor(1000 + Math.random() * 9000);
+  return `PRK-${value}`;
+};
 
-  for (let i = 0; i < 6; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
+const generateUniqueBookingCode = async () => {
+  let code = generateBookingNumber();
+
+  while (await Booking.exists({ bookingCode: code })) {
+    code = generateBookingNumber();
   }
 
   return code;
@@ -153,7 +168,6 @@ Conflict Check: Allow ONLY IF (newStart >= blockedEnd) OR (newEnd <= blockedStar
 exports.confirmBooking = async (req, res) => {
   try {
     const {
-      userId,
       parkingId,
       slotId,
       startTime,
@@ -162,6 +176,7 @@ exports.confirmBooking = async (req, res) => {
       vehicleNumber,
       paymentMethod,
     } = req.body;
+    const userId = req.user.id;
 
     const buffer = 15 * 60 * 1000;
 
@@ -247,6 +262,7 @@ exports.confirmBooking = async (req, res) => {
       endTime: end,
       duration,
       totalAmount,
+      bookingCode: await generateUniqueBookingCode(),
       paymentMethod: normalizedPaymentMethod,
       paymentStatus,
       status: "confirmed",
@@ -254,7 +270,19 @@ exports.confirmBooking = async (req, res) => {
 
     console.log(`✅ Booking created: ${booking._id}`);
 
-    // 🔥 IMPORTANT CHANGE HERE
+    let walletPayment = null;
+
+    // Deduct only when wallet payment is explicitly selected.
+    if (normalizedPaymentMethod === "wallet") {
+      try {
+        walletPayment = await deductMoney(userId, totalAmount, booking._id);
+      } catch (walletError) {
+        await Booking.findByIdAndDelete(booking._id);
+        return res.status(400).json({
+          message: walletError.message || "Wallet payment failed",
+        });
+      }
+    }
 
     const now = new Date();
 
@@ -270,10 +298,34 @@ exports.confirmBooking = async (req, res) => {
       });
     }
 
+    await booking.populate([
+      { path: "parking", select: "name location basePrice" },
+      { path: "slot", select: "label status" },
+      { path: "user", select: "fullName email mobile vehicleNumber" },
+    ]);
+
     res.json({
       message: "Booking confirmed successfully",
       booking,
       bufferInfo: "15 minutes before & after applied",
+    });
+
+    void sendNotification({
+      user: userId,
+      type: "booking",
+      title: "Booking confirmed",
+      message: `Your booking ${booking._id.toString().slice(-6).toUpperCase()} has been confirmed.`,
+      entityType: "booking",
+      entityId: booking._id,
+      metadata: {
+        status: booking.status,
+        paymentStatus,
+        paymentMethod: normalizedPaymentMethod,
+        bookingCode: booking.bookingCode,
+        walletBalance: walletPayment?.wallet?.balance,
+      },
+    }).catch((notificationError) => {
+      console.error("Booking notification error:", notificationError);
     });
   } catch (error) {
     console.error("Confirm booking error:", error);
@@ -286,7 +338,8 @@ Instant booking for X hours from now with 15min buffer before & after
 */
 exports.bookSlot = async (req, res) => {
   try {
-    const { userId, parkingId, slotId, hours = 1 } = req.body;
+    const { parkingId, slotId, hours = 1 } = req.body;
+    const userId = req.user.id;
 
     if (!userId || !parkingId || !slotId || !hours) {
       return res.status(400).json({ message: "Missing fields" });
@@ -350,11 +403,23 @@ exports.bookSlot = async (req, res) => {
       endTime: end,
       duration: hoursNum,
       totalAmount,
+      bookingCode: await generateUniqueBookingCode(),
       status: "confirmed",
       paymentStatus: "paid",
     });
 
     console.log(`✅ Booking created: ${booking._id}`);
+
+    const wallet = await createWalletIfNotExists(userId);
+    await Transaction.create({
+      user: userId,
+      wallet: wallet._id,
+      type: "debit",
+      amount: totalAmount,
+      status: "success",
+      description: "Parking Booking Payment",
+      booking: booking._id,
+    });
 
     // Set status - instant booking is "occupied" (already started)
     slot.status = "occupied";
@@ -365,7 +430,7 @@ exports.bookSlot = async (req, res) => {
 
     await booking.populate(["parking", "slot"]);
 
-    const bookingId = `BK${booking._id.toString().slice(-6).toUpperCase()}`;
+    const bookingId = booking.bookingCode;
 
     res.json({
       message: "Booked successfully! Slot locked until end+15min buffer",
@@ -383,11 +448,67 @@ exports.bookSlot = async (req, res) => {
 };
 
 /*
+Get Single Booking Detail
+*/
+exports.getBookingDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const booking = await Booking.findOne({ _id: id, user: userId })
+      .populate("parking", "name location basePrice totalSlots occupiedSlots status")
+      .populate("slot", "label status bookedAt lockExpiresAt")
+      .populate("user", "fullName email mobile vehicleNumber");
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    const transactions = await Transaction.find({ booking: booking._id })
+      .sort({ createdAt: -1 })
+      .select("type amount status description createdAt")
+      .populate("wallet", "balance");
+
+    const bookingCode = booking.bookingCode || `PRK-${booking._id.toString().slice(-4).toUpperCase()}`;
+    const qrPayload = JSON.stringify({
+      bookingId: booking._id,
+      bookingCode,
+      userId: booking.user?._id,
+      slotId: booking.slot?._id,
+      parkingId: booking.parking?._id,
+    });
+
+    const now = new Date();
+    const canCancel = ["confirmed", "active"].includes(booking.status);
+    const canExtend =
+      ["confirmed", "active"].includes(booking.status) && now <= booking.endTime;
+
+    res.json({
+      success: true,
+      data: {
+        ...booking.toObject(),
+        bookingCode,
+        qrPayload,
+        accessCode: bookingCode,
+        canCancel,
+        canExtend,
+        isUpcoming: booking.startTime > now,
+        isOngoing: booking.startTime <= now && booking.endTime >= now,
+        paymentTransactions: transactions,
+      },
+    });
+  } catch (error) {
+    console.error("Get booking details error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/*
 4. Get User Booking History
 */
 exports.getUserBookings = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
 
     const bookings = await Booking.find({ user: userId })
       .populate("parking", "name location")
@@ -407,7 +528,7 @@ Filter: confirmed/active && now between start/end
 */
 exports.getCurrentBookings = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
     const now = new Date();
 
     const bookings = await Booking.find({
@@ -431,7 +552,7 @@ exports.getCurrentBookings = async (req, res) => {
 */
 exports.getUpcomingBookings = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
     const now = new Date();
 
     const bookings = await Booking.find({
@@ -454,7 +575,7 @@ exports.getUpcomingBookings = async (req, res) => {
 */
 exports.getPastBookings = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
     const now = new Date();
 
     const bookings = await Booking.find({
@@ -544,9 +665,15 @@ exports.extendBooking = async (req, res) => {
 
     // Update
     const hourlyRate = booking.parking.basePrice;
+    const extraCharge = hourlyRate * parseInt(extraHours);
+
+    if (booking.paymentStatus === "paid" && extraCharge > 0) {
+      await deductMoney(userId, extraCharge, booking._id);
+    }
+
     booking.duration += parseInt(extraHours);
     booking.endTime = newEnd;
-    booking.totalAmount += hourlyRate * parseInt(extraHours);
+    booking.totalAmount += extraCharge;
 
     await booking.save();
 
@@ -559,6 +686,22 @@ exports.extendBooking = async (req, res) => {
         extendedUntil: newEnd.toISOString(),
       },
       booking,
+    });
+
+    void sendNotification({
+      user: userId,
+      type: "booking",
+      title: "Booking extended",
+      message: `Your booking ${booking._id.toString().slice(-6).toUpperCase()} was extended by ${extraHours} hour(s).`,
+      entityType: "booking",
+      entityId: booking._id,
+      metadata: {
+        extraHours: parseInt(extraHours),
+        extraCharge,
+        newEndTime: newEnd,
+      },
+    }).catch((notificationError) => {
+      console.error("Extend notification error:", notificationError);
     });
   } catch (error) {
     console.error("Extend error:", error);
@@ -691,9 +834,20 @@ exports.cancelBooking = async (req, res) => {
         .json({ message: "Can only cancel confirmed or active bookings" });
     }
 
+    const shouldRefund = booking.paymentStatus === "paid";
+
     // Cancel & release slot
     booking.status = "cancelled";
+
+    if (shouldRefund) {
+      booking.paymentStatus = "refunded";
+    }
+
     await booking.save();
+
+    if (shouldRefund) {
+      await refundMoney(userId, booking.totalAmount, booking._id);
+    }
 
     await Slot.findByIdAndUpdate(booking.slot._id, {
       status: "available",
@@ -705,6 +859,23 @@ exports.cancelBooking = async (req, res) => {
     res.json({
       message: "Booking cancelled successfully",
       booking,
+    });
+
+    void sendNotification({
+      user: userId,
+      type: shouldRefund ? "refund" : "booking",
+      title: shouldRefund ? "Booking cancelled and refunded" : "Booking cancelled",
+      message: shouldRefund
+        ? `Your booking ${booking._id.toString().slice(-6).toUpperCase()} was cancelled and refunded.`
+        : `Your booking ${booking._id.toString().slice(-6).toUpperCase()} was cancelled.`,
+      entityType: "booking",
+      entityId: booking._id,
+      metadata: {
+        refunded: shouldRefund,
+        paymentStatus: booking.paymentStatus,
+      },
+    }).catch((notificationError) => {
+      console.error("Cancel notification error:", notificationError);
     });
   } catch (error) {
     console.error("Cancel booking error:", error);

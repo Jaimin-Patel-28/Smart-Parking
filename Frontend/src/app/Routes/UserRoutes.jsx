@@ -3,21 +3,41 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import UserLayout from "../../User-Panel/Layout/UserLayout";
 
 // Lazy Load Pages
-const FindParking = lazy(() => import("../../User-Panel/Parking/Pages/FindParking"));
-const ParkingDetails = lazy(() => import("../../User-Panel/Parking/Pages/ParkingDetails"));
-const BookingPreview = lazy(() => import("../../User-Panel/Parking/Pages/BookingPreview"));
-const BookingSuccess = lazy(() => import("../../User-Panel/Parking/Pages/BookingSuccess"));
+const FindParking = lazy(
+  () => import("../../User-Panel/Parking/Pages/FindParking"),
+);
+const ParkingDetails = lazy(
+  () => import("../../User-Panel/Parking/Pages/ParkingDetails"),
+);
+const BookingPreview = lazy(
+  () => import("../../User-Panel/Parking/Pages/BookingPreview"),
+);
+const BookingSuccess = lazy(
+  () => import("../../User-Panel/Parking/Pages/BookingSuccess"),
+);
 const Profile = lazy(() => import("../../User-Panel/Profile/Pages/Profile"));
-
-// Placeholders
-const Dashboard = lazy(() => import("../../User-Panel/Dashboard/Pages/Dashboard"));
-const MyBookings = lazy(() => import("../../User-Panel/MyBookings/Pages/MyBookings"));
-const Support = () => (
-  <div className="text-[#FAF3E1] p-10 text-center font-bold">
-    24/7 Customer Support
-  </div>
+const Settings = lazy(
+  () => import("../../User-Panel/Setting-Page/Pages/SettingsPage"),
 );
 
+// Placeholders
+const Dashboard = lazy(
+  () => import("../../User-Panel/Dashboard/Pages/Dashboard"),
+);
+const MyBookings = lazy(
+  () => import("../../User-Panel/MyBookings/Pages/MyBookings"),
+);
+const BookingHistory = lazy(
+  () => import("../../User-Panel/Parking/Pages/BookingHistory"),
+);
+const BookingDetails = lazy(
+  () => import("../../User-Panel/MyBookings/Pages/BookingDetails"),
+);
+const Wallet = lazy(() => import("../../User-Panel/Wallet/Pages/Wallet"));
+const Notifications = lazy(
+  () => import("../../User-Panel/Notifications/Pages/Notifications"),
+);
+const Support = lazy(() => import("../../User-Panel/Support/Pages/Support"));
 
 const UserRoutes = () => {
   return (
@@ -32,6 +52,10 @@ const UserRoutes = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="find-parking" element={<FindParking />} />
           <Route path="bookings" element={<MyBookings />} />
+          <Route path="booking-history" element={<BookingHistory />} />
+          <Route path="bookings/:id" element={<BookingDetails />} />
+          <Route path="wallet" element={<Wallet />} />
+          <Route path="notifications" element={<Notifications />} />
 
           <Route path="support" element={<Support />} />
 
@@ -40,6 +64,8 @@ const UserRoutes = () => {
           <Route path="parking/preview" element={<BookingPreview />} />
           <Route path="parking/success" element={<BookingSuccess />} />
           <Route path="profile" element={<Profile />} />
+
+          <Route path="settings" element={<Settings />} />
 
           {/* CRITICAL: Catch-all should point back to a safe, existing route using absolute path */}
           <Route path="*" element={<Navigate to="/user/dashboard" replace />} />
