@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 // Sub-component imports
-import ContactHero from "../components/contact/ContactHero";
-import ContactCards from "../components/contact/ContactCards";
-import ContactForm from "../components/contact/ContactForm";
-import WhyContact from "../components/contact/WhyContact";
-import ContactMap from "../components/contact/ContactMap";
-import FAQShortcut from "../components/contact/FAQShortcut";
-import SocialLinks from "../components/contact/SocialLinks";
-import ContactCTA from "../components/contact/ContactCTA";
+import ContactHero from "../Components/contact/ContactHero";
+import ContactCards from "../Components/contact/ContactCards";
+import ContactForm from "../Components/contact/ContactForm";
+import WhyContact from "../Components/contact/WhyContact";
+import ContactMap from "../Components/contact/ContactMap";
+import FAQShortcut from "../Components/contact/FAQShortcut";
+import SocialLinks from "../Components/contact/SocialLinks";
+import ContactCTA from "../Components/contact/ContactCTA";
 
 const Contact = () => {
   // Reset scroll to top on page load
@@ -39,11 +39,11 @@ const Contact = () => {
 
           {/* RIGHT: Supportive Info & Socials */}
           <aside className="lg:col-span-5 flex flex-col gap-10">
-            <div className="bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 p-8 rounded-[2.5rem]">
+            <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/5 p-8 rounded-[2.5rem]">
               <WhyContact />
             </div>
 
-            <div className="bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 p-8 rounded-[2.5rem]">
+            <div className="bg-[#FAF3E1]/1 border border-[#F5E7C6]/5 p-8 rounded-[2.5rem]">
               <SocialLinks />
             </div>
           </aside>
@@ -72,8 +72,8 @@ const Contact = () => {
       </footer>
 
       {/* GLOBAL DECORATIVE GLOWS */}
-      <div className="fixed top-[10%] right-[-5%] w-[400px] h-[400px] bg-[#FA8112]/[0.03] blur-[120px] rounded-full pointer-events-none z-0" />
-      <div className="fixed bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-[#FA8112]/[0.05] blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="fixed top-[10%] right-[-5%] w-100 h-100 bg-[#FA8112]/3 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="fixed bottom-[10%] left-[-5%] w-125 h-125 bg-[#FA8112]/5 blur-[120px] rounded-full pointer-events-none z-0" />
     </main>
   );
 };

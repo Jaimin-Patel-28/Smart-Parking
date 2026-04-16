@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AuthCard from "../components/auth/AuthCard";
+import AuthCard from "../Components/auth/AuthCard";
 
 const Auth = () => {
   // 🔐 Single source of truth

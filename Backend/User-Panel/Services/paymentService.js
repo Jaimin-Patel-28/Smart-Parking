@@ -9,11 +9,25 @@ const {
 } = require("../../Super-Admin-Panel/Services/walletService");
 const transactionService = require("../../Super-Admin-Panel/services/transactionService");
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+let razorpayClient = null;
+
+const getRazorpayClient = () => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!keyId || !keySecret) {
+    throw new Error("Razorpay credentials are missing. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Backend/.env");
+  }
+
+  if (!razorpayClient) {
+    razorpayClient = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
+  }
+
+  return razorpayClient;
+};
 
 /**
  * Create Razorpay Order for wallet top-up
@@ -47,6 +61,7 @@ const createPaymentOrder = async (userId, amount) => {
       },
     };
 
+    const razorpay = getRazorpayClient();
     const razorpayOrder = await razorpay.orders.create(orderOptions);
 
     // Save payment record
@@ -96,6 +111,12 @@ const createPaymentOrder = async (userId, amount) => {
 const verifyPaymentSignature = (orderId, paymentId, signature) => {
   try {
     const data = `${orderId}|${paymentId}`;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keySecret) {
+      throw new Error("Razorpay secret is missing. Set RAZORPAY_KEY_SECRET in Backend/.env");
+    }
+
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(data)
@@ -134,6 +155,7 @@ const handlePaymentSuccess = async (orderId, paymentId, signature) => {
     }
 
     // Verify payment with Razorpay
+    const razorpay = getRazorpayClient();
     const razorpayPayment = await razorpay.payments.fetch(paymentId);
     if (razorpayPayment.status !== "authorized" && razorpayPayment.status !== "captured") {
       throw new Error("Payment not authorized by Razorpay");
@@ -256,6 +278,7 @@ const getPaymentStatus = async (orderId) => {
     // Fetch from Razorpay if needed
     let razorpayOrder = null;
     try {
+      const razorpay = getRazorpayClient();
       razorpayOrder = await razorpay.orders.fetch(orderId);
     } catch (err) {
       console.warn("Could not fetch from Razorpay:", err.message);
@@ -297,6 +320,7 @@ const refundPayment = async (orderId, reason = "Customer request") => {
     }
 
     // Create refund in Razorpay
+    const razorpay = getRazorpayClient();
     const refund = await razorpay.payments.refund(payment.payment_id, {
       amount: Math.round(payment.amount * 100), // in paise
       notes: {

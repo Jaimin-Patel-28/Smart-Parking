@@ -12,8 +12,8 @@ import {
 import { jsPDF } from "jspdf";
 import toast from "react-hot-toast";
 import { useReports } from "../hooks/useReports";
-import ReportCard from "../components/ReportCard";
-import ReportFilters from "../components/ReportFilters";
+import ReportCard from "../Components/ReportCard";
+import ReportFilters from "../Components/ReportFilters";
 
 const Reports = () => {
   const { comprehensiveReport, revenueReport, occupancyReport, userReport, systemHealthReport, loading, error, refresh } =

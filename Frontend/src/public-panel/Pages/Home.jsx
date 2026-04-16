@@ -3,14 +3,14 @@ import React from "react";
 // Sub-component imports
 import HeroSection from "../Components/home/HeroSection";
 import StatsSection from "../Components/home/StatsSection";
-import ProblemSolution from "../components/home/ProblemSolution";
-import HowItWorks from "../components/home/HowItWorks";
-import Features from "../components/home/Features";
-import WhyChoose from "../components/home/WhyChoose";
-import UseCases from "../components/home/UseCases";
-import AppPreview from "../components/home/AppPreview";
-import Testimonials from "../components/home/Testimonials";
-import FinalCTA from "../components/home/FinalCTA";
+import ProblemSolution from "../Components/home/ProblemSolution";
+import HowItWorks from "../Components/home/HowItWorks";
+import Features from "../Components/home/Features";
+import WhyChoose from "../Components/home/WhyChoose";
+import UseCases from "../Components/home/UseCases";
+import AppPreview from "../Components/home/AppPreview";
+import Testimonials from "../Components/home/Testimonials";
+import FinalCTA from "../Components/home/FinalCTA";
 
 const Home = () => {
   return (
