@@ -1,4 +1,0 @@
-﻿C:\Smart-Parking-Final\Frontend\src\Super-Admin-Panel\Dashboard\Components\DashboardStats.jsx:15: ? `$${data.totalRevenue.toLocaleString()}`
-C:\Smart-Parking-Final\Frontend\src\Super-Admin-Panel\Dashboard\Components\DashboardStats.jsx:16: : "$0",
-C:\Smart-Parking-Final\Frontend\src\Super-Admin-Panel\Wallet & Transactions\Components\WalletStatsGrid.jsx:25: value: `$${stats?.totalRevenue?.toLocaleString() || 0}`,
-C:\Smart-Parking-Final\Frontend\src\Super-Admin-Panel\Wallet & Transactions\Components\WalletStatsGrid.jsx:34: value: `$${stats?.totalRefunds?.toLocaleString() || 0}`,

@@ -9,10 +9,9 @@ const createSuperAdmin = async () => {
     const existing = await User.findOne({ email });
 
     if (existing) {
-      console.log("Super Admin exists, deleting and recreating");
-      await User.deleteOne({ email });
+      console.log("Super Admin already exists, skipping creation");
+      return;
     }
-  
 
     // const hashedPassword = await bcrypt.hash(password, 10); // Remove this
 

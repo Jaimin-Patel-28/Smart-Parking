@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Send, User, Mail, MessageSquare, Terminal, CheckCircle, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
+import backendUrl from "../../../Shared/config/backendUrl";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const response = await fetch(`${backendUrl}/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ const ContactForm = () => {
   };
 
   return (
-    <article className="relative bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 p-8 md:p-12 rounded-[3rem] shadow-2xl overflow-hidden group">
+    <article className="relative bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 p-8 md:p-12 rounded-[3rem] shadow-2xl overflow-hidden group">
       {/* Decorative Corner Glow */}
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#FA8112]/5 blur-[80px] rounded-full pointer-events-none" />
 
@@ -145,7 +146,7 @@ const ContactForm = () => {
             placeholder="How can our MERN experts assist you today?"
             value={formData.message}
             onChange={handleInputChange}
-            className="w-full bg-[#2a2a2a]/40 border border-[#F5E7C6]/5 rounded-[2rem] p-6 text-[#FAF3E1] placeholder:text-[#FAF3E1]/20 focus:outline-none focus:border-[#FA8112]/40 focus:bg-[#2a2a2a]/60 transition-all text-sm resize-none"
+            className="w-full bg-[#2a2a2a]/40 border border-[#F5E7C6]/5 rounded-4xl p-6 text-[#FAF3E1] placeholder:text-[#FAF3E1]/20 focus:outline-none focus:border-[#FA8112]/40 focus:bg-[#2a2a2a]/60 transition-all text-sm resize-none"
           ></textarea>
         </div>
 

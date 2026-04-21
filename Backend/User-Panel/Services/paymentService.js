@@ -48,11 +48,15 @@ const createPaymentOrder = async (userId, amount) => {
       throw new Error("Amount must be greater than 0");
     }
 
+    // Razorpay receipt must be <= 40 chars, so keep it compact and deterministic.
+    const shortUserId = userId.toString().slice(-8);
+    const compactTs = Date.now().toString().slice(-8);
+
     // Create Razorpay order (amount in paise)
     const orderOptions = {
       amount: Math.round(parsedAmount * 100), // Convert to paise
       currency: "INR",
-      receipt: `topup_${userId}_${Date.now()}`,
+      receipt: `topup_${shortUserId}_${compactTs}`,
       notes: {
         userId: userId.toString(),
         userEmail: user.email,
@@ -96,8 +100,14 @@ const createPaymentOrder = async (userId, amount) => {
       },
     };
   } catch (error) {
-    console.error("Error creating payment order:", error);
-    throw error;
+    const razorpayMessage =
+      error?.error?.description ||
+      error?.error?.reason ||
+      error?.description ||
+      error?.message;
+
+    console.error("Error creating payment order:", razorpayMessage || error);
+    throw new Error(razorpayMessage || "Failed to create Razorpay order");
   }
 };
 

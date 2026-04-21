@@ -1,7 +1,8 @@
 import axios from "axios";
+import backendUrl from "../config/backendUrl";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api", // Replace with your backend URL
+  baseURL: backendUrl,
 });
 
 const getAccessToken = () => {
@@ -81,7 +82,7 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const { data } = await axios.post("http://localhost:5000/api/auth/refresh-token", {
+      const { data } = await axios.post(`${backendUrl}/auth/refresh-token`, {
         refreshToken,
       });
 

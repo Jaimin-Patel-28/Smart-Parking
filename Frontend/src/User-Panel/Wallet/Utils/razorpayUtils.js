@@ -39,13 +39,26 @@ export const openRazorpayCheckout = (options) => {
       },
     };
 
+    // Build method option if specified
+    const methodOptions = {};
+    if (options.method) {
+      // Razorpay supports 'card', 'upi', 'netbanking', 'wallet', etc.
+      methodOptions.method = {
+        [options.method]: 1, // Enable only selected method
+      };
+    }
+
     const mergedOptions = {
       ...defaultOptions,
       ...options,
+      ...methodOptions,
       handler: function (response) {
         resolve(response);
       },
     };
+
+    // Remove custom method key as it's not a valid Razorpay option
+    delete mergedOptions.method;
 
     try {
       const rzp = new window.Razorpay(mergedOptions);

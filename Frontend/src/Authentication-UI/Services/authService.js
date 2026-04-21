@@ -1,6 +1,7 @@
 import axios from "axios";
+import backendUrl from "../../Shared/config/backendUrl";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = `${backendUrl}/auth`;
 
 const authService = {
   // REGISTER

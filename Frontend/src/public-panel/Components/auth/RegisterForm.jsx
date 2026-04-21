@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import PasswordStrength from "./PasswordStrength";
 import SecurityNotes from "./SecurityNotes";
+import backendUrl from "../../../Shared/config/backendUrl";
 
 const RegisterForm = ({ setMode }) => {
   const [form, setForm] = useState({
@@ -39,7 +40,12 @@ const RegisterForm = ({ setMode }) => {
 
     try {
       setIsLoading(true);
-      await axios.post("http://localhost:5000/api/auth/register", form);
+      await axios.post(`${backendUrl}/auth/register`, {
+        fullName: form.name,
+        email: form.email,
+        password: form.password,
+        vehicleNumber: form.vehicleNumber,
+      });
 
       // Rule 2: Save for login prefill logic remains identical
       sessionStorage.setItem(

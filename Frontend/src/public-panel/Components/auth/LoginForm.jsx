@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
 import SecurityNotes from "./SecurityNotes";
+import backendUrl from "../../../Shared/config/backendUrl";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -28,13 +29,13 @@ const LoginForm = () => {
     try {
       setIsLoading(true);
 
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${backendUrl}/auth/login`, {
         email,
         password,
       });
 
       // Logic Preserved: Auth success handling
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.data.accessToken || res.data.token);
       localStorage.setItem("isAuth", "true");
       sessionStorage.removeItem("loginPrefill");
 

@@ -7,9 +7,6 @@ import {
   ShieldCheck,
   ArrowRight,
   ChevronLeft,
-  CreditCard,
-  Smartphone,
-  Banknote,
   Wallet,
 } from "lucide-react";
 import VehicleSelector from "../Components/VehicleSelector";
@@ -30,7 +27,6 @@ const BookingPreview = () => {
   const [registeredVehicles, setRegisteredVehicles] = useState(
     user?.vehicleNumber ? [user.vehicleNumber] : [],
   );
-  const [paymentMethod, setPaymentMethod] = useState("upi");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -63,6 +59,8 @@ const BookingPreview = () => {
   );
   const totalAmount = durationHours * parking?.basePrice;
 
+  const bookingPaymentMethod = "wallet";
+
   const handleConfirm = async () => {
     if (registeredVehicles.length === 0)
       return toast.error("Update vehicle in profile first");
@@ -70,6 +68,7 @@ const BookingPreview = () => {
       return toast.error("Select a vehicle");
 
     setIsSubmitting(true);
+
     try {
       const bookingData = {
         userId: user._id || user.id,
@@ -81,14 +80,14 @@ const BookingPreview = () => {
         duration: durationHours,
         hourlyRate: parking?.basePrice,
         totalAmount,
-        paymentMethod,
+        paymentMethod: bookingPaymentMethod,
       };
 
       const { data } = await parkingService.confirmBooking(bookingData);
       toast.success("Spot Secured!");
       navigate("/user/parking/success", { state: { booking: data.booking } });
     } catch (err) {
-      toast.error(err.response?.data?.message || "Booking failed");
+      toast.error(err.response?.data?.message || err.message || "Booking failed");
     } finally {
       setIsSubmitting(false);
     }
@@ -100,14 +99,6 @@ const BookingPreview = () => {
         No session data found.
       </div>
     );
-
-  const paymentOptions = [
-    { key: "wallet", label: "Wallet", icon: <Wallet size={18} /> },
-    { key: "upi", label: "UPI", icon: <Smartphone size={18} /> },
-    { key: "credit_debit_card", label: "Card", icon: <CreditCard size={18} /> },
-    { key: "net_banking", label: "Net Bank", icon: <Banknote size={18} /> },
-    { key: "cash_on_counter", label: "Counter", icon: <Banknote size={18} /> },
-  ];
 
   return (
     <div className="max-w-2xl mx-auto pb-24 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -221,23 +212,11 @@ const BookingPreview = () => {
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#FAF3E1]/20 ml-1">
               Payment Method
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {paymentOptions.map((option) => (
-                <button
-                  key={option.key}
-                  onClick={() => setPaymentMethod(option.key)}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all ${
-                    paymentMethod === option.key
-                      ? "border-[#FA8112] bg-[#FA8112]/10 text-[#FA8112]"
-                      : "border-[#F5E7C6]/5 bg-[#FAF3E1]/2 text-[#FAF3E1]/30 hover:bg-[#FAF3E1]/5"
-                  }`}
-                >
-                  {option.icon}
-                  <span className="text-[10px] font-black uppercase tracking-tighter italic">
-                    {option.label}
-                  </span>
-                </button>
-              ))}
+            <div className="rounded-2xl border border-[#FA8112]/30 bg-[#FA8112]/10 px-4 py-5 flex items-center justify-center gap-3 text-[#FA8112]">
+              <Wallet size={18} />
+              <span className="text-[11px] font-black uppercase tracking-widest italic">
+                Wallet Only
+              </span>
             </div>
           </div>
 

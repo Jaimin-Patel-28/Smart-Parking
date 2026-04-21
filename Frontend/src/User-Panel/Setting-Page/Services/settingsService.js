@@ -1,6 +1,7 @@
 import axios from "axios";
+import backendUrl from "../../../Shared/config/backendUrl";
 
-const BACKEND_API_URL = "http://localhost:5000/api";
+const BACKEND_API_URL = backendUrl;
 
 const API = axios.create({
   baseURL: BACKEND_API_URL,
