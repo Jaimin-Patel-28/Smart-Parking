@@ -16,9 +16,9 @@ const bookingService = {
   // Get past/history bookings for logged-in user
   getPastBookings: () => api.get(`/past-bookings`),
 
-  // Extend active booking
-  extendBooking: (bookingId, extraHours) => 
-    api.patch(`/bookings/${bookingId}/extend`, { extraHours }),
+  // Extend/reduce active booking by signed minutes
+  extendBooking: (bookingId, adjustmentMinutes) => 
+    api.patch(`/bookings/${bookingId}/extend`, { adjustmentMinutes }),
 
   // Edit booking date/time
   editBooking: (bookingId, updates) => 

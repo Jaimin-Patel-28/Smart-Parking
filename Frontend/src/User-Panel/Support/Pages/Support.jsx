@@ -21,6 +21,7 @@ const categories = [
   "Slot availability issue",
   "Refund request",
   "App bug",
+  "Delete/ Deactivate account",
   "Other",
 ];
 
@@ -73,7 +74,10 @@ const Support = () => {
     handleChange({
       target: {
         name: "category",
-        value: contextItem.type === "booking" ? "Booking issue" : "Payment / Wallet issue",
+        value:
+          contextItem.type === "booking"
+            ? "Booking issue"
+            : "Payment / Wallet issue",
       },
     });
   };
@@ -95,9 +99,9 @@ const Support = () => {
               Need help with your parking account?
             </h1>
             <p className="max-w-2xl text-sm md:text-base leading-7 text-[#FAF3E1]/45">
-              Use the support form to report booking, wallet, or app issues.
-              We already know your account details, so the process stays quick
-              and focused.
+              Use the support form to report booking, wallet, or app issues. We
+              already know your account details, so the process stays quick and
+              focused.
             </p>
           </div>
         </div>
@@ -122,7 +126,7 @@ const Support = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="relative z-10 space-y-5">
+          <form onSubmit={handleSubmit} className="relative z-10 space-y-5 mb-25">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <label className="space-y-2">
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#FAF3E1]/35">
@@ -217,6 +221,21 @@ const Support = () => {
               </button>
             </div>
           </form>
+
+          <SupportTicketTracker
+            tickets={tickets}
+            loading={ticketsLoading}
+            reopening={reopening}
+            statusFilter={statusFilter}
+            onStatusFilterChange={setStatusFilter}
+            error={ticketsError}
+            onRefresh={refreshTickets}
+            onReopen={reopenTicket}
+          />
+
+          <section className="rounded-[2.5rem] border border-[#F5E7C6]/5 bg-[#FAF3E1]/5 p-6 mt-25 md:p-7">
+            <SupportFaq />
+          </section>
         </section>
 
         <aside className="space-y-6">
@@ -231,17 +250,6 @@ const Support = () => {
             onRefresh={refreshActivity}
           />
 
-          <SupportTicketTracker
-            tickets={tickets}
-            loading={ticketsLoading}
-            reopening={reopening}
-            statusFilter={statusFilter}
-            onStatusFilterChange={setStatusFilter}
-            error={ticketsError}
-            onRefresh={refreshTickets}
-            onReopen={reopenTicket}
-          />
-
           {activityError ? (
             <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-200">
               {activityError}
@@ -254,8 +262,12 @@ const Support = () => {
                 <ShieldAlert size={20} />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-[#FAF3E1]">What to include</h3>
-                <p className="text-sm text-[#FAF3E1]/40">Give us enough context to resolve it faster.</p>
+                <h3 className="text-lg font-bold text-[#FAF3E1]">
+                  What to include
+                </h3>
+                <p className="text-sm text-[#FAF3E1]/40">
+                  Give us enough context to resolve it faster.
+                </p>
               </div>
             </div>
 
@@ -271,9 +283,7 @@ const Support = () => {
             <SupportQuickActions />
           </section>
 
-          <section className="rounded-[2.5rem] border border-[#F5E7C6]/5 bg-[#FAF3E1]/5 p-6 md:p-7">
-            <SupportFaq />
-          </section>
+          
         </aside>
       </div>
     </div>

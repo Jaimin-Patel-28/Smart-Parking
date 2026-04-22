@@ -25,7 +25,6 @@ const createSuperAdmin = require("./utils/createSuperAdmin");
 // User Routes
 const userParkingRoutes = require("./User-Panel/routes/parkingRoutes");
 const profileRoutes = require("./User-Panel/routes/profileRoutes");
-const settingsRoutes = require("./User-Panel/routes/settingsRoutes");
 const userWalletRoutes = require("./User-Panel/routes/walletRoutes");
 const notificationRoutes = require("./User-Panel/routes/notificationRoutes");
 const paymentRoutes = require("./User-Panel/routes/paymentRoutes");
@@ -138,7 +137,6 @@ app.use("/api/auth", authRoutes);
 // User Routes
 app.use("/api", userParkingRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/api/settings", settingsRoutes);
 app.use("/api/wallet", userWalletRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/payment", paymentRoutes);

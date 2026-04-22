@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Save, X, MapPin, Car, DollarSign, Info } from "lucide-react";
+import { Save, X, MapPin, Car, IndianRupee, Info } from "lucide-react";
 import toast from "react-hot-toast";
 
 const ParkingForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
@@ -99,7 +99,7 @@ const ParkingForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         {/* Pricing Input */}
         <div className="space-y-2.5">
           <label className="text-[11px] font-black text-[#FAF3E1]/40 uppercase tracking-[0.1em] flex items-center gap-2">
-            <DollarSign size={14} className="text-[#FA8112]" /> Hourly Rate
+            <IndianRupee size={14} className="text-[#FA8112]" /> Hourly Rate
           </label>
           <input
             name="basePrice"

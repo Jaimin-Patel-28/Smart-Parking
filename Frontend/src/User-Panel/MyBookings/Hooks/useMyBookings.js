@@ -66,12 +66,12 @@ export const useMyBookings = () => {
     }
   }, [userId]);
 
-// Extend booking
-  const extendBooking = async (bookingId, extraHours) => {
+// Extend/reduce booking
+  const extendBooking = async (bookingId, adjustmentMinutes) => {
     if (!userId) return;
     setExtending(true);
     try {
-      const { data } = await bookingService.extendBooking(bookingId, extraHours);
+      const { data } = await bookingService.extendBooking(bookingId, adjustmentMinutes);
       
       // Optimistic update all tabs
       setCurrentBookings(prev => 
@@ -84,7 +84,7 @@ export const useMyBookings = () => {
         prev.map(b => b._id === bookingId ? data.booking : b)
       );
       
-      console.log(`Extended by ${extraHours} hours!`);
+      console.log(`Booking adjusted by ${adjustmentMinutes} minute(s)!`);
       return data.booking;
     } catch (err) {
       console.error("Extend error:", err);

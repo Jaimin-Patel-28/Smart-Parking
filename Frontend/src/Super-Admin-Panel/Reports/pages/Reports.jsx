@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   BarChart3,
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   Users,
   AlertCircle,
@@ -128,7 +128,7 @@ const Reports = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           <ReportCard
             title="Total Revenue"
-            icon={DollarSign}
+            icon={IndianRupee}
             value={`₹${(comprehensiveReport.data?.totalRevenue || 0).toLocaleString()}`}
             bgColor="from-emerald-500/10 to-emerald-400/5"
           />
@@ -165,7 +165,7 @@ const Reports = () => {
       {revenueReport && (
         <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-[2.5rem] p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
-            <DollarSign className="text-[#FA8112]" size={24} />
+            <IndianRupee className="text-[#FA8112]" size={24} />
             <h2 className="text-xl font-black text-[#FAF3E1] uppercase tracking-tighter">
               Revenue <span className="text-[#FA8112]">Analysis</span>
             </h2>

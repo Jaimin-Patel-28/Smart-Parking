@@ -8,6 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
+import ConfirmDialog from "../../../app/Components/ConfirmDialog";
 import ExtendForm from "./ExtendForm";
 import EditForm from "./EditForm";
 
@@ -21,11 +22,21 @@ const BookingCard = ({
   extendingId = null,
 }) => {
   const [showEdit, setShowEdit] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const navigate = useNavigate();
 
   const remaining = formatDistanceToNow(new Date(booking.endTime), {
     addSuffix: true,
   });
+
+  const handleCancelClick = () => {
+    setShowCancelConfirm(true);
+  };
+
+  const confirmCancelBooking = () => {
+    onCancel(booking._id);
+    setShowCancelConfirm(false);
+  };
 
   return (
     <div className="group relative overflow-hidden bg-[#FAF3E1]/3 border border-[#F5E7C6]/10 rounded-4xl p-6 transition-all hover:bg-[#FAF3E1]/6 hover:border-[#FA8112]/30">
@@ -115,7 +126,7 @@ const BookingCard = ({
               disabled={extendingId === booking._id}
             />
             <button
-              onClick={() => onCancel(booking._id)}
+                onClick={handleCancelClick}
               className="w-full text-xs font-black uppercase tracking-widest text-red-400 border border-red-400/30 py-3 rounded-xl hover:bg-red-500/10 transition-all"
             >
               Cancel Booking
@@ -133,7 +144,7 @@ const BookingCard = ({
                 Edit Booking
               </button>
               <button
-                onClick={() => onCancel(booking._id)}
+                onClick={handleCancelClick}
                 className="flex-1 text-xs font-black uppercase tracking-widest text-red-400 border border-red-400/30 py-3 rounded-xl hover:bg-red-500/10 transition-all"
               >
                 Cancel Upcoming
@@ -154,6 +165,17 @@ const BookingCard = ({
 
       {/* Background Decorative Element */}
       <ShieldCheck className="absolute -right-4 -top-4 w-24 h-24 text-[#FAF3E1]/2 -rotate-12 pointer-events-none" />
+
+      <ConfirmDialog
+        open={showCancelConfirm}
+        title="Cancel Booking"
+        message="Are you sure you want to cancel this booking? If your payment is eligible, the refund will be processed automatically."
+        confirmLabel="Yes, Cancel"
+        cancelLabel="No"
+        intent="danger"
+        onConfirm={confirmCancelBooking}
+        onCancel={() => setShowCancelConfirm(false)}
+      />
     </div>
   );
 };

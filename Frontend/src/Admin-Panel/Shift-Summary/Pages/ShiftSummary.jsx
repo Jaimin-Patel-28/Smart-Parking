@@ -1,4 +1,4 @@
-import { Loader, AlertCircle, Calendar, TrendingUp, DollarSign, CheckCircle, AlertTriangle, Clock } from "lucide-react";
+import { Loader, AlertCircle, Calendar, TrendingUp, CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import useShiftMetrics from "../Hooks/useShiftMetrics";
 import StatsCard from "../Components/StatsCard";
 

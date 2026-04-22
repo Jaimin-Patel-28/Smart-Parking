@@ -16,9 +16,6 @@ const BookingSuccess = lazy(
   () => import("../../User-Panel/Parking/Pages/BookingSuccess"),
 );
 const Profile = lazy(() => import("../../User-Panel/Profile/Pages/Profile"));
-const Settings = lazy(
-  () => import("../../User-Panel/Setting-Page/Pages/SettingsPage"),
-);
 
 // Placeholders
 const Dashboard = lazy(
@@ -64,8 +61,6 @@ const UserRoutes = () => {
           <Route path="parking/preview" element={<BookingPreview />} />
           <Route path="parking/success" element={<BookingSuccess />} />
           <Route path="profile" element={<Profile />} />
-
-          <Route path="settings" element={<Settings />} />
 
           {/* CRITICAL: Catch-all should point back to a safe, existing route using absolute path */}
           <Route path="*" element={<Navigate to="/user/dashboard" replace />} />

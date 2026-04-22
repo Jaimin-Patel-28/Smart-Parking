@@ -10,7 +10,7 @@ const DashboardStats = ({ stats }) => {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="h-40 rounded-[2rem] bg-[#FAF3E1]/5 animate-pulse"
+            className="h-40 rounded-4xl bg-[#FAF3E1]/5 animate-pulse"
           />
         ))}
       </div>
@@ -20,28 +20,28 @@ const DashboardStats = ({ stats }) => {
     {
       title: "Total Bookings",
       value: stats.totalBookings || 0,
-      change: 12.5,
+      change: Number(stats.totalBookingsChange || 0),
       icon: Calendar,
       color: "bg-[#FA8112]", // Your Brand Orange
     },
     {
       title: "Active Sessions",
       value: stats.activeBookings || 0,
-      change: 4.2,
+      change: Number(stats.activeBookingsChange || 0),
       icon: Activity,
       color: "bg-emerald-500", // Success Green
     },
     {
       title: "Total Expenditure",
       value: `₹${Number(stats.totalSpent || 0).toFixed(0)}`,
-      change: 18.1,
+      change: Number(stats.totalSpentChange || 0),
       icon: CreditCard,
       color: "bg-blue-500", // Info Blue
     },
     {
-      title: "Peak Usage",
-      value: `${(stats.avgBookingValue || 0).toFixed(0)}h`,
-      change: -2.4,
+      title: "Total Hours",
+      value: `${Number(stats.totalHours || 0).toFixed(0)}h`,
+      change: Number(stats.totalHoursChange || 0),
       icon: Zap,
       color: "bg-purple-500", // Power Purple
     },

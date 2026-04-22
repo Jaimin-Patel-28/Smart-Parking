@@ -1,12 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import notificationService from "../Services/notificationService";
 
+const UNREAD_EVENT_NAME = "user-notifications-unread";
+
 const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const emitUnreadCount = useCallback((count) => {
+    window.dispatchEvent(
+      new CustomEvent(UNREAD_EVENT_NAME, {
+        detail: { unreadCount: Math.max(0, Number(count) || 0) },
+      }),
+    );
+  }, []);
 
   const fetchNotifications = useCallback(async (params = {}) => {
     setLoading(true);
@@ -18,14 +28,18 @@ const useNotifications = () => {
         notificationService.getUnreadCount(),
       ]);
 
-      setNotifications(notificationResponse?.data?.notifications || notificationResponse?.data || []);
-      setUnreadCount(unreadResponse?.unreadCount || 0);
+      const nextNotifications = notificationResponse?.data?.notifications || notificationResponse?.data || [];
+      const nextUnread = unreadResponse?.unreadCount || 0;
+
+      setNotifications(nextNotifications);
+      setUnreadCount(nextUnread);
+      emitUnreadCount(nextUnread);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load notifications");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [emitUnreadCount]);
 
   const markOneAsRead = useCallback(async (id) => {
     setActionLoading(true);
@@ -35,11 +49,15 @@ const useNotifications = () => {
       setNotifications((current) =>
         current.map((item) => (item._id === id ? { ...item, isRead: true } : item)),
       );
-      setUnreadCount((current) => Math.max(0, current - 1));
+      setUnreadCount((current) => {
+        const nextUnread = Math.max(0, current - 1);
+        emitUnreadCount(nextUnread);
+        return nextUnread;
+      });
     } finally {
       setActionLoading(false);
     }
-  }, []);
+  }, [emitUnreadCount]);
 
   const markAllAsRead = useCallback(async () => {
     setActionLoading(true);
@@ -48,10 +66,11 @@ const useNotifications = () => {
       await notificationService.markAllAsRead();
       setNotifications((current) => current.map((item) => ({ ...item, isRead: true })));
       setUnreadCount(0);
+      emitUnreadCount(0);
     } finally {
       setActionLoading(false);
     }
-  }, []);
+  }, [emitUnreadCount]);
 
   const removeNotification = useCallback(async (id) => {
     setActionLoading(true);
@@ -61,12 +80,14 @@ const useNotifications = () => {
       setNotifications((current) => current.filter((item) => item._id !== id));
       setUnreadCount((current) => {
         const removed = notifications.find((item) => item._id === id);
-        return removed && !removed.isRead ? Math.max(0, current - 1) : current;
+        const nextUnread = removed && !removed.isRead ? Math.max(0, current - 1) : current;
+        emitUnreadCount(nextUnread);
+        return nextUnread;
       });
     } finally {
       setActionLoading(false);
     }
-  }, [notifications]);
+  }, [emitUnreadCount, notifications]);
 
   const clearAll = useCallback(async () => {
     setActionLoading(true);
@@ -75,10 +96,11 @@ const useNotifications = () => {
       await notificationService.clearNotifications();
       setNotifications([]);
       setUnreadCount(0);
+      emitUnreadCount(0);
     } finally {
       setActionLoading(false);
     }
-  }, []);
+  }, [emitUnreadCount]);
 
   useEffect(() => {
     fetchNotifications();

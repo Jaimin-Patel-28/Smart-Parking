@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Clock, MapPin, Hash, IndianRupee, CalendarDays, ParkingSquare, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, Hash, IndianRupee, CalendarDays, ParkingSquare, ShieldCheck, Download } from "lucide-react";
 import { format } from "date-fns";
 import useBookingDetails from "../Hooks/useBookingDetails";
 import ExtendForm from "../Components/ExtendForm";
@@ -26,6 +26,82 @@ const BookingDetails = () => {
     ["confirmed", "active", "upcoming", "scheduled"].includes(bookingStatus) &&
     startAt &&
     startAt > now;
+
+  const formatDuration = (hoursValue) => {
+    if (!hoursValue || Number(hoursValue) <= 0) return "N/A";
+
+    const totalMinutes = Math.round(Number(hoursValue) * 60);
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+
+    if (hrs > 0 && mins > 0) return `${hrs}h ${mins}m`;
+    if (hrs > 0) return `${hrs}h`;
+    return `${mins}m`;
+  };
+
+  const handleSavePass = async () => {
+    if (!booking) return;
+
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+    let y = 18;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("Smart Parking - Booking Receipt", 14, y);
+
+    y += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Generated: ${format(new Date(), "dd MMM yyyy, hh:mm a")}`, 14, y);
+
+    y += 10;
+    doc.setDrawColor(240, 240, 240);
+    doc.line(14, y, 196, y);
+
+    const rows = [
+      ["Booking Code", booking.bookingCode || "PRK-0000"],
+      ["Booking ID", booking._id || "N/A"],
+      ["User", booking.user?.fullName || "N/A"],
+      ["Vehicle Number", booking.vehicleNumber || booking.user?.vehicleNumber || "N/A"],
+      ["Parking Zone", booking.parking?.name || "N/A"],
+      ["Parking Location", booking.parking?.location || booking.parking?.address || "N/A"],
+      ["Slot", booking.slot?.label || "N/A"],
+      ["Start Time", booking.startTime ? format(new Date(booking.startTime), "dd MMM yyyy, hh:mm a") : "N/A"],
+      ["End Time", booking.endTime ? format(new Date(booking.endTime), "dd MMM yyyy, hh:mm a") : "N/A"],
+      ["Duration", formatDuration(booking.duration)],
+      ["Total Amount", `INR ${Number(booking.totalAmount || 0).toFixed(2)}`],
+      ["Payment Status", booking.paymentStatus || "N/A"],
+      ["Booking Status", booking.status || "N/A"],
+      ["Created", booking.createdAt ? format(new Date(booking.createdAt), "dd MMM yyyy, hh:mm a") : "N/A"],
+    ];
+
+    y += 10;
+    rows.forEach(([label, value]) => {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`${label}:`, 14, y);
+
+      doc.setFont("helvetica", "normal");
+      const wrappedValue = doc.splitTextToSize(String(value), 120);
+      doc.text(wrappedValue, 72, y);
+      y += Math.max(7, wrappedValue.length * 5);
+
+      if (y > 275) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+
+    y += 6;
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(10);
+    doc.text("Thank you for choosing Smart Parking.", 14, y);
+
+    const safeCode = (booking.bookingCode || "booking-pass").replace(/[^a-zA-Z0-9-_]/g, "");
+    const fileName = `${safeCode}-receipt-${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(fileName);
+  };
 
   if (loading) {
     return (
@@ -117,9 +193,16 @@ const BookingDetails = () => {
               <h2 className="text-2xl font-black text-[#FAF3E1] mt-2">Manage booking</h2>
             </div>
 
+            <button
+              onClick={handleSavePass}
+              className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-[#FAF3E1]/70 border border-[#F5E7C6]/10 hover:bg-[#FAF3E1]/10 transition-all"
+            >
+              <Download size={15} /> Save Pass (PDF)
+            </button>
+
             {isCurrent ? (
               <div className="space-y-3">
-                <ExtendForm bookingId={booking._id} onExtend={(bookingId, extraHours) => extendBooking(extraHours)} disabled={actionLoading} />
+                <ExtendForm bookingId={booking._id} onExtend={(bookingId, adjustmentMinutes) => extendBooking(adjustmentMinutes)} disabled={actionLoading} />
                 <button
                   onClick={cancelBooking}
                   disabled={actionLoading}

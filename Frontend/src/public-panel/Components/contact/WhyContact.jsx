@@ -1,5 +1,5 @@
 import React from "react";
-import { Clock, ShieldCheck, Zap } from "lucide-react";
+import { Clock, ShieldCheck, Zap, RefreshCcwDotIcon } from "lucide-react";
 
 const WhyContact = () => {
   const benefits = [
@@ -18,6 +18,12 @@ const WhyContact = () => {
       title: "Secure Channels",
       desc: "Your data and queries are always end-to-end encrypted.",
       icon: ShieldCheck,
+    },
+    {
+      className: "border-y border-[#F5E7C6]/5 py-6 my-6",
+      title: "Reactivation Account",
+      desc: "If you wish to reactivate your account, please contact us with your registered email address and we will assist you in the process.",
+      icon: RefreshCcwDotIcon,
     },
   ];
 

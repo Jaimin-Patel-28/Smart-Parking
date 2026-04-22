@@ -4,7 +4,7 @@ import { useBookings } from "../Hooks/useBookings";
 import {
   MapPin,
   Hash,
-  Receipt,
+  ReceiptIndianRupee,
   Calendar,
   ArrowRight,
   Loader2,
@@ -35,7 +35,7 @@ const BookingHistory = () => {
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <div className="bg-[#FA8112]/10 p-2 rounded-xl">
-              <Receipt className="text-[#FA8112]" size={24} />
+              <ReceiptIndianRupee className="text-[#FA8112]" size={24} />
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-[#FAF3E1] tracking-tight italic uppercase">
               Past <span className="text-[#FA8112]">Logs</span>
@@ -130,7 +130,9 @@ const BookingHistory = () => {
                   </div>
 
                   <div className="hidden md:block">
-                    <button className="p-3 bg-[#FAF3E1]/5 rounded-xl text-[#FAF3E1]/20 group-hover:text-[#FA8112] transition-all">
+                    <button 
+                    onClick={() => navigate(`/user/bookings/${booking._id}`)}
+                    className="p-3 bg-[#FAF3E1]/5 rounded-xl text-[#FAF3E1]/20 group-hover:text-[#FA8112] transition-all">
                       <ArrowRight size={20} />
                     </button>
                   </div>

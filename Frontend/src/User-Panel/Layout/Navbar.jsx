@@ -3,18 +3,18 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   MapPin,
   Bell,
-  Wallet,
   User as UserIcon,
   LogOut,
-  Settings,
   ChevronDown,
 } from "lucide-react";
 import { useAuth } from "../../Authentication-UI/Context/AuthContext";
+import useUnreadCount from "../Notifications/Hooks/useUnreadCount";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
+  const { unreadCount } = useUnreadCount();
 
   const navLinks = [
     { name: "Dashboard", path: "/user/dashboard" },
@@ -64,7 +64,11 @@ const Navbar = () => {
             className="relative p-2 text-[#FAF3E1]/40 hover:text-[#FA8112] transition-colors"
           >
             <Bell size={22} />
-            <span className="absolute top-2 right-2.5 w-2 h-2 bg-[#FA8112] rounded-full border-2 border-[#222222]"></span>
+            {unreadCount > 0 ? (
+              <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-[#FA8112] text-[#222222] text-[10px] font-black flex items-center justify-center border-2 border-[#222222]">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            ) : null}
           </button>
 
           <div className="relative">
@@ -102,13 +106,6 @@ const Navbar = () => {
                   onClick={() => setIsProfileOpen(false)}
                 >
                   <UserIcon size={18} /> My Profile
-                </NavLink>
-                <NavLink
-                  to="/user/settings"
-                  onClick={() => setIsProfileOpen(false)}
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#FAF3E1]/60 hover:text-[#FA8112] hover:bg-[#FAF3E1]/5 rounded-xl transition-all"
-                >
-                  <Settings size={18} /> Settings
                 </NavLink>
                 {/* <NavLink
                   to="/user/wallet"

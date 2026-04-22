@@ -42,13 +42,13 @@ const useBookingDetails = (bookingId) => {
   }, [bookingId, fetchBooking]);
 
   const extendBooking = useCallback(
-    async (extraHours) => {
+    async (adjustmentMinutes) => {
       if (!bookingId) return;
 
       setActionLoading(true);
 
       try {
-        const { data } = await bookingService.extendBooking(bookingId, extraHours);
+        const { data } = await bookingService.extendBooking(bookingId, adjustmentMinutes);
         setBooking(data?.booking || data?.data || data);
         toast.success("Booking extended");
         return data?.booking || data?.data || data;

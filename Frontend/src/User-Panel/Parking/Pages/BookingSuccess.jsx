@@ -4,12 +4,10 @@ import {
   CheckCircle2,
   QrCode,
   Download,
-  Share2,
   Home,
   MapPin,
   Car,
   Hash,
-  ArrowRight,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -25,6 +23,81 @@ const BookingSuccess = () => {
     (start && end
       ? Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60)))
       : null);
+
+  const formatDuration = (hoursValue) => {
+    if (!hoursValue || Number(hoursValue) <= 0) return "N/A";
+
+    const totalMinutes = Math.round(Number(hoursValue) * 60);
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+
+    if (hrs > 0 && mins > 0) return `${hrs}h ${mins}m`;
+    if (hrs > 0) return `${hrs}h`;
+    return `${mins}m`;
+  };
+
+  const handleSavePass = async () => {
+    if (!booking) return;
+
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+    let y = 18;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("Smart Parking - Booking Receipt", 14, y);
+
+    y += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Generated: ${format(new Date(), "dd MMM yyyy, hh:mm a")}`, 14, y);
+
+    y += 10;
+    doc.setDrawColor(240, 240, 240);
+    doc.line(14, y, 196, y);
+
+    const rows = [
+      ["Booking Code", booking.bookingCode || "PRK-0000"],
+      ["Booking ID", booking._id || "N/A"],
+      ["User", booking.user?.fullName || "N/A"],
+      ["Vehicle Number", booking.vehicleNumber || booking.user?.vehicleNumber || "N/A"],
+      ["Parking Zone", booking.parking?.name || "N/A"],
+      ["Parking Location", booking.parking?.location || booking.parking?.address || "N/A"],
+      ["Slot", booking.slot?.label || "N/A"],
+      ["Start Time", start ? format(start, "dd MMM yyyy, hh:mm a") : "N/A"],
+      ["End Time", end ? format(end, "dd MMM yyyy, hh:mm a") : "N/A"],
+      ["Duration", formatDuration(durationHours)],
+      ["Total Amount", `INR ${Number(booking.totalAmount || 0).toFixed(2)}`],
+      ["Payment Status", booking.paymentStatus || "N/A"],
+      ["Booking Status", booking.status || "N/A"],
+    ];
+
+    y += 10;
+    rows.forEach(([label, value]) => {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`${label}:`, 14, y);
+
+      doc.setFont("helvetica", "normal");
+      const wrappedValue = doc.splitTextToSize(String(value), 120);
+      doc.text(wrappedValue, 72, y);
+      y += Math.max(7, wrappedValue.length * 5);
+
+      if (y > 275) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+
+    y += 6;
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(10);
+    doc.text("Thank you for choosing Smart Parking.", 14, y);
+
+    const safeCode = (booking.bookingCode || "booking-pass").replace(/[^a-zA-Z0-9-_]/g, "");
+    const fileName = `${safeCode}-receipt-${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(fileName);
+  };
 
   // Guard clause for direct URL access
   if (!booking) {
@@ -173,11 +246,11 @@ const BookingSuccess = () => {
         </button>
 
         <div className="flex gap-4">
-          <button className="flex-1 flex items-center justify-center gap-2 bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 text-[#FAF3E1]/60 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#FAF3E1]/10 transition-all">
+          <button
+            onClick={handleSavePass}
+            className="flex-1 flex items-center justify-center gap-2 bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 text-[#FAF3E1]/60 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#FAF3E1]/10 transition-all"
+          >
             <Download size={16} /> Save Pass
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-2 bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 text-[#FAF3E1]/60 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#FAF3E1]/10 transition-all">
-            <Share2 size={16} /> Share
           </button>
         </div>
       </div>

@@ -601,11 +601,38 @@ Buffer Logic: Check if extended booking (with 15min before & after) conflicts wi
 exports.extendBooking = async (req, res) => {
   try {
     const { id } = req.params;
-    const { extraHours } = req.body;
+    const { extraHours, adjustmentMinutes } = req.body;
     const userId = req.user?.id || req.user?._id; // Assume auth middleware adds req.user
 
-    if (!extraHours || extraHours < 1 || extraHours > 24) {
-      return res.status(400).json({ message: "extraHours must be 1-24" });
+    const parsedMinutes =
+      adjustmentMinutes !== undefined
+        ? Number(adjustmentMinutes)
+        : Number(extraHours) * 60;
+
+    const formatDurationText = (minutes) => {
+      const total = Math.abs(minutes);
+      const hours = Math.floor(total / 60);
+      const mins = total % 60;
+
+      if (hours > 0 && mins > 0) {
+        return `${hours} hour(s) ${mins} minute(s)`;
+      }
+
+      if (hours > 0) {
+        return `${hours} hour(s)`;
+      }
+
+      return `${mins} minute(s)`;
+    };
+
+    if (
+      !Number.isFinite(parsedMinutes) ||
+      parsedMinutes === 0 ||
+      Math.abs(parsedMinutes) > 24 * 60
+    ) {
+      return res
+        .status(400)
+        .json({ message: "adjustmentMinutes must be between -1440 and 1440, excluding 0" });
     }
 
     const booking = await Booking.findOne({ _id: id, user: userId }).populate(
@@ -630,8 +657,16 @@ exports.extendBooking = async (req, res) => {
 
     const buffer = 15 * 60 * 1000;
     const newEnd = new Date(
-      booking.endTime.getTime() + extraHours * 60 * 60 * 1000,
+      booking.endTime.getTime() + parsedMinutes * 60 * 1000,
     );
+
+    if (newEnd <= booking.startTime) {
+      return res.status(400).json({ message: "Adjusted time cannot be earlier than the booking start time" });
+    }
+
+    if (parsedMinutes < 0 && newEnd <= now) {
+      return res.status(400).json({ message: "Reduced time must still leave a future booking window" });
+    }
 
     // Extended booking period: from startTime to newEnd, with 15min buffer on both sides
     const reservedStart = new Date(booking.startTime.getTime() - buffer);
@@ -665,25 +700,35 @@ exports.extendBooking = async (req, res) => {
 
     // Update
     const hourlyRate = booking.parking.basePrice;
-    const extraCharge = hourlyRate * parseInt(extraHours);
+    const adjustmentAmount = hourlyRate * (Math.abs(parsedMinutes) / 60);
 
-    if (booking.paymentStatus === "paid" && extraCharge > 0) {
-      await deductMoney(userId, extraCharge, booking._id);
+    if (booking.paymentStatus === "paid") {
+      if (parsedMinutes > 0) {
+        await deductMoney(userId, adjustmentAmount, booking._id);
+      } else if (parsedMinutes < 0) {
+        await refundMoney(userId, adjustmentAmount, booking._id);
+      }
     }
 
-    booking.duration += parseInt(extraHours);
+    booking.duration += parsedMinutes / 60;
     booking.endTime = newEnd;
-    booking.totalAmount += extraCharge;
+    booking.totalAmount += parsedMinutes > 0 ? adjustmentAmount : -adjustmentAmount;
 
     await booking.save();
 
     await booking.populate("slot", "label");
 
     res.json({
-      message: "Booking extended successfully",
+      message: parsedMinutes > 0 ? "Booking extended successfully" : "Booking reduced successfully",
       bufferApplied: {
         buffer: "15 minutes before and after",
-        extendedUntil: newEnd.toISOString(),
+        updatedUntil: newEnd.toISOString(),
+      },
+      adjustment: {
+        minutes: parsedMinutes,
+        hours: parsedMinutes / 60,
+        type: parsedMinutes > 0 ? "extended" : "reduced",
+        amount: adjustmentAmount,
       },
       booking,
     });
@@ -691,13 +736,17 @@ exports.extendBooking = async (req, res) => {
     void sendNotification({
       user: userId,
       type: "booking",
-      title: "Booking extended",
-      message: `Your booking ${booking._id.toString().slice(-6).toUpperCase()} was extended by ${extraHours} hour(s).`,
+      title: parsedMinutes > 0 ? "Booking extended" : "Booking reduced",
+      message:
+        parsedMinutes > 0
+          ? `Your booking ${booking._id.toString().slice(-6).toUpperCase()} was extended by ${formatDurationText(parsedMinutes)}.`
+          : `Your booking ${booking._id.toString().slice(-6).toUpperCase()} was reduced by ${formatDurationText(parsedMinutes)}.`,
       entityType: "booking",
       entityId: booking._id,
       metadata: {
-        extraHours: parseInt(extraHours),
-        extraCharge,
+        adjustmentMinutes: parsedMinutes,
+        extraHours: parsedMinutes / 60,
+        adjustmentAmount,
         newEndTime: newEnd,
       },
     }).catch((notificationError) => {

@@ -42,7 +42,7 @@ const getWalletSummary = async (userId) => {
 
 const getWalletTransactions = async (
   userId,
-  { page = 1, limit = 10, type, status } = {},
+  { page = 1, limit, type, status } = {},
 ) => {
   const query = { user: userId };
 
@@ -54,24 +54,32 @@ const getWalletTransactions = async (
     query.status = status;
   }
 
-  const skip = (Number(page) - 1) * Number(limit);
+  const hasLimit = Number.isFinite(Number(limit)) && Number(limit) > 0;
+  const safeLimit = hasLimit ? Number(limit) : null;
+  const safePage = Number.isFinite(Number(page)) && Number(page) > 0 ? Number(page) : 1;
+  const skip = hasLimit ? (safePage - 1) * safeLimit : 0;
+
+  const transactionsQuery = Transaction.find(query)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .populate("booking", "startTime endTime status paymentStatus totalAmount")
+    .select("type amount status description booking createdAt");
+
+  if (hasLimit) {
+    transactionsQuery.limit(safeLimit);
+  }
 
   const [transactions, total] = await Promise.all([
-    Transaction.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit))
-      .populate("booking", "startTime endTime status paymentStatus totalAmount")
-      .select("type amount status description booking createdAt"),
+    transactionsQuery,
     Transaction.countDocuments(query),
   ]);
 
   return {
     transactions,
     total,
-    page: Number(page),
-    limit: Number(limit),
-    totalPages: Math.max(1, Math.ceil(total / Number(limit))),
+    page: safePage,
+    limit: hasLimit ? safeLimit : total,
+    totalPages: hasLimit ? Math.max(1, Math.ceil(total / safeLimit)) : 1,
   };
 };
 
