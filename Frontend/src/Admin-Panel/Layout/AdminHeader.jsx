@@ -9,10 +9,8 @@ const AdminHeader = ({ onMenuClick }) => {
   const [alertCount, setAlertCount] = useState(0);
   const { user, logout } = useAuth();
 
-  // 🔥 Dynamic Role Handling
   const basePath = user?.role === "admin" ? "/admin" : "/super-admin";
 
-  // 🔥 Get initials (nice UX)
   const getInitials = (name = "") => {
     return name
       .split(" ")
@@ -24,30 +22,21 @@ const AdminHeader = ({ onMenuClick }) => {
 
   useEffect(() => {
     let active = true;
-
     const loadAlerts = async () => {
       if (user?.role !== "admin") {
-        if (active) {
-          setAlertCount(0);
-        }
+        if (active) setAlertCount(0);
         return;
       }
-
       try {
         const res = await getOperationalAlerts();
-        if (active) {
-          setAlertCount(res?.data?.total || 0);
-        }
+        if (active) setAlertCount(res?.data?.total || 0);
       } catch {
-        if (active) {
-          setAlertCount(0);
-        }
+        if (active) setAlertCount(0);
       }
     };
 
     loadAlerts();
     const timer = setInterval(loadAlerts, 60000);
-
     return () => {
       active = false;
       clearInterval(timer);
@@ -55,100 +44,113 @@ const AdminHeader = ({ onMenuClick }) => {
   }, [user?.role]);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#F5E7C6]/10 bg-[#222222]/80 backdrop-blur-md">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-8">
-        {/* Left */}
+    <header className="sticky top-0 z-40 w-full border-b border-[#F5E7C6]/5 bg-[#222222]/90 backdrop-blur-md">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* LEFT SECTION */}
         <div className="flex items-center gap-4">
           <button
             onClick={onMenuClick}
-            className="inline-flex items-center justify-center rounded-md p-2 text-[#FAF3E1] hover:bg-[#FAF3E1]/5 lg:hidden"
+            className="inline-flex items-center justify-center rounded-lg p-2 text-[#FAF3E1]/60 hover:text-[#FAF3E1] hover:bg-[#FAF3E1]/5 lg:hidden transition-colors"
           >
-            <Menu size={24} />
+            <Menu size={20} />
           </button>
 
-          <div className="relative hidden sm:block">
+          {/* Search Bar - Refined padding and font */}
+          <div className="relative hidden md:block">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#FAF3E1]/40"
-              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20"
+              size={16}
             />
             <input
               type="text"
-              placeholder="Quick search..."
-              className="h-10 w-64 rounded-full text-[#FAF3E1] bg-[#FAF3E1]/2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#FA8112]/20 border border-[#F5E7C6]/10 focus:border-[#FA8112]"
+              placeholder="Search bookings, slots..."
+              className="h-9 w-64 rounded-lg text-[#FAF3E1] bg-[#FAF3E1]/5 pl-10 pr-4 text-[13px] placeholder:text-[#FAF3E1]/20 focus:outline-none border border-[#F5E7C6]/5 focus:border-[#FA8112]/50 transition-all"
             />
           </div>
         </div>
 
-        {/* Right */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          {/* Notifications */}
+        {/* RIGHT SECTION */}
+        <div className="flex items-center gap-3 sm:gap-5">
+          {/* Notifications - Refined Badge */}
           <Link
-            to={user?.role === "admin" ? `${basePath}/exceptions` : `${basePath}/dashboard`}
-            className="relative p-2 text-[#FAF3E1]/60 hover:text-[#FAF3E1] hover:bg-[#FAF3E1]/5 rounded-full"
+            to={
+              user?.role === "admin"
+                ? `${basePath}/exceptions`
+                : `${basePath}/dashboard`
+            }
+            className="relative p-2 text-[#FAF3E1]/40 hover:text-[#FA8112] transition-colors"
           >
             <Bell size={20} />
-            {alertCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-[#FA8112] text-[#222222] text-[10px] font-black flex items-center justify-center border border-[#222222]">
+            {alertCount > 0 ? (
+              <span className="absolute top-1 right-1 h-4 min-w-[16px] px-1 rounded-full bg-[#FA8112] text-[#222222] text-[9px] font-bold flex items-center justify-center">
                 {alertCount > 99 ? "99+" : alertCount}
               </span>
-            )}
-            {alertCount === 0 && (
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#FA8112] border-2 border-[#222222]"></span>
+            ) : (
+              <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[#FA8112]/40"></span>
             )}
           </Link>
 
-          <div className="h-6 w-px bg-[#F5E7C6]/10 mx-1 hidden sm:block"></div>
+          <div className="h-4 w-px bg-[#F5E7C6]/10 hidden sm:block"></div>
 
-          {/* Profile */}
+          {/* Profile Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-3 p-1 rounded-full hover:bg-[#FAF3E1]/5"
+              className="flex items-center gap-3 pl-1 pr-2 py-1 rounded-lg hover:bg-[#FAF3E1]/5 transition-all"
             >
-              {/* Avatar */}
-              <div className="h-9 w-9 rounded-full bg-[#FA8112] flex items-center justify-center text-[#222222] font-bold">
+              <div className="h-8 w-8 rounded-lg bg-[#FA8112]/10 border border-[#FA8112]/20 flex items-center justify-center text-[#FA8112] text-xs font-bold">
                 {getInitials(user?.name || user?.fullName)}
               </div>
 
-              <div className="hidden md:block text-left">
-                <p className="text-sm font-semibold text-[#FAF3E1] leading-none">
+              <div className="hidden lg:block text-left">
+                <p className="text-[13px] font-semibold text-[#FAF3E1] leading-tight">
                   {user?.name || user?.fullName || "Admin"}
                 </p>
-                <p className="text-[11px] text-[#FAF3E1]/40 mt-1 capitalize">
+                <p className="text-[10px] uppercase tracking-widest text-[#FAF3E1]/30 mt-0.5">
                   {user?.role}
                 </p>
               </div>
 
               <ChevronDown
-                size={16}
-                className={`text-[#FAF3E1]/40 transition-transform ${
+                size={14}
+                className={`text-[#FAF3E1]/20 transition-transform duration-300 ${
                   isProfileOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
 
-            {/* Dropdown */}
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-[#F5E7C6]/10 bg-[#222222] p-2 shadow-2xl">
-                <Link
-                  to={`${basePath}/profile`}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-[#FAF3E1]/80 hover:text-[#FAF3E1] hover:bg-[#FAF3E1]/5"
-                >
-                  <User size={16} /> Profile
-                </Link>
+              <>
+                {/* Overlay to close on outside click */}
+                <div
+                  className="fixed inset-0 z-[-1]"
+                  onClick={() => setIsProfileOpen(false)}
+                ></div>
 
-                <hr className="my-1 border-[#F5E7C6]/10" />
+                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-[#F5E7C6]/10 bg-[#222222] p-1.5 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+                  <Link
+                    to={`${basePath}/profile`}
+                    onClick={() => setIsProfileOpen(false)}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-[#FAF3E1]/70 hover:text-[#FAF3E1] hover:bg-[#FAF3E1]/5 transition-colors"
+                  >
+                    <User size={15} />
+                    <span>My Profile</span>
+                  </Link>
 
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    logout();
-                  }}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-[#FA8112] hover:bg-[#FA8112]/10 w-full text-left font-bold"
-                >
-                  <LogOut size={16} /> Logout
-                </button>
-              </div>
+                  <div className="my-1.5 border-t border-[#F5E7C6]/5"></div>
+
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      logout();
+                    }}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-rose-400 hover:bg-rose-500/10 w-full text-left font-semibold transition-colors"
+                  >
+                    <LogOut size={15} />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>
