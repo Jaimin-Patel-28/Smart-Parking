@@ -1,36 +1,56 @@
-import { Loader, AlertCircle, Calendar, TrendingUp, CheckCircle, AlertTriangle, Clock } from "lucide-react";
+import {
+  Loader,
+  AlertCircle,
+  Calendar,
+  TrendingUp,
+  CheckCircle,
+  AlertTriangle,
+  Clock,
+  ArrowLeft,
+  BarChart3,
+  Activity,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import useShiftMetrics from "../Hooks/useShiftMetrics";
 import StatsCard from "../Components/StatsCard";
 
 const ShiftSummary = () => {
-  const { metrics, loading, error, timeRange, fetchMetrics } = useShiftMetrics();
+  const navigate = useNavigate();
+  const { metrics, loading, error, timeRange, fetchMetrics } =
+    useShiftMetrics();
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
         <Loader className="w-8 h-8 text-[#FA8112] animate-spin" />
+        <p className="text-[#FAF3E1]/40 text-[10px] uppercase font-bold tracking-widest">
+          Aggregating Metrics...
+        </p>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !metrics) {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-black text-[#FAF3E1]">Shift Summary</h2>
-        <div className="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-6 text-rose-400 flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <span>{error}</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!metrics) {
-    return (
-      <div className="space-y-6">
-        <h2 className="text-2xl font-black text-[#FAF3E1]">Shift Summary</h2>
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 text-amber-400">
-          <p>No data available for the selected time range.</p>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-[#FAF3E1]/40 hover:text-[#FAF3E1] transition-all"
+        >
+          <ArrowLeft size={16} />{" "}
+          <span className="text-xs font-bold uppercase tracking-widest">
+            Back
+          </span>
+        </button>
+        <div
+          className={`p-6 rounded-xl border ${error ? "bg-rose-500/5 border-rose-500/20 text-rose-300" : "bg-amber-500/5 border-amber-500/20 text-amber-300"}`}
+        >
+          <div className="flex items-center gap-3">
+            <AlertCircle size={20} />
+            <p className="font-medium">
+              {error || "No data available for the selected time range."}
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -40,210 +60,238 @@ const ShiftSummary = () => {
   const periodEnd = new Date(metrics.period?.endDate).toLocaleDateString();
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-black text-[#FAF3E1]">Shift Summary</h2>
-          <p className="text-[#FAF3E1]/50 text-sm mt-1">
-            {periodStart} to {periodEnd}
-          </p>
+    <div className="space-y-8 max-w-[1600px] mx-auto pb-16">
+      {/* 1. HEADER & NAVIGATION */}
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="space-y-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="group flex items-center gap-2 text-[#FAF3E1]/40 hover:text-[#FA8112] transition-all"
+          >
+            <div className="p-2 rounded-lg bg-[#FAF3E1]/5 group-hover:bg-[#FA8112]/10 border border-[#F5E7C6]/5">
+              <ArrowLeft size={16} />
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-widest">
+              Dashboard
+            </span>
+          </button>
+
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-[#FAF3E1]">
+              Shift Analytics
+            </h2>
+            <p className="text-[#FAF3E1]/40 text-sm mt-1 flex items-center gap-2">
+              <Calendar size={14} className="text-[#FA8112]" /> {periodStart} —{" "}
+              {periodEnd}
+            </p>
+          </div>
         </div>
 
-        {/* Time Range Selector */}
-        <div className="flex gap-2">
+        {/* TIME RANGE SELECTOR */}
+        <div className="flex p-1 bg-[#FAF3E1]/5 rounded-lg border border-[#F5E7C6]/5 w-fit">
           {["today", "week", "month"].map((range) => (
             <button
               key={range}
               onClick={() => fetchMetrics(range)}
-              className={`px-4 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition ${
+              className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all ${
                 timeRange === range
-                  ? "bg-[#FA8112] text-[#222222]"
-                  : "bg-[#FAF3E1]/10 text-[#FAF3E1] border border-[#F5E7C6]/10 hover:bg-[#FAF3E1]/20"
+                  ? "bg-[#FA8112] text-[#222222] shadow-lg shadow-[#FA8112]/10"
+                  : "text-[#FAF3E1]/40 hover:text-[#FAF3E1]"
               }`}
             >
-              {range === "today" ? "Today" : range === "week" ? "This Week" : "This Month"}
+              {range}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Summary Overview */}
-      <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
-          <p className="text-[#FAF3E1]/50 text-sm uppercase tracking-widest">Total Actions</p>
-          <p className="text-3xl font-black text-[#FAF3E1]">{metrics.summary?.totalActions || 0}</p>
+      {/* 2. OVERALL SUCCESS SUMMARY */}
+      <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/5 rounded-xl p-8 grid grid-cols-1 sm:grid-cols-3 gap-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
+          <BarChart3 size={120} />
         </div>
 
-        <div className="space-y-2">
-          <p className="text-[#FAF3E1]/50 text-sm uppercase tracking-widest">Successful</p>
-          <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-black text-emerald-400">{metrics.summary?.totalSuccess || 0}</p>
-            <p className="text-lg font-semibold text-emerald-400">{metrics.summary?.overallSuccessRate || 0}%</p>
+        <div className="space-y-1">
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#FAF3E1]/30">
+            Total Transactions
+          </p>
+          <p className="text-4xl font-bold text-[#FAF3E1]">
+            {metrics.summary?.totalActions || 0}
+          </p>
+        </div>
+
+        <div className="space-y-1 border-l border-[#F5E7C6]/5 sm:pl-8">
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-400/60">
+            Success Rate
+          </p>
+          <div className="flex items-baseline gap-2 text-emerald-400">
+            <p className="text-4xl font-bold">
+              {metrics.summary?.overallSuccessRate || 0}%
+            </p>
+            <p className="text-sm font-medium opacity-60">
+              ({metrics.summary?.totalSuccess || 0} items)
+            </p>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <p className="text-[#FAF3E1]/50 text-sm uppercase tracking-widest">Failed</p>
-          <p className="text-3xl font-black text-rose-400">
-            {(metrics.summary?.totalActions || 0) - (metrics.summary?.totalSuccess || 0)}
+        <div className="space-y-1 border-l border-[#F5E7C6]/5 sm:pl-8">
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-rose-400/60">
+            Failure Logs
+          </p>
+          <p className="text-4xl font-bold text-rose-400">
+            {(metrics.summary?.totalActions || 0) -
+              (metrics.summary?.totalSuccess || 0)}
           </p>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Entries */}
+      {/* 3. KPI GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
           icon={CheckCircle}
-          label="Total Entries"
+          label="Entries"
           value={metrics.entries?.total || 0}
-          subtext={`${metrics.entries?.successful || 0} successful`}
-          trend={`${metrics.entries?.successRate || 0}% success rate`}
+          subtext={`${metrics.entries?.successful || 0} Completed`}
+          trend={`${metrics.entries?.successRate || 0}% Rate`}
           color="#10b981"
         />
-
-        {/* Exits */}
         <StatsCard
-          icon={CheckCircle}
-          label="Total Exits"
+          icon={Activity}
+          label="Exits"
           value={metrics.exits?.total || 0}
-          subtext={`${metrics.exits?.successful || 0} successful`}
-          trend={`${metrics.exits?.successRate || 0}% success rate`}
+          subtext={`${metrics.exits?.successful || 0} Completed`}
+          trend={`${metrics.exits?.successRate || 0}% Rate`}
           color="#3b82f6"
         />
-
-        {/* Verifications */}
         <StatsCard
           icon={TrendingUp}
-          label="Verifications"
+          label="Validations"
           value={metrics.verifications?.total || 0}
-          subtext={`${metrics.verifications?.successful || 0} successful`}
-          trend={`${metrics.verifications?.successRate || 0}% success rate`}
+          subtext={`${metrics.verifications?.successful || 0} Verified`}
+          trend={`${metrics.verifications?.successRate || 0}% Rate`}
           color="#8b5cf6"
         />
-
-        {/* Overrides */}
         <StatsCard
           icon={AlertTriangle}
-          label="Overrides"
+          label="Manual Overrides"
           value={metrics.overrides?.total || 0}
-          subtext={`${metrics.overrides?.successful || 0} successful`}
-          trend={`${metrics.overrides?.successRate || 0}% success rate`}
+          subtext={`${metrics.overrides?.successful || 0} Authorized`}
+          trend={`${metrics.overrides?.successRate || 0}% Rate`}
           color="#f59e0b"
         />
       </div>
 
-      {/* Processing Time */}
-      <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-2xl p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Clock className="w-5 h-5 text-[#FA8112]" />
-          <h3 className="text-lg font-black text-[#FAF3E1] uppercase tracking-wider">Processing Time</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <p className="text-[#FAF3E1]/50 text-sm uppercase tracking-widest">Average (Entry/Exit)</p>
-            <p className="text-4xl font-black text-[#FA8112]">
-              {metrics.avgProcessingTimeSecs === "N/A" ? "N/A" : `${metrics.avgProcessingTimeSecs}s`}
-            </p>
+      {/* 4. PERFORMANCE & EXCEPTIONS GRID */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {/* Processing Time */}
+        <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/5 rounded-xl p-6 flex flex-col justify-center">
+          <div className="flex items-center gap-2 mb-6 text-[#FA8112]/60">
+            <Clock size={16} />
+            <h3 className="text-[11px] font-bold uppercase tracking-widest">
+              Avg. Processing Speed
+            </h3>
           </div>
-          <div className="bg-[#222222]/50 rounded-xl p-4 flex items-center">
-            <div className="space-y-1">
-              <p className="text-[#FAF3E1]/50 text-xs uppercase tracking-widest">Based on</p>
-              <p className="text-xl font-semibold text-[#FAF3E1]">
-                {(metrics.entries?.total || 0) + (metrics.exits?.total || 0)} operations
+          <div className="flex items-end gap-4">
+            <p className="text-6xl font-bold text-[#FA8112]">
+              {metrics.avgProcessingTimeSecs === "N/A"
+                ? "N/A"
+                : `${metrics.avgProcessingTimeSecs}s`}
+            </p>
+            <div className="pb-2">
+              <p className="text-[10px] text-[#FAF3E1]/30 uppercase font-bold tracking-tighter">
+                Per Transaction
+              </p>
+              <p className="text-xs text-[#FAF3E1]/60 font-medium">
+                Based on{" "}
+                {(metrics.entries?.total || 0) + (metrics.exits?.total || 0)}{" "}
+                operations
               </p>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Exception Breakdown */}
-      {Object.keys(metrics.exceptionBreakdown || {}).length > 0 && (
-        <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-2xl p-6">
-          <h3 className="text-lg font-black text-[#FAF3E1] uppercase tracking-wider mb-6">Exception Breakdown</h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {Object.entries(metrics.exceptionBreakdown).map(([type, count]) => {
-              // Format the exception type name
-              let displayName = type;
-              let color = "#FA8112";
-
-              switch (type) {
-                case "ALLOW_ENTRY":
-                  displayName = "Allow Entry";
-                  color = "#10b981";
-                  break;
-                case "ALLOW_EXIT_PENDING_PAYMENT":
-                  displayName = "Exit w/ Pending";
-                  color = "#f59e0b";
-                  break;
-                case "MARK_NO_SHOW":
-                  displayName = "No-Show";
-                  color = "#ef4444";
-                  break;
-                case "FORCE_COMPLETE_OVERSTAY":
-                  displayName = "Force Complete";
-                  color = "#3b82f6";
-                  break;
-                default:
-                  displayName = type;
-              }
-
-              return (
-                <div key={type} className="bg-[#222222]/50 border border-[#F5E7C6]/10 rounded-xl p-4 space-y-3">
-                  <p className="text-[#FAF3E1]/50 text-sm font-semibold uppercase tracking-widest">{displayName}</p>
-                  <div className="flex items-baseline gap-2">
-                    <p className="text-2xl font-black" style={{ color }}>
-                      {count}
+        {/* Exception Highlights */}
+        <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/5 rounded-xl p-6">
+          <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#FAF3E1]/30 mb-6">
+            Categorized Exceptions
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            {Object.entries(metrics.exceptionBreakdown || {}).map(
+              ([type, count]) => {
+                const colors = {
+                  ALLOW_ENTRY:
+                    "text-emerald-400 bg-emerald-400/5 border-emerald-400/10",
+                  MARK_NO_SHOW:
+                    "text-rose-400 bg-rose-400/5 border-rose-400/10",
+                  default: "text-[#FA8112] bg-[#FA8112]/5 border-[#FA8112]/10",
+                };
+                const style = colors[type] || colors.default;
+                return (
+                  <div key={type} className={`p-4 rounded-lg border ${style}`}>
+                    <p className="text-[9px] uppercase font-bold tracking-widest opacity-60 mb-1 truncate">
+                      {type.replace(/_/g, " ")}
                     </p>
-                    <p className="text-xs" style={{ color: `${color}88` }}>
-                      {count === 1 ? "case" : "cases"}
-                    </p>
+                    <p className="text-2xl font-bold">{count}</p>
                   </div>
-                </div>
-              );
-            })}
+                );
+              },
+            )}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Detailed Action Breakdown */}
-      <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-2xl p-6">
-        <h3 className="text-lg font-black text-[#FAF3E1] uppercase tracking-wider mb-6">Action Breakdown</h3>
-
+      {/* 5. DATA TABLE: ACTION BREAKDOWN */}
+      <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/5 rounded-xl overflow-hidden shadow-xl">
+        <div className="px-6 py-4 border-b border-[#F5E7C6]/5">
+          <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#FAF3E1]/30">
+            Full Operational Breakdown
+          </h3>
+        </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-[#F5E7C6]/10">
-                <th className="py-3 px-4 text-[#FAF3E1]/50 text-xs font-black uppercase tracking-widest">Action</th>
-                <th className="py-3 px-4 text-[#FAF3E1]/50 text-xs font-black uppercase tracking-widest">Total</th>
-                <th className="py-3 px-4 text-[#FAF3E1]/50 text-xs font-black uppercase tracking-widest">Successful</th>
-                <th className="py-3 px-4 text-[#FAF3E1]/50 text-xs font-black uppercase tracking-widest">Failed</th>
-                <th className="py-3 px-4 text-[#FAF3E1]/50 text-xs font-black uppercase tracking-widest">Success Rate</th>
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#FAF3E1]/2 text-[#FAF3E1]/20 uppercase text-[10px] font-bold tracking-widest">
+              <tr>
+                <th className="py-4 px-6">Metric Category</th>
+                <th className="py-4 px-6">Total Vol.</th>
+                <th className="py-4 px-6 text-emerald-400/60">Success</th>
+                <th className="py-4 px-6 text-rose-400/60">Failed</th>
+                <th className="py-4 px-6">Performance</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#F5E7C6]/5">
               {[
-                { label: "Entries", data: metrics.entries },
-                { label: "Exits", data: metrics.exits },
-                { label: "Verifications", data: metrics.verifications },
-                { label: "Overrides", data: metrics.overrides },
+                { label: "Gate Entries", data: metrics.entries },
+                { label: "Gate Exits", data: metrics.exits },
+                { label: "Ticket Validations", data: metrics.verifications },
+                { label: "Admin Overrides", data: metrics.overrides },
               ].map((item) => (
-                <tr key={item.label} className="border-t border-[#F5E7C6]/10 hover:bg-[#222222]/30 transition">
-                  <td className="py-3 px-4 text-[#FAF3E1] font-semibold">{item.label}</td>
-                  <td className="py-3 px-4 text-[#FAF3E1]">{item.data?.total || 0}</td>
-                  <td className="py-3 px-4 text-emerald-400 font-semibold">{item.data?.successful || 0}</td>
-                  <td className="py-3 px-4 text-rose-400 font-semibold">{item.data?.failed || 0}</td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 rounded-full bg-[#222222] overflow-hidden">
+                <tr
+                  key={item.label}
+                  className="hover:bg-[#FAF3E1]/2 transition-colors"
+                >
+                  <td className="py-4 px-6 text-[#FAF3E1] font-semibold">
+                    {item.label}
+                  </td>
+                  <td className="py-4 px-6 text-[#FAF3E1]/60">
+                    {item.data?.total || 0}
+                  </td>
+                  <td className="py-4 px-6 text-emerald-400 font-bold">
+                    {item.data?.successful || 0}
+                  </td>
+                  <td className="py-4 px-6 text-rose-400 font-bold">
+                    {item.data?.failed || 0}
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-24 h-1.5 rounded-full bg-[#222] overflow-hidden">
                         <div
                           className="h-full bg-[#FA8112]"
                           style={{ width: `${item.data?.successRate || 0}%` }}
                         />
                       </div>
-                      <span className="text-[#FAF3E1] text-sm font-semibold">{item.data?.successRate || 0}%</span>
+                      <span className="text-[11px] font-bold text-[#FAF3E1]">
+                        {item.data?.successRate || 0}%
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -251,15 +299,6 @@ const ShiftSummary = () => {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Time Period Info */}
-      <div className="bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 rounded-2xl p-4 flex items-center gap-3 text-[#FAF3E1]/70 text-sm">
-        <Calendar className="w-5 h-5 shrink-0" />
-        <span>
-          Data period: <strong>{periodStart}</strong> to <strong>{periodEnd}</strong> • Last updated:{" "}
-          <strong>{new Date().toLocaleTimeString()}</strong>
-        </span>
       </div>
     </div>
   );
