@@ -1,26 +1,23 @@
 import React from "react";
 
 const BookingStatusBadge = ({ status }) => {
-  // Theme Variables:
-  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
-
+  // Logic remains untouched
   const statusLower = status?.toLowerCase();
 
   const styles = {
-    // Primary Accent for Active/Live sessions
-    active:
-      "bg-[#FA8112]/10 text-[#FA8112] border-[#FA8112]/20 shadow-[0_0_8px_rgba(250,129,18,0.1)]",
+    // Primary Accent: Using your #FA8112 with a more professional opacity
+    active: "bg-[#FA8112]/10 text-[#FA8112] border-[#FA8112]/30",
 
-    // Warm Amber for Pending
-    pending: "bg-amber-400/10 text-amber-400 border-amber-400/20",
+    // Pending: Softer Amber
+    pending: "bg-amber-500/10 text-amber-500 border-amber-500/20",
 
-    // Cool Cyan/Blue for Confirmed
-    confirmed: "bg-cyan-400/10 text-cyan-400 border-cyan-400/20",
+    // Confirmed: Professional Emerald/Teal instead of high-contrast Cyan
+    confirmed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 
-    // Muted Cream for Completed
-    completed: "bg-[#FAF3E1]/5 text-[#FAF3E1]/40 border-[#F5E7C6]/10",
+    // Completed: Using your #FAF3E1 but slightly more visible for professional look
+    completed: "bg-[#FAF3E1]/10 text-[#FAF3E1]/60 border-[#F5E7C6]/20",
 
-    // Rose Red for Cancelled
+    // Cancelled: Soft Rose
     cancelled: "bg-rose-500/10 text-rose-400 border-rose-500/20",
   };
 
@@ -28,7 +25,21 @@ const BookingStatusBadge = ({ status }) => {
 
   return (
     <span
-      className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-[0.15em] border transition-all duration-300 ${currentStyle}`}
+      className={`
+        /* Layout: Proper padding and inline-block for consistency */
+        inline-flex items-center justify-center px-2.5 py-0.5 
+        
+        /* Shape: rounded-md (6px) instead of large rounded-lg for a sharper look */
+        rounded-md 
+        
+        /* Typography: Fixed "Bold & Big" issue. Semi-bold is more premium than Black */
+        text-[10px] font-bold uppercase tracking-wider 
+        
+        /* Structure: Border and Transitions */
+        border transition-colors duration-300 
+        
+        ${currentStyle}
+      `}
     >
       {status}
     </span>
