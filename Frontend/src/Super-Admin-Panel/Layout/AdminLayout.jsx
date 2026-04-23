@@ -8,7 +8,7 @@ const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
-  // Operational Logic: Auto-close sidebar when switching pages on mobile
+  // Operational Logic: Auto-close sidebar on mobile navigation
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [location]);
@@ -16,49 +16,65 @@ const AdminLayout = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    // Page Background: #222222 | Text: #FAF3E1
-    <div className="flex h-screen bg-[#222222] text-[#FAF3E1] overflow-hidden font-sans">
-      {/* 1. Sidebar Section */}
+    <div className="flex h-screen bg-[#222222] text-[#FAF3E1] overflow-hidden font-sans antialiased">
+      {/* 1. SIDEBAR ARCHITECTURE */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-50 transform lg:relative lg:translate-x-0 
-          transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          w-72 bg-[#222222] border-r border-[#F5E7C6]/10
+          transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)
+          ${isSidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.5)]" : "-translate-x-full"}
+          w-[280px] bg-[#1a1a1a] border-r border-[#F5E7C6]/5
         `}
       >
         <AdminSidebar closeMobileMenu={() => setIsSidebarOpen(false)} />
       </aside>
 
-      {/* 2. Mobile Overlay */}
+      {/* 2. SECURITY OVERLAY (Mobile Only) */}
       {isSidebarOpen && (
         <div
-          // Overlay: #222222 with 60% opacity
-          className="fixed inset-0 bg-[#222222]/60 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-[#111111]/80 backdrop-blur-sm z-40 lg:hidden animate-in fade-in duration-300"
           onClick={toggleSidebar}
           aria-hidden="true"
         />
       )}
 
-      {/* 3. Main Viewport */}
-      <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
-        {/* Header - Receiving the toggle function */}
+      {/* 3. CORE VIEWPORT ENGINE */}
+      <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden relative">
+        {/* Persistent Header */}
         <AdminHeader onMenuClick={toggleSidebar} />
 
-        {/* Scrollable Content Area */}
-        {/* Main BG: #222222 */}
-        <main className="flex-1 overflow-y-auto bg-[#222222] scroll-smooth">
-          <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto min-h-screen">
+        {/* Scrollable Workspace */}
+        <main className="flex-1 overflow-y-auto bg-[#222222] scroll-smooth custom-scrollbar">
+          <div className="p-4 sm:p-6 lg:p-10 max-w-[1600px] mx-auto min-h-[calc(100vh-140px)]">
             <ErrorBoundary>
-              <Outlet />
+              {/* Outlet with a subtle entrance animation for sub-pages */}
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <Outlet />
+              </div>
             </ErrorBoundary>
           </div>
 
-          {/* Operational Footer */}
-          {/* Text: #FAF3E1 with 30% opacity | Border: #F5E7C6 at 10% opacity */}
-          <footer className="px-8 py-6 text-center text-[10px] font-bold uppercase tracking-widest text-[#FAF3E1]/30 border-t border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.01]">
-            © 2026 Smart Parking Admin System •{" "}
-            <span className="text-[#FA8112]">v1.2.4</span>
+          {/* SYSTEM FOOTER: Technical Metadata Style */}
+          <footer className="px-10 py-8 text-center border-t border-[#F5E7C6]/5 bg-[#FAF3E1]/[0.01]">
+            <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FAF3E1]/10">
+                © 2026{" "}
+                <span className="text-[#FAF3E1]/20">Smart Park Management</span>
+              </p>
+
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#FAF3E1]/20">
+                    Kernel v1.2.4
+                  </span>
+                </div>
+                <div className="h-3 w-px bg-[#F5E7C6]/5"></div>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-[#FA8112]/40">
+                  Secure Operational Node
+                </p>
+              </div>
+            </div>
           </footer>
         </main>
       </div>

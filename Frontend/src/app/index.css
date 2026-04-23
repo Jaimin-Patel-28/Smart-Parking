@@ -34,3 +34,28 @@
 @utility animate-slideRightToLeft {
   animation: slideRightToLeft 20s linear infinite;
 }
+
+/* Custom Scrollbar for Chrome, Safari, and Edge */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px; /* Very thin for a professional look */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Makes the track invisible */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(245, 231, 198, 0.05); /* Muted cream to match borders */
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 129, 18, 0.3); /* Subtle orange glow on hover */
+}
+
+/* Firefox Support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245, 231, 198, 0.05) transparent;
+}
