@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parkingService } from "../Services/parkingService";
 import ParkingForm from "../Components/ParkingForm";
-import { ChevronLeft, PlusCircle } from "lucide-react";
+import { ChevronLeft, PlusCircle, Terminal, Cpu } from "lucide-react";
 import toast from "react-hot-toast";
 
 const AddParking = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
 
   const handleAdd = async (formData) => {
     try {
@@ -22,53 +20,64 @@ const AddParking = () => {
       };
 
       await parkingService.create(cleanData);
-      toast.success("Parking location created successfully");
+      toast.success("Asset initialized successfully");
       navigate("/super-admin/parking");
     } catch (err) {
       const serverMessage =
-        err.response?.data?.message || "Check your backend connection";
-      console.error("Backend said:", serverMessage);
-      toast.error("Error: " + serverMessage);
+        err.response?.data?.message || "Internal Node Sync Failure";
+      toast.error("Critical Error: " + serverMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-10">
-      {/* Back Button - Styled with Cream #FAF3E1 at 40% opacity */}
+    <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-16">
+      {/* 1. TOP NAVIGATION: Clean Breadcrumb */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-[#FAF3E1]/40 hover:text-[#FA8112] font-black uppercase tracking-widest text-[10px] transition-all group"
+        className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#FAF3E1]/20 hover:text-[#FA8112] transition-all"
       >
         <ChevronLeft
-          size={18}
-          className="group-hover:-translate-x-1 transition-transform"
+          size={14}
+          className="transition-transform group-hover:-translate-x-1"
         />
-        Back to Directory
+        Registry Directory
       </button>
 
-      {/* Main Container - Card Style: #FAF3E1 at 2% opacity */}
-      <div className="bg-[#FAF3E1]/[0.02] p-10 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-2xl relative overflow-hidden">
-        {/* Decorative Background Icon */}
-        <PlusCircle
-          size={120}
-          className="absolute -right-4 -top-4 text-[#FAF3E1]/[0.02] pointer-events-none"
-        />
-
-        <div className="mb-10 relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-8 w-1 bg-[#FA8112] rounded-full" />
-            <h1 className="text-3xl font-black text-[#FAF3E1] tracking-tighter uppercase">
-              Register <span className="text-[#FA8112]">New Zone</span>
-            </h1>
-          </div>
-          <p className="text-[#FAF3E1]/40 text-sm font-medium italic">
-            Initialize a new parking asset with capacity and pricing logic.
-          </p>
+      {/* 2. MAIN WORKSPACE CONTAINER */}
+      <div className="bg-[#FAF3E1]/[0.01] p-8 md:p-12 rounded-xl border border-[#F5E7C6]/5 shadow-2xl relative overflow-hidden">
+        {/* Background Technical Decoration */}
+        <div className="absolute -right-10 -top-10 text-[#FAF3E1]/[0.02] rotate-12 pointer-events-none">
+          <Cpu size={280} strokeWidth={1} />
         </div>
 
-        {/* The Form - Inherits the dark theme styles we applied earlier */}
+        {/* Header Section: Professional Branding */}
+        <div className="mb-12 relative z-10 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-[#FA8112]/10 border border-[#FA8112]/20 text-[#FA8112]">
+              <PlusCircle size={24} strokeWidth={1.5} />
+            </div>
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-[#FA8112] uppercase tracking-[0.4em]">
+                System Initialization
+              </p>
+              <h1 className="text-3xl font-bold text-[#FAF3E1] tracking-tight">
+                Register <span className="text-[#FA8112]">New Zone</span>
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span className="h-px w-8 bg-[#FA8112]/20" />
+            <p className="text-[#FAF3E1]/40 text-xs font-medium leading-relaxed italic max-w-md">
+              Define a new operational parking asset. Ensure capacity and
+              pricing logic align with local station protocols.
+            </p>
+          </div>
+        </div>
+
+        {/* Form Integration */}
         <div className="relative z-10">
           <ParkingForm
             onSubmit={handleAdd}
@@ -78,9 +87,14 @@ const AddParking = () => {
         </div>
       </div>
 
-      {/* System Note */}
-      <div className="text-center">
-        <p className="text-[9px] font-black text-[#FAF3E1]/20 uppercase tracking-[0.3em]">
+      {/* 3. FOOTER METADATA: Technical Log Style */}
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center gap-4 text-[#FAF3E1]/10">
+          <span className="h-px w-12 bg-[#FAF3E1]/10" />
+          <Terminal size={14} />
+          <span className="h-px w-12 bg-[#FAF3E1]/10" />
+        </div>
+        <p className="text-[9px] font-bold text-[#FAF3E1]/10 uppercase tracking-[0.6em]">
           Secure Asset Registration Module • v1.0.2
         </p>
       </div>

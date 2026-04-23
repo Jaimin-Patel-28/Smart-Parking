@@ -6,7 +6,7 @@ import {
   Calendar,
   CreditCard,
   RefreshCcw,
-  ShieldInfo,
+  ShieldCheckIcon,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -15,7 +15,7 @@ const iconMap = {
   payment: CreditCard,
   refund: RefreshCcw,
   wallet: CreditCard,
-  account: ShieldInfo,
+  account: ShieldCheckIcon,
   system: Bell,
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { BellOff, inbox } from "lucide-react";
+import { BellOff } from "lucide-react";
 
 const NotificationEmpty = () => {
   return (
