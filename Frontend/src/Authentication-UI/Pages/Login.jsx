@@ -7,7 +7,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-[90vh] flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 animate-in fade-in duration-500">
+    <div className="flex min-h-[90vh] flex-col justify-center px-2 py-2 sm:px-6 lg:px-8 animate-in fade-in duration-500">
       <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
         {/* 1. TOP NAVIGATION: Consistent Back Button */}
         <button
