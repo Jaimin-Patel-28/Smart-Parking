@@ -827,12 +827,36 @@ exports.editBooking = async (req, res) => {
       });
     }
 
-    // Update booking
+    if (newEnd <= newStart) {
+      return res
+        .status(400)
+        .json({ message: "endTime must be later than startTime" });
+    }
+
+    // Update booking and settle wallet based on amount difference.
     const durationHours = (newEnd - newStart) / (1000 * 60 * 60);
+    const previousAmount = Number(booking.totalAmount || 0);
+    const nextAmount = Number((durationHours * booking.parking.basePrice).toFixed(2));
+    const amountDelta = Number((nextAmount - previousAmount).toFixed(2));
+
+    if (booking.paymentStatus === "paid") {
+      try {
+        if (amountDelta > 0) {
+          await deductMoney(userId, amountDelta, booking._id);
+        } else if (amountDelta < 0) {
+          await refundMoney(userId, Math.abs(amountDelta), booking._id);
+        }
+      } catch (walletError) {
+        return res.status(400).json({
+          message: walletError.message || "Unable to process wallet adjustment",
+        });
+      }
+    }
+
     booking.startTime = newStart;
     booking.endTime = newEnd;
     booking.duration = durationHours;
-    booking.totalAmount = durationHours * booking.parking.basePrice;
+    booking.totalAmount = nextAmount;
 
     await booking.save();
 
@@ -841,6 +865,17 @@ exports.editBooking = async (req, res) => {
     res.json({
       message: "Booking updated successfully",
       bufferApplied: "15 minutes before and after new time",
+      adjustment: {
+        previousAmount,
+        updatedAmount: nextAmount,
+        amountDelta,
+        walletAction:
+          amountDelta > 0
+            ? "debit"
+            : amountDelta < 0
+              ? "refund"
+              : "none",
+      },
       booking,
     });
   } catch (error) {

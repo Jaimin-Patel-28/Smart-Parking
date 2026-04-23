@@ -13,7 +13,6 @@ const userRoutes = require("./Super-Admin-Panel/routes/userRoutes");
 const walletRoutes = require("./Super-Admin-Panel/routes/walletRoutes");
 const transactionRoutes = require("./Super-Admin-Panel/routes/transactionRoutes");
 const reportRoutes = require("./Super-Admin-Panel/routes/reportRoutes");
-const settingsAdminRoutes = require("./Super-Admin-Panel/routes/settingsRoutes");
 const auditTrailRoutes = require("./Super-Admin-Panel/routes/auditTrailRoutes");
 const adminPaymentRoutes = require("./Super-Admin-Panel/routes/paymentRoutes");
 const adminBookingRoutes = require("./Admin-Panel/routes/adminBookingRoutes");
@@ -124,7 +123,6 @@ app.use("/api/super-admin/users", userRoutes);
 app.use("/api/super-admin/wallet", walletRoutes);
 app.use("/api/super-admin/transactions", transactionRoutes);
 app.use("/api/super-admin/reports", reportRoutes);
-app.use("/api/super-admin/settings", settingsAdminRoutes);
 app.use("/api/super-admin/audit-trail", auditTrailRoutes);
 app.use("/api/super-admin/payments", adminPaymentRoutes);
 

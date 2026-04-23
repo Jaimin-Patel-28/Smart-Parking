@@ -13,6 +13,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line, Doughnut } from "react-chartjs-2";
+import { Activity, PieChart, TrendingUp } from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -27,24 +28,23 @@ ChartJS.register(
   Filler,
 );
 
-const DashboardCharts = ({ stats, recentBookings, statusCounts }) => {
-  // 1. Spending Trend - Sleek Area Chart
+const DashboardCharts = ({ stats, statusCounts }) => {
+  // 1. Spending Trend - Technical Area Chart
   const trendData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
         fill: true,
-        label: "Spent",
+        label: "Settled_Value",
         data: [0, 0, 0, 0, 0, stats?.totalSpent || 0],
         borderColor: "#FA8112",
-        backgroundColor: "rgba(250, 129, 18, 0.05)",
-        borderWidth: 3,
+        backgroundColor: "rgba(250, 129, 18, 0.03)",
+        borderWidth: 2,
         pointBackgroundColor: "#FA8112",
         pointBorderColor: "#222222",
         pointBorderWidth: 2,
         pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.4, // Creates that smooth wave look
+        tension: 0.4,
       },
     ],
   };
@@ -56,42 +56,52 @@ const DashboardCharts = ({ stats, recentBookings, statusCounts }) => {
       legend: { display: false },
       tooltip: {
         backgroundColor: "#1a1a1a",
-        titleColor: "#FAF3E1",
-        bodyColor: "#FA8112",
+        titleFont: { family: "monospace", size: 10 },
+        bodyFont: { family: "monospace", size: 12, weight: "bold" },
         padding: 12,
-        cornerRadius: 12,
+        cornerRadius: 8,
         displayColors: false,
+        borderWidth: 1,
+        borderColor: "rgba(250, 129, 18, 0.2)",
       },
     },
     scales: {
       y: {
         beginAtZero: true,
-        grid: { color: "rgba(245, 231, 198, 0.03)", drawBorder: false },
-        ticks: { color: "rgba(245, 231, 198, 0.3)", font: { size: 10 } },
+        grid: { color: "rgba(245, 231, 198, 0.03)" },
+        ticks: {
+          color: "rgba(245, 231, 198, 0.2)",
+          font: { family: "monospace", size: 9 },
+        },
       },
       x: {
         grid: { display: false },
-        ticks: { color: "rgba(245, 231, 198, 0.3)", font: { size: 10 } },
+        ticks: {
+          color: "rgba(245, 231, 198, 0.2)",
+          font: { family: "monospace", size: 9 },
+        },
       },
     },
   };
 
-  // 2. Status Breakdown - Modern Doughnut
-  const statusObj = statusCounts?.reduce((acc, item) => {
-    acc[item._id] = item.count;
-    return acc;
-  }, {}) || {};
+  // 2. Status Breakdown - Precision Ring
+  const statusObj =
+    statusCounts?.reduce((acc, item) => {
+      acc[item._id] = item.count;
+      return acc;
+    }, {}) || {};
 
   const pieData = {
-    labels: Object.keys(statusObj),
+    labels: Object.keys(statusObj).map((s) => s.toUpperCase()),
     datasets: [
       {
         data: Object.values(statusObj),
-        backgroundColor: ["#FA8112", "#FAF3E1", "#444444", "#888888", "#AAAAAA"],
-        hoverOffset: 10,
-        borderWidth: 0,
-        borderRadius: 20,
-        spacing: 10,
+        backgroundColor: ["#FA8112", "#FAF3E1", "#333333", "#555555"],
+        hoverOffset: 0,
+        borderWidth: 2,
+        borderColor: "#222222",
+        borderRadius: 4,
+        spacing: 5,
       },
     ],
   };
@@ -99,16 +109,16 @@ const DashboardCharts = ({ stats, recentBookings, statusCounts }) => {
   const pieOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: "80%", // Makes it a thin, elegant ring
+    cutout: "85%",
     plugins: {
       legend: {
         position: "bottom",
         labels: {
-          color: "rgba(245, 231, 198, 0.5)",
+          color: "rgba(245, 231, 198, 0.3)",
           usePointStyle: true,
-          pointStyle: "circle",
+          pointStyle: "rect",
           padding: 20,
-          font: { size: 11, weight: "bold" },
+          font: { family: "monospace", size: 9, weight: "bold" },
         },
       },
     },
@@ -116,49 +126,62 @@ const DashboardCharts = ({ stats, recentBookings, statusCounts }) => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
-      {/* Area Chart Container (3/5 width) */}
-      <div className="xl:col-span-3 bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 rounded-[2.5rem] p-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#FAF3E1]/30 mb-1">
-              Revenue Flow
+      {/* AREA CHART: SPENDING TELEMETRY */}
+      <div className="xl:col-span-3 bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 rounded-xl p-8 shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FA8112]/[0.02] blur-[100px] pointer-events-none" />
+
+        <div className="flex items-center justify-between mb-10 relative z-10">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-[#FA8112]">
+              <Activity size={14} className="animate-pulse" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em]">
+                Financial_Flow
+              </span>
+            </div>
+            <h4 className="text-xl font-bold text-[#FAF3E1] uppercase tracking-tight">
+              Spending <span className="text-[#FA8112]">Trend</span>
             </h4>
-            <p className="text-2xl font-black text-[#FAF3E1] italic">
-              Spending Trend
-            </p>
           </div>
-          <div className="bg-[#FA8112]/10 px-4 py-2 rounded-full">
-            <span className="text-[#FA8112] text-xs font-black">Monthly</span>
+          <div className="bg-[#1a1a1a] border border-[#F5E7C6]/5 px-4 py-1.5 rounded-md">
+            <span className="text-[#FAF3E1]/40 text-[9px] font-bold uppercase tracking-widest">
+              Temporal_Cycle: Monthly
+            </span>
           </div>
         </div>
 
-        <div className="h-64">
+        <div className="h-64 relative z-10">
           <Line data={trendData} options={trendOptions} />
         </div>
       </div>
 
-      {/* Doughnut Chart Container (2/5 width) */}
-      <div className="xl:col-span-2 bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 rounded-[2.5rem] p-8 relative flex flex-col">
-        <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#FAF3E1]/30 mb-8">
-          Booking Status
-        </h4>
+      {/* DOUGHNUT CHART: STATUS DISTRIBUTION */}
+      <div className="xl:col-span-2 bg-[#FAF3E1]/[0.01] border border-[#F5E7C6]/5 rounded-xl p-8 relative flex flex-col shadow-2xl group">
+        <div className="flex items-center gap-3 mb-10">
+          <div className="p-2 bg-[#FA8112]/5 rounded-lg border border-[#FA8112]/10 text-[#FA8112]">
+            <PieChart size={16} />
+          </div>
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FAF3E1]/30">
+            Allocation_Status
+          </h4>
+        </div>
 
-        <div className="h-56 relative mb-4">
+        <div className="h-56 relative mb-6">
           <Doughnut data={pieData} options={pieOptions} />
-          {/* Center Stat */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-3xl font-black text-[#FAF3E1] italic">
+            <span className="text-3xl font-bold text-[#FAF3E1] tabular-nums">
               {stats?.totalBookings || 0}
             </span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#FAF3E1]/20">
-              Total
+            <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#FAF3E1]/10">
+              Total_Units
             </span>
           </div>
         </div>
 
-        <p className="text-[10px] text-center text-[#FAF3E1]/20 italic mt-auto">
-          Real-time status synchronization active
-        </p>
+        <div className="mt-auto pt-6 border-t border-[#F5E7C6]/5 flex justify-center">
+          <p className="text-[9px] font-mono font-bold text-[#FAF3E1]/10 uppercase tracking-[0.2em] flex items-center gap-2">
+            <TrendingUp size={10} /> Sync_Status: Verified_Live
+          </p>
+        </div>
       </div>
     </div>
   );

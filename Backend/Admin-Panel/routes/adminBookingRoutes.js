@@ -25,10 +25,6 @@ router.post("/gate/shift-notes", auth, isAdmin, controller.createShiftNote);
 router.get("/profile", auth, isAdmin, controller.getAdminProfile);
 router.put("/profile", auth, isAdmin, controller.updateAdminProfile);
 
-// ✅ Phase 4 - Admin Settings Routes
-router.get("/settings", auth, isAdmin, controller.getAdminSettings);
-router.put("/settings", auth, isAdmin, controller.updateAdminSettings);
-
 // ✅ Phase 5 - Shift Metrics Routes
 router.get("/shift-metrics", auth, isAdmin, controller.getShiftMetrics);
 

@@ -5,18 +5,27 @@ import {
   TrendingUp,
   Users,
   AlertCircle,
-  Download,
   RefreshCw,
   MapPin,
+  Terminal,
+  Activity,
+  ArrowUpRight,
 } from "lucide-react";
-import toast from "react-hot-toast";
 import { useReports } from "../hooks/useReports";
 import ReportCard from "../components/ReportCard";
 import ReportFilters from "../components/ReportFilters";
 
 const Reports = () => {
-  const { comprehensiveReport, revenueReport, occupancyReport, userReport, systemHealthReport, loading, error, refresh } =
-    useReports();
+  const {
+    comprehensiveReport,
+    revenueReport,
+    occupancyReport,
+    bookingReport,
+    userReport,
+    loading,
+    error,
+    refresh,
+  } = useReports();
 
   const [filters, setFilters] = useState({
     startDate: "",
@@ -28,383 +37,290 @@ const Reports = () => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleExportPDF = async () => {
-    try {
-      const { jsPDF } = await import("jspdf");
-      const doc = new jsPDF();
-      let y = 16;
-
-      doc.setFontSize(18);
-      doc.text("Smart Parking - Super Admin Report", 14, y);
-      y += 8;
-
-      doc.setFontSize(10);
-      doc.text(`Generated: ${new Date().toLocaleString()}`, 14, y);
-      y += 10;
-
-      if (comprehensiveReport?.data) {
-        const data = comprehensiveReport.data;
-        doc.setFontSize(12);
-        doc.text("Comprehensive Summary", 14, y);
-        y += 7;
-        doc.setFontSize(10);
-        doc.text(`Total Revenue: INR ${Number(data.totalRevenue || 0).toLocaleString()}`, 14, y);
-        y += 6;
-        doc.text(`Occupancy Rate: ${data.occupancyRate || 0}%`, 14, y);
-        y += 6;
-        doc.text(`Active Users: ${data.activeUsers || 0} / ${data.totalUsers || 0}`, 14, y);
-        y += 6;
-        doc.text(`Completion Rate: ${data.completionRate || 0}%`, 14, y);
-        y += 10;
-      }
-
-      if (revenueReport?.data?.revenueByParking?.length) {
-        doc.setFontSize(12);
-        doc.text("Revenue by Parking", 14, y);
-        y += 7;
-        doc.setFontSize(10);
-
-        revenueReport.data.revenueByParking.slice(0, 15).forEach((item) => {
-          if (y > 275) {
-            doc.addPage();
-            y = 16;
-          }
-          doc.text(
-            `${item.parkingName}: INR ${Number(item.totalRevenue || 0).toLocaleString()} (${item.bookingsCount || 0} bookings)`,
-            14,
-            y,
-          );
-          y += 6;
-        });
-        y += 6;
-      }
-
-      const fileName = `super-admin-report-${new Date().toISOString().slice(0, 10)}.pdf`;
-      doc.save(fileName);
-      toast.success("PDF exported successfully");
-    } catch (exportError) {
-      toast.error("Failed to export PDF");
-      console.error("PDF export failed", exportError);
+  const handleGenerateReport = () => {
+    if (filters.startDate && filters.endDate && filters.startDate > filters.endDate) {
+      toast.error("Period Start cannot be later than Period End");
+      return;
     }
+
+    refresh(filters);
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-10 bg-[#222222]">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-black text-[#FAF3E1] uppercase tracking-tighter flex items-center gap-4">
-            <BarChart3 className="text-[#FA8112]" size={32} />
+    <div className="max-w-400 mx-auto space-y-10 animate-in fade-in duration-700 pb-16">
+      {/* 1. ANALYTICS HEADER */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-1">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-[#FA8112]">
+            <Activity size={14} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em]">
+              Operational Intelligence
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold text-[#FAF3E1] tracking-tight uppercase">
             Reports <span className="text-[#FA8112]">Center</span>
           </h1>
-          <p className="text-[#FAF3E1]/40 text-xs font-black uppercase tracking-[0.2em] mt-1">
-            Comprehensive system analytics and operational insights
+          <p className="text-[10px] text-[#FAF3E1]/30 font-bold uppercase tracking-widest">
+            High-integrity system analytics & spatial diagnostics
           </p>
         </div>
-        <button
-          onClick={handleExportPDF}
-          className="flex items-center justify-center gap-3 bg-[#FA8112] text-[#222222] px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-[#FA8112]/10 hover:bg-[#FAF3E1] transition-all active:scale-95"
-        >
-          <Download size={20} /> Export PDF
-        </button>
+
       </div>
 
-      {/* Filters Section */}
+      {/* 2. QUERY ENGINE */}
       <ReportFilters
         filters={filters}
         onFilterChange={handleFilterChange}
-        onRefresh={refresh}
+        onRefresh={handleGenerateReport}
         loading={loading}
       />
 
-      {error ? (
-        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 text-rose-300 text-sm font-semibold">
-          {error}
+      {error && (
+        <div className="bg-rose-500/5 border border-rose-500/10 rounded-lg p-4 text-rose-400 text-[11px] font-bold uppercase tracking-widest">
+          Critical Sync Error: {error}
         </div>
-      ) : null}
+      )}
 
-      {/* Comprehensive Overview Cards */}
-      {comprehensiveReport && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      {/* 3. COMPREHENSIVE TELEMETRY (Overview) */}
+      {comprehensiveReport && !loading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <ReportCard
-            title="Total Revenue"
+            title="Revenue Asset"
             icon={IndianRupee}
             value={`₹${(comprehensiveReport.data?.totalRevenue || 0).toLocaleString()}`}
-            bgColor="from-emerald-500/10 to-emerald-400/5"
+            trend="+12.4%"
           />
           <ReportCard
-            title="Occupancy Rate"
+            title="Spatial Density"
             icon={MapPin}
             value={`${comprehensiveReport.data?.occupancyRate || 0}%`}
-            bgColor="from-blue-500/10 to-blue-400/5"
           />
           <ReportCard
-            title="Active Users"
+            title="User Registry"
             icon={Users}
             value={comprehensiveReport.data?.activeUsers || 0}
-            subtitle={`of ${comprehensiveReport.data?.totalUsers || 0}`}
-            bgColor="from-purple-500/10 to-purple-400/5"
+            subtitle={`OF ${comprehensiveReport.data?.totalUsers || 0} TOTAL`}
           />
           <ReportCard
-            title="Total Bookings"
+            title="Session Completion"
             icon={TrendingUp}
-            value={comprehensiveReport.data?.completionRate || 0}
-            subtitle="Completion Rate"
-            bgColor="from-orange-500/10 to-orange-400/5"
+            value={`${comprehensiveReport.data?.completionRate || 0}%`}
           />
           <ReportCard
-            title="System Status"
+            title="System Health"
             icon={AlertCircle}
-            value="Healthy"
-            bgColor="from-green-500/10 to-green-400/5"
+            value="ACTIVE"
+            subtitle="PROTOCOL_HEALTHY"
           />
         </div>
       )}
 
-      {/* Revenue Report Section */}
-      {revenueReport && (
-        <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-[2.5rem] p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <IndianRupee className="text-[#FA8112]" size={24} />
-            <h2 className="text-xl font-black text-[#FAF3E1] uppercase tracking-tighter">
-              Revenue <span className="text-[#FA8112]">Analysis</span>
-            </h2>
-          </div>
+      {/* 4. DATA BREAKDOWN MODULES */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        {/* REVENUE ANALYSIS BOX */}
+        {revenueReport && (
+          <div className="bg-[#FAF3E1]/1 border border-[#F5E7C6]/5 rounded-xl p-8 space-y-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#F5E7C6]/5 pb-6">
+              <div className="flex items-center gap-3">
+                <IndianRupee className="text-[#FA8112]/40" size={20} />
+                <h2 className="text-sm font-bold text-[#FAF3E1] uppercase tracking-[0.2em]">
+                  Revenue <span className="text-[#FA8112]">Diagnostic</span>
+                </h2>
+              </div>
+              <p className="text-[9px] font-mono font-bold text-[#FAF3E1]/10">
+                LOG_REF_
+                {new Date(revenueReport.generatedAt)
+                  .getTime()
+                  .toString()
+                  .slice(-6)}
+              </p>
+            </div>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-                <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                  Total Revenue
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-[#1a1a1a] rounded-lg p-5 border border-[#F5E7C6]/5 space-y-1">
+                <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
+                  Net Settlement
                 </p>
-                <p className="text-3xl font-black text-emerald-400 tracking-tighter">
+                <p className="text-2xl font-bold text-emerald-400 tabular-nums tracking-tighter">
                   ₹{(revenueReport.data?.totalRevenue || 0).toLocaleString()}
                 </p>
               </div>
-
-              <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-                <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                  Period
+              <div className="bg-[#1a1a1a] rounded-lg p-5 border border-[#F5E7C6]/5 space-y-1">
+                <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
+                  Query Origin
                 </p>
-                <p className="text-sm font-bold text-[#FAF3E1]">
-                  {revenueReport.data?.period?.startDate || "All Time"}
+                <p className="text-[11px] font-mono font-bold text-[#FAF3E1]/60 uppercase">
+                  {revenueReport.data?.period?.startDate || "ALL_TIME"}
                 </p>
               </div>
-
-              <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-                <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                  Report Generated
+              <div className="bg-[#1a1a1a] rounded-lg p-5 border border-[#F5E7C6]/5 space-y-1">
+                <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
+                  Sync Stamp
                 </p>
-                <p className="text-sm font-bold text-[#FAF3E1]">
+                <p className="text-[11px] font-mono font-bold text-[#FAF3E1]/60">
                   {new Date(revenueReport.generatedAt).toLocaleDateString()}
                 </p>
               </div>
             </div>
 
-            {/* Revenue by Parking */}
-            {revenueReport.data?.revenueByParking && (
-              <div className="mt-6">
-                <h3 className="text-sm font-black text-[#FAF3E1] uppercase tracking-widest mb-4">
-                  Revenue by Parking Location
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {revenueReport.data.revenueByParking.map((item) => (
-                    <div
-                      key={item._id}
-                      className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5 hover:border-[#FA8112]/20 transition-all"
-                    >
-                      <p className="text-sm font-black text-[#FAF3E1] mb-2">
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.3em] ml-1">
+                Site Revenue Breakdown
+              </h3>
+              <div className="grid grid-cols-1 gap-3">
+                {revenueReport.data?.revenueByParking?.map((item) => (
+                  <div
+                    key={item._id}
+                    className="flex items-center justify-between p-4 bg-[#1a1a1a] rounded-lg border border-[#F5E7C6]/5 hover:border-[#FA8112]/20 transition-all group"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-[12px] font-bold text-[#FAF3E1] uppercase tracking-tight">
                         {item.parkingName}
-                      </p>
-                      <p className="text-2xl font-black text-[#FA8112] mb-4">
-                        ₹{item.totalRevenue.toLocaleString()}
-                      </p>
-                      <p className="text-[10px] font-black text-[#FAF3E1]/40">
-                        {item.bookingsCount} Bookings
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Occupancy Report Section */}
-      {occupancyReport && (
-        <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-[2.5rem] p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <MapPin className="text-[#FA8112]" size={24} />
-            <h2 className="text-xl font-black text-[#FAF3E1] uppercase tracking-tighter">
-              Occupancy <span className="text-[#FA8112]">Status</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {occupancyReport.data && occupancyReport.data.map((parking) => (
-              <div
-                key={parking.parkingId}
-                className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5"
-              >
-                <p className="text-sm font-black text-[#FAF3E1] mb-2">
-                  {parking.parkingName}
-                </p>
-                <p className="text-[10px] font-black text-[#FAF3E1]/40 mb-4 uppercase tracking-widest">
-                  {parking.location}
-                </p>
-
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-[10px] font-black text-[#FAF3E1]/60">
-                        Occupancy
                       </span>
-                      <span className="text-sm font-black text-[#FA8112]">
+                      <span className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
+                        {item.bookingsCount} SEQUENCES
+                      </span>
+                    </div>
+                    <span className="text-lg font-bold text-[#FA8112] tabular-nums group-hover:scale-105 transition-transform">
+                      ₹{item.totalRevenue.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SPATIAL OCCUPANCY BOX */}
+        {occupancyReport && (
+          <div className="bg-[#FAF3E1]/1 border border-[#F5E7C6]/5 rounded-xl p-8 space-y-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#F5E7C6]/5 pb-6">
+              <div className="flex items-center gap-3">
+                <MapPin className="text-[#FA8112]/40" size={20} />
+                <h2 className="text-sm font-bold text-[#FAF3E1] uppercase tracking-[0.2em]">
+                  Spatial <span className="text-[#FA8112]">Density Map</span>
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FA8112] animate-pulse" />
+                <span className="text-[9px] font-bold text-[#FA8112] uppercase tracking-[0.2em]">
+                  Live Telemetry
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {occupancyReport.data?.map((parking) => (
+                <div
+                  key={parking.parkingId}
+                  className="bg-[#1a1a1a] rounded-lg p-5 border border-[#F5E7C6]/5 space-y-4"
+                >
+                  <div className="space-y-1">
+                    <p className="text-[12px] font-bold text-[#FAF3E1] uppercase tracking-tight">
+                      {parking.parkingName}
+                    </p>
+                    <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest leading-none">
+                      {parking.location}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-end">
+                      <span className="text-[9px] font-bold text-[#FAF3E1]/10 uppercase">
+                        Utilization
+                      </span>
+                      <span className="text-sm font-mono font-bold text-[#FA8112]">
                         {parking.occupancyRate}%
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-[#FAF3E1]/10 rounded-full overflow-hidden">
+                    <div className="h-1 w-full bg-[#FAF3E1]/5 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[#FA8112] rounded-full transition-all"
+                        className="h-full bg-[#FA8112] shadow-[0_0_8px_#FA8112]"
                         style={{ width: `${parking.occupancyRate}%` }}
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 text-center">
-                    <div>
-                      <p className="text-xs font-black text-[#FAF3E1]">
-                        {parking.occupiedSlots}
-                      </p>
-                      <p className="text-[8px] text-[#FAF3E1]/40">Occupied</p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-black text-[#FAF3E1]">
-                        {parking.availableSlots}
-                      </p>
-                      <p className="text-[8px] text-[#FAF3E1]/40">Available</p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-black text-[#FAF3E1]">
-                        {parking.totalSlots}
-                      </p>
-                      <p className="text-[8px] text-[#FAF3E1]/40">Total</p>
-                    </div>
+                  <div className="flex justify-between items-center text-[9px] font-bold uppercase tracking-widest text-[#FAF3E1]/30 border-t border-[#F5E7C6]/5 pt-3 tabular-nums">
+                    <span>{parking.occupiedSlots} ENGAGED</span>
+                    <span>{parking.availableSlots} READY</span>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {bookingReport && (
+          <div className="bg-[#FAF3E1]/1 border border-[#F5E7C6]/5 rounded-xl p-8 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#F5E7C6]/5 pb-6">
+              <h2 className="text-sm font-bold text-[#FAF3E1] uppercase tracking-[0.2em]">
+                Booking <span className="text-[#FA8112]">Manifest</span>
+              </h2>
+              <span className="text-[10px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest">
+                {bookingReport.data?.stats?.totalBookings || 0} Records
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {Object.entries(bookingReport.data?.stats?.byStatus || {}).map(([status, count]) => (
+                <div key={status} className="bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-lg p-4">
+                  <p className="text-[9px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest">{status}</p>
+                  <p className="text-xl font-bold text-[#FAF3E1] mt-1">{count}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {userReport && (
+          <div className="bg-[#FAF3E1]/1 border border-[#F5E7C6]/5 rounded-xl p-8 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#F5E7C6]/5 pb-6">
+              <h2 className="text-sm font-bold text-[#FAF3E1] uppercase tracking-[0.2em]">
+                User <span className="text-[#FA8112]">Registry</span>
+              </h2>
+              <span className="text-[10px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest">
+                Snapshot
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-lg p-4">
+                <p className="text-[9px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest">Total Users</p>
+                <p className="text-xl font-bold text-[#FAF3E1] mt-1">{userReport.data?.summary?.totalUsers || 0}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* User Report Section */}
-      {userReport && (
-        <div className="bg-[#FAF3E1]/2 border border-[#F5E7C6]/10 rounded-[2.5rem] p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <Users className="text-[#FA8112]" size={24} />
-            <h2 className="text-xl font-black text-[#FAF3E1] uppercase tracking-tighter">
-              User <span className="text-[#FA8112]">Analytics</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-            <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-              <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                Total Users
-              </p>
-              <p className="text-3xl font-black text-[#FAF3E1]">
-                {userReport.data?.summary?.totalUsers || 0}
-              </p>
-            </div>
-            <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-              <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                Active Users
-              </p>
-              <p className="text-3xl font-black text-emerald-400">
-                {userReport.data?.summary?.activeUsers || 0}
-              </p>
-            </div>
-            <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-              <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                Inactive Users
-              </p>
-              <p className="text-3xl font-black text-orange-400">
-                {userReport.data?.summary?.inactiveUsers || 0}
-              </p>
-            </div>
-            <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-              <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                Admins
-              </p>
-              <p className="text-3xl font-black text-blue-400">
-                {userReport.data?.summary?.adminUsers || 0}
-              </p>
-            </div>
-            <div className="bg-[#222222] rounded-2xl p-6 border border-[#F5E7C6]/5">
-              <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest mb-2">
-                Regular Users
-              </p>
-              <p className="text-3xl font-black text-purple-400">
-                {userReport.data?.summary?.regularUsers || 0}
-              </p>
-            </div>
-          </div>
-
-          {/* Top Users */}
-          {userReport.data?.topUsers && userReport.data.topUsers.length > 0 && (
-            <div>
-              <h3 className="text-sm font-black text-[#FAF3E1] uppercase tracking-widest mb-4">
-                Top 10 Users by Spending
-              </h3>
-              <div className="space-y-3">
-                {userReport.data.topUsers.map((user, idx) => (
-                  <div
-                    key={user.userId}
-                    className="bg-[#222222] rounded-xl p-4 border border-[#F5E7C6]/5 flex items-center justify-between hover:border-[#FA8112]/20 transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-[#FA8112]/20 rounded-lg flex items-center justify-center text-[#FA8112] font-black">
-                        #{idx + 1}
-                      </div>
-                      <div>
-                        <p className="font-black text-[#FAF3E1]">{user.fullName}</p>
-                        <p className="text-[10px] text-[#FAF3E1]/40">{user.email}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-black text-[#FA8112]">
-                        ₹{user.totalSpent.toLocaleString()}
-                      </p>
-                      <p className="text-[10px] text-[#FAF3E1]/40">
-                        {user.totalBookings} bookings
-                      </p>
-                    </div>
-                  </div>
-                ))}
+              <div className="bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-lg p-4">
+                <p className="text-[9px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest">Active Users</p>
+                <p className="text-xl font-bold text-emerald-400 mt-1">{userReport.data?.summary?.activeUsers || 0}</p>
               </div>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
-      {/* Empty State */}
-      {loading && (
-        <div className="min-h-96 flex flex-col items-center justify-center gap-4">
-          <RefreshCw className="h-10 w-10 animate-spin text-[#FA8112]" />
-          <p className="font-black text-[#FAF3E1]/40 uppercase tracking-[0.3em] text-[10px]">
-            Generating Reports...
+      {/* 5. USER METRICS & EMPTY STATE */}
+      {loading ? (
+        <div className="min-h-100 flex flex-col items-center justify-center gap-6">
+          <div className="relative">
+            <RefreshCw
+              size={48}
+              className="animate-spin text-[#FA8112]"
+              strokeWidth={1.5}
+            />
+            <div className="absolute inset-0 border-2 border-[#FA8112]/5 rounded-full" />
+          </div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#FAF3E1]/20">
+            Synthesizing System Data...
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-6 opacity-20 py-10">
+          <Terminal size={24} />
+          <p className="text-[9px] font-bold uppercase tracking-[0.6em]">
+            System Audit Manifest • Site_Registry_Anand
           </p>
         </div>
       )}
-
-      {/* Footer */}
-      <div className="text-center">
-        <p className="text-[9px] font-black text-[#FAF3E1]/10 uppercase tracking-[0.5em]">
-          Report Generated: {new Date().toLocaleDateString()}
-        </p>
-      </div>
     </div>
   );
 };

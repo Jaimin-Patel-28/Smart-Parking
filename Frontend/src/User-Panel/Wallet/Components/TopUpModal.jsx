@@ -10,6 +10,9 @@ import {
   CreditCard,
   Smartphone,
   Banknote,
+  Terminal,
+  Activity,
+  Fingerprint,
 } from "lucide-react";
 import walletService from "../Services/walletService";
 import {
@@ -37,13 +40,13 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
     onClose();
   };
 
-  // --- LOGIC REMAINS EXACTLY AS PROVIDED ---
+  // Logic remains exactly as provided
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     setError("");
     const parsedAmount = parseFloat(amount);
     if (!parsedAmount || parsedAmount <= 0) {
-      setError("Please enter a valid amount");
+      setError("VALIDATION_ERROR: Provide positive integer");
       return;
     }
     setLoading(true);
@@ -54,7 +57,7 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
         await handleWalletTopup(parsedAmount);
       }
     } catch (err) {
-      setError(err.message || "Payment failed. Please try again.");
+      setError(err.message || "SEQUENCE_FAULT: Link interrupted");
     } finally {
       setLoading(false);
     }
@@ -63,10 +66,10 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
   const handleRazorpayPayment = async (amount) => {
     try {
       const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) throw new Error("Failed to load payment gateway.");
+      if (!scriptLoaded) throw new Error("GATEWAY_LOAD_FAILURE");
       const orderResponse = await walletService.createPaymentOrder(amount);
       if (!orderResponse.data?.data?.orderId)
-        throw new Error("Failed to create payment order");
+        throw new Error("ORDER_GEN_FAILED");
       const { orderId, keyId, userEmail, userPhone, name } =
         orderResponse.data.data;
       const paymentResponse = await openRazorpayCheckout({
@@ -75,7 +78,7 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
         amount: Math.round(amount * 100),
         currency: "INR",
         name: name,
-        description: "Wallet Top-up",
+        description: "Vault Reload Sequence",
         prefill: { email: userEmail, contact: userPhone },
         method: razorpayMethod,
       });
@@ -85,7 +88,7 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
       );
       if (verificationResponse.data?.success) {
         setSuccess(true);
-        setSuccessMessage(`Payment successful! ₹${amount} has been added.`);
+        setSuccessMessage(`Reload_Successful: ₹${amount} authorized.`);
         setAmount("");
         setTimeout(() => {
           if (onSuccess) onSuccess(verificationResponse.data.data);
@@ -93,7 +96,7 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
         }, 2000);
       } else {
         throw new Error(
-          verificationResponse.data?.message || "Verification failed",
+          verificationResponse.data?.message || "VERIFICATION_FAILURE",
         );
       }
     } catch (err) {
@@ -101,7 +104,7 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
         setError(err.message);
         try {
           await walletService.handlePaymentFailure(amount.toString(), {
-            code: "USER_CANCELLED",
+            code: "USER_ABORT",
             description: err.message,
           });
         } catch (notifyErr) {
@@ -116,14 +119,14 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
       const response = await walletService.topUpWallet(amount);
       if (response.data?.success) {
         setSuccess(true);
-        setSuccessMessage(`₹${amount} has been added to your wallet.`);
+        setSuccessMessage(`Registry_Update: ₹${amount} injected.`);
         setAmount("");
         setTimeout(() => {
           if (onSuccess) onSuccess(response.data.data);
           handleClose();
         }, 2000);
       } else {
-        throw new Error(response.data?.message || "Failed to add funds");
+        throw new Error(response.data?.message || "LEDGER_SYNC_FAILED");
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message);
@@ -133,46 +136,55 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/90 backdrop-blur-md px-4 animate-in fade-in duration-300">
-      <div className="w-full max-w-5xl overflow-hidden rounded-[2.5rem] border border-[#F5E7C6]/10 bg-[#1a1a1a] shadow-[0_0_50px_rgba(0,0,0,0.5)] relative">
-        {/* Glow Header */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#FA8112] to-transparent opacity-50" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/95 backdrop-blur-xl px-4 animate-in fade-in duration-500">
+      <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-[#F5E7C6]/5 bg-[#1a1a1a] shadow-[0_0_100px_rgba(0,0,0,0.8)] relative">
+        {/* Glow Scanning Accent */}
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FA8112]/50 to-transparent" />
 
-        {/* 1. Header Area */}
-        <div className="flex items-center justify-between border-b border-[#F5E7C6]/5 px-8 py-6">
-          <div className="flex items-center gap-4">
-            <div className="bg-[#FA8112]/10 p-3 rounded-2xl text-[#FA8112]">
-              <Wallet size={24} />
+        {/* 1. TERMINAL HEADER */}
+        <div className="flex items-center justify-between border-b border-[#F5E7C6]/5 px-10 py-8 bg-[#222222]/50">
+          <div className="flex items-center gap-5">
+            <div className="bg-[#FA8112]/5 border border-[#FA8112]/20 p-3.5 rounded-lg text-[#FA8112] shadow-[0_0_15px_rgba(250,129,18,0.1)]">
+              <Wallet size={22} strokeWidth={1.5} />
             </div>
-            <div>
-              <h2 className="text-2xl font-black uppercase tracking-tighter italic text-[#FAF3E1]">
-                Wallet <span className="text-[#FA8112]">Reload</span>
+            <div className="space-y-1">
+              <h2 className="text-2xl font-bold uppercase tracking-tight text-[#FAF3E1]">
+                Vault <span className="text-[#FA8112]">Reload</span>
               </h2>
-              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FAF3E1]/20">
-                Secure Transaction Terminal
-              </p>
+              <div className="flex items-center gap-3">
+                <Terminal size={12} className="text-[#FAF3E1]/20" />
+                <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#FAF3E1]/20">
+                  Transaction_Terminal_v4.0
+                </p>
+              </div>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="p-2.5 rounded-xl bg-[#FAF3E1]/5 text-[#FAF3E1]/40 hover:text-red-400 hover:bg-red-500/10 transition-all"
+            className="p-3 rounded-lg bg-[#1a1a1a] border border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-rose-500 hover:border-rose-500/20 transition-all active:scale-95"
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* 2. Main Content Container */}
-        <div className="p-8 max-h-[80vh] overflow-y-auto">
+        {/* 2. OPERATIONAL VIEWPORT */}
+        <div className="px-10 py-3 max-h-[80vh] overflow-y-auto custom-scrollbar">
           {success ? (
-            <div className="py-12 flex flex-col items-center justify-center text-center space-y-6 animate-in zoom-in duration-500">
-              <div className="h-24 w-24 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
-                <CheckCircle size={48} strokeWidth={2.5} />
+            <div className="py-20 flex flex-col items-center justify-center text-center space-y-8 animate-in zoom-in-95 duration-700">
+              <div className="relative">
+                <div className="h-24 w-24 bg-emerald-500/5 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+                  <ShieldCheck size={48} strokeWidth={1.5} />
+                </div>
+                <Activity
+                  size={16}
+                  className="absolute -bottom-2 -right-2 text-emerald-500 animate-pulse"
+                />
               </div>
-              <div>
-                <h3 className="text-2xl font-black text-[#FAF3E1] italic uppercase tracking-tight">
-                  Funds Secured
+              <div className="space-y-3">
+                <h3 className="text-3xl font-bold text-[#FAF3E1] uppercase tracking-tight">
+                  Reload_Confirmed
                 </h3>
-                <p className="text-sm font-bold text-[#FAF3E1]/40 mt-2 uppercase tracking-widest">
+                <p className="text-[10px] font-mono font-bold text-[#FAF3E1]/20 uppercase tracking-[0.3em]">
                   {successMessage}
                 </p>
               </div>
@@ -180,22 +192,22 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
           ) : (
             <form
               onSubmit={handlePaymentSubmit}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-10"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-12"
             >
-              {/* Left Column: Amount Entry (5 Cols) */}
-              <div className="lg:col-span-5 space-y-8">
+              {/* LEFT: QUANTITY CONFIGURATION */}
+              <div className="lg:col-span-5 space-y-10">
                 {error && (
-                  <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 p-4 rounded-2xl text-red-400 text-xs font-bold animate-in slide-in-from-top-2">
-                    <AlertCircle size={16} /> {error}
+                  <div className="flex items-center gap-4 bg-rose-500/5 border border-rose-500/20 p-5 rounded-lg text-rose-400 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-top-4">
+                    <AlertCircle size={16} className="shrink-0" /> {error}
                   </div>
                 )}
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FA8112] ml-1">
-                    Reload Amount
+                <div className="space-y-4">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#FA8112]/60 ml-1">
+                    Injection_Amount
                   </label>
                   <div className="relative group">
-                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-[#FAF3E1]/20 group-focus-within:text-[#FA8112] transition-colors">
+                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-bold text-[#FAF3E1]/10 group-focus-within:text-[#FA8112] transition-colors tabular-nums">
                       ₹
                     </span>
                     <input
@@ -203,14 +215,14 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-2xl py-6 pl-14 pr-6 text-3xl font-black text-[#FAF3E1] italic focus:border-[#FA8112]/50 focus:outline-none transition-all placeholder:text-[#FAF3E1]/5"
+                      className="w-full bg-[#222222] border border-[#F5E7C6]/5 rounded-lg py-7 pl-16 pr-8 text-4xl font-bold text-[#FAF3E1] focus:border-[#FA8112]/40 focus:outline-none transition-all placeholder:text-[#FAF3E1]/5 tabular-nums shadow-inner"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FAF3E1]/20 ml-1">
-                    Quick Presets
+                <div className="space-y-4">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#FAF3E1]/10 ml-1">
+                    Preset_Modules
                   </label>
                   <div className="grid grid-cols-3 gap-3">
                     {quickAmounts.map((val) => (
@@ -218,10 +230,10 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
                         key={val}
                         type="button"
                         onClick={() => setAmount(val.toString())}
-                        className={`py-4 rounded-2xl text-xs font-black transition-all border ${
+                        className={`py-4 rounded-lg text-[10px] font-bold tracking-[0.2em] transition-all duration-500 border ${
                           amount === val.toString()
-                            ? "bg-[#FA8112] border-[#FA8112] text-[#222222] shadow-xl shadow-[#FA8112]/20"
-                            : "bg-[#FAF3E1]/5 border-[#F5E7C6]/5 text-[#FAF3E1]/60 hover:bg-[#FAF3E1]/10"
+                            ? "bg-[#FA8112] border-[#FA8112] text-[#222222] shadow-xl shadow-[#FA8112]/10"
+                            : "bg-[#1a1a1a] border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-[#FAF3E1]/50 hover:bg-[#222222]"
                         }`}
                       >
                         ₹{val}
@@ -233,79 +245,73 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
                 <button
                   type="submit"
                   disabled={loading || !amount}
-                  className="w-full py-5 rounded-2xl bg-[#FA8112] text-[#222222] font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20 shadow-2xl shadow-[#FA8112]/20"
+                  className="w-full py-6 rounded-lg bg-[#FA8112] text-[#222222] font-bold uppercase tracking-[0.4em] text-[11px] flex items-center justify-center gap-4 hover:bg-[#FAF3E1] transition-all disabled:opacity-10 shadow-2xl shadow-[#FA8112]/5 active:scale-[0.98] group"
                 >
                   {loading ? (
-                    <Loader2 className="animate-spin" size={20} />
+                    <Loader2
+                      className="animate-spin"
+                      size={20}
+                      strokeWidth={3}
+                    />
                   ) : (
-                    <Zap size={18} fill="currentColor" />
+                    <Fingerprint
+                      size={20}
+                      className="group-hover:scale-110 transition-transform"
+                    />
                   )}
                   {loading
-                    ? "Syncing Ledger..."
-                    : `Authorize ₹${amount || "0"}`}
+                    ? "SYNCING_LEDGER..."
+                    : `AUTHORIZE_₹${amount || "0"}`}
                 </button>
               </div>
 
-              {/* Right Column: Gateway Selection (7 Cols) */}
-              <div className="lg:col-span-7 space-y-6">
+              {/* RIGHT: PROTOCOL SELECTION */}
+              <div className="lg:col-span-7 space-y-8">
                 <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FA8112] ml-1">
-                    Payment Protocol
+                  <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#FA8112]/60 ml-1">
+                    Gateway_Protocol
                   </label>
 
-                  {/* Razorpay Option */}
+                  {/* Razorpay Channel */}
                   <div
                     onClick={() => setPaymentMethod("razorpay")}
-                    className={`p-6 rounded-[2rem] border transition-all cursor-pointer relative overflow-hidden ${
+                    className={`p-8 rounded-xl border transition-all duration-500 cursor-pointer relative overflow-hidden group/opt ${
                       paymentMethod === "razorpay"
-                        ? "bg-[#FA8112]/5 border-[#FA8112]/30"
-                        : "bg-[#FAF3E1]/[0.02] border-[#F5E7C6]/5 hover:bg-[#FAF3E1]/[0.04]"
+                        ? "bg-[#FA8112]/[0.03] border-[#FA8112]/30 shadow-2xl"
+                        : "bg-[#1a1a1a] border-[#F5E7C6]/5 hover:border-[#FA8112]/20"
                     }`}
                   >
                     <div className="flex items-center justify-between relative z-10">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-5">
                         <div
-                          className={`p-3 rounded-xl ${paymentMethod === "razorpay" ? "bg-[#FA8112] text-[#222222]" : "bg-[#FAF3E1]/5 text-[#FAF3E1]/40"}`}
+                          className={`p-3.5 rounded-lg border transition-all duration-500 ${paymentMethod === "razorpay" ? "bg-[#FA8112] border-[#FA8112] text-[#222222]" : "bg-[#222222] border-[#F5E7C6]/5 text-[#FAF3E1]/10"}`}
                         >
-                          <CreditCard size={20} />
+                          <CreditCard size={20} strokeWidth={1.5} />
                         </div>
-                        <div>
-                          <p className="text-sm font-black text-[#FAF3E1] uppercase italic">
-                            Online Gateway
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold text-[#FAF3E1] uppercase tracking-wider">
+                            Online_Gateway
                           </p>
-                          <p className="text-[9px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest mt-1 italic">
-                            Instant Processing via Razorpay
+                          <p className="text-[9px] font-bold text-[#FAF3E1]/10 uppercase tracking-[0.25em]">
+                            Instant_Sync_Protocol
                           </p>
                         </div>
                       </div>
                       <div
-                        className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "razorpay" ? "border-[#FA8112]" : "border-[#FAF3E1]/10"}`}
+                        className={`h-6 w-6 rounded border transition-all duration-500 flex items-center justify-center ${paymentMethod === "razorpay" ? "border-[#FA8112] bg-[#FA8112]/10" : "border-[#F5E7C6]/10"}`}
                       >
                         {paymentMethod === "razorpay" && (
-                          <div className="h-2.5 w-2.5 bg-[#FA8112] rounded-full" />
+                          <div className="h-2 w-2 bg-[#FA8112] rounded-sm shadow-[0_0_8px_#FA8112]" />
                         )}
                       </div>
                     </div>
 
-                    {/* Razorpay Sub-methods */}
                     {paymentMethod === "razorpay" && (
-                      <div className="mt-6 grid grid-cols-3 gap-3 animate-in slide-in-from-top-2">
+                      <div className="mt-8 grid grid-cols-3 gap-4 animate-in slide-in-from-top-4 duration-500">
                         {[
-                          {
-                            id: "card",
-                            icon: <CreditCard size={14} />,
-                            label: "CARD",
-                          },
-                          {
-                            id: "upi",
-                            icon: <Smartphone size={14} />,
-                            label: "UPI",
-                          },
-                          {
-                            id: "netbanking",
-                            icon: <Banknote size={14} />,
-                            label: "BANK",
-                          },
+                          { id: "card", icon: CreditCard, label: "CARD" },
+                          { id: "upi", icon: Smartphone, label: "UPI" },
+                          { id: "netbanking", icon: Banknote, label: "BANK" },
                         ].map((m) => (
                           <button
                             key={m.id}
@@ -314,96 +320,109 @@ const TopUpModal = ({ isOpen, onClose, onSuccess }) => {
                               e.stopPropagation();
                               setRazorpayMethod(m.id);
                             }}
-                            className={`flex flex-col items-center gap-2 p-3 rounded-xl border text-[9px] font-black tracking-widest transition-all ${
+                            className={`flex flex-col items-center gap-3 p-4 rounded-lg border text-[9px] font-bold tracking-[0.3em] transition-all duration-500 ${
                               razorpayMethod === m.id
                                 ? "bg-[#FA8112]/10 border-[#FA8112] text-[#FA8112]"
-                                : "bg-[#222] border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-[#FAF3E1]/40"
+                                : "bg-[#222222] border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-[#FAF3E1]/50"
                             }`}
                           >
-                            {m.icon} {m.label}
+                            <m.icon size={16} strokeWidth={1.5} /> {m.label}
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
 
-                  {/* Manual Wallet Option */}
+                  {/* Wallet Channel */}
                   <div
                     onClick={() => setPaymentMethod("wallet")}
-                    className={`p-6 rounded-[2rem] border transition-all cursor-pointer ${
+                    className={`p-8 rounded-xl border transition-all duration-500 cursor-pointer relative group/opt ${
                       paymentMethod === "wallet"
-                        ? "bg-[#FA8112]/5 border-[#FA8112]/30"
-                        : "bg-[#FAF3E1]/[0.02] border-[#F5E7C6]/5 hover:bg-[#FAF3E1]/[0.04]"
+                        ? "bg-[#FA8112]/[0.03] border-[#FA8112]/30 shadow-2xl"
+                        : "bg-[#1a1a1a] border-[#F5E7C6]/5 hover:border-[#FA8112]/20"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-5">
                         <div
-                          className={`p-3 rounded-xl ${paymentMethod === "wallet" ? "bg-[#FA8112] text-[#222222]" : "bg-[#FAF3E1]/5 text-[#FAF3E1]/40"}`}
+                          className={`p-3.5 rounded-lg border transition-all duration-500 ${paymentMethod === "wallet" ? "bg-[#FA8112] border-[#FA8112] text-[#222222]" : "bg-[#222222] border-[#F5E7C6]/5 text-[#FAF3E1]/10"}`}
                         >
-                          <ShieldCheck size={20} />
+                          <ShieldCheck size={20} strokeWidth={1.5} />
                         </div>
-                        <div>
-                          <p className="text-sm font-black text-[#FAF3E1] uppercase italic">
-                            Admin Direct
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold text-[#FAF3E1] uppercase tracking-wider">
+                            Direct_Ledger
                           </p>
-                          <p className="text-[9px] font-bold text-[#FAF3E1]/30 uppercase tracking-widest mt-1 italic">
-                            Manual Verification (24h Sync)
+                          <p className="text-[9px] font-bold text-[#FAF3E1]/10 uppercase tracking-[0.25em]">
+                            Manual_Sync (24H Latency)
                           </p>
                         </div>
                       </div>
                       <div
-                        className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "wallet" ? "border-[#FA8112]" : "border-[#FAF3E1]/10"}`}
+                        className={`h-6 w-6 rounded border transition-all duration-500 flex items-center justify-center ${paymentMethod === "wallet" ? "border-[#FA8112] bg-[#FA8112]/10" : "border-[#F5E7C6]/10"}`}
                       >
                         {paymentMethod === "wallet" && (
-                          <div className="h-2.5 w-2.5 bg-[#FA8112] rounded-full" />
+                          <div className="h-2 w-2 bg-[#FA8112] rounded-sm shadow-[0_0_8px_#FA8112]" />
                         )}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Live Test Console (Test Credentials) */}
+                {/* TEST CREDENTIALS HUD */}
                 {paymentMethod === "razorpay" && (
-                  <div className="bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 rounded-3xl p-6 space-y-4">
-                    <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-[#FA8112]">
-                      <Zap size={12} fill="currentColor" /> Test Environment
-                      Credentials
+                  <div className="bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-xl p-8 space-y-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 rotate-12">
+                      <Zap size={60} />
+                    </div>
+                    <div className="flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.4em] text-[#FA8112]">
+                      <Zap size={14} className="fill-current" />{" "}
+                      Simulation_Mode_Metadata
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 text-[10px] font-bold">
+                    <div className="grid grid-cols-2 gap-8 relative z-10">
                       {razorpayMethod === "card" && (
                         <>
-                          <div className="space-y-1">
-                            <p className="text-[#FAF3E1]/20">NUMBER</p>
-                            <p className="text-[#FAF3E1]">
+                          <div className="space-y-2">
+                            <p className="text-[8px] font-bold text-[#FAF3E1]/10 uppercase tracking-widest">
+                              Entry_Code
+                            </p>
+                            <p className="text-xs font-mono font-bold text-[#FAF3E1]/40 tracking-[0.1em]">
                               4111 1111 1111 1111
                             </p>
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-[#FAF3E1]/20">EXP/CVV</p>
-                            <p className="text-[#FAF3E1]">12/28 • 123</p>
+                          <div className="space-y-2">
+                            <p className="text-[8px] font-bold text-[#FAF3E1]/10 uppercase tracking-widest">
+                              EXP_CVV
+                            </p>
+                            <p className="text-xs font-mono font-bold text-[#FAF3E1]/40 tracking-[0.1em]">
+                              12/28 • 123
+                            </p>
                           </div>
                         </>
                       )}
                       {razorpayMethod === "upi" && (
-                        <div className="col-span-2 space-y-1">
-                          <p className="text-[#FAF3E1]/20">TEST VPA</p>
-                          <p className="text-[#FAF3E1]">
+                        <div className="col-span-2 space-y-2">
+                          <p className="text-[8px] font-bold text-[#FAF3E1]/10 uppercase tracking-widest">
+                            Virtual_Private_Addr
+                          </p>
+                          <p className="text-xs font-mono font-bold text-[#FAF3E1]/40 tracking-[0.1em]">
                             testuser@upi{" "}
-                            <span className="ml-2 text-[#FA8112]/40">
-                              (OTP: 123456)
+                            <span className="text-[#FA8112]/20 font-bold ml-4">
+                              BYPASS_OTP: 123456
                             </span>
                           </p>
                         </div>
                       )}
                       {razorpayMethod === "netbanking" && (
-                        <div className="col-span-2 space-y-1">
-                          <p className="text-[#FAF3E1]/20">USER / PASS</p>
-                          <p className="text-[#FAF3E1]">
+                        <div className="col-span-2 space-y-2">
+                          <p className="text-[8px] font-bold text-[#FAF3E1]/10 uppercase tracking-widest">
+                            Auth_Key_Pair
+                          </p>
+                          <p className="text-xs font-mono font-bold text-[#FAF3E1]/40 tracking-[0.1em]">
                             testuser / Test@123{" "}
-                            <span className="ml-2 text-[#FA8112]/40">
-                              (OTP: 123456)
+                            <span className="text-[#FA8112]/20 font-bold ml-4">
+                              BYPASS_OTP: 123456
                             </span>
                           </p>
                         </div>

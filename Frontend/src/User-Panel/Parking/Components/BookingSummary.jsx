@@ -1,80 +1,111 @@
 import React from "react";
-import { ShieldCheck, Info, Timer, LayoutGrid, Banknote } from "lucide-react";
+import {
+  ShieldCheck,
+  Info,
+  Timer,
+  LayoutGrid,
+  Banknote,
+  Terminal,
+  Activity,
+} from "lucide-react";
 
 const BookingSummary = ({ parking, slot, duration, total }) => {
+  // Theme: BG #222222 | Accent #FA8112 | Border #F5E7C6/5
+
   return (
-    <div className="space-y-6">
-      {/* 1. Quick Stats Grid */}
+    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-700">
+      {/* 1. SECTOR TELEMETRY GRID */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 p-4 rounded-2xl">
-          <div className="flex items-center gap-2 mb-1">
-            <LayoutGrid size={12} className="text-[#FA8112]" />
-            <p className="text-[9px] font-black uppercase tracking-widest text-[#FAF3E1]/20">
-              Slot ID
+        <div className="bg-[#1a1a1a] border border-[#F5E7C6]/5 p-5 rounded-xl shadow-inner group hover:border-[#FA8112]/20 transition-all duration-500">
+          <div className="flex items-center gap-2 mb-2">
+            <LayoutGrid size={14} className="text-[#FA8112]/60" />
+            <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#FAF3E1]/20">
+              Allocation_Node
             </p>
           </div>
-          <p className="text-lg font-black text-[#FA8112] italic leading-none">
-            {slot?.label || "---"}
+          <p className="text-2xl font-bold text-[#FA8112] tabular-nums tracking-tighter">
+            {slot?.label || "PENDING"}
           </p>
         </div>
 
-        <div className="bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 p-4 rounded-2xl">
-          <div className="flex items-center gap-2 mb-1">
-            <Timer size={12} className="text-[#FA8112]" />
-            <p className="text-[9px] font-black uppercase tracking-widest text-[#FAF3E1]/20">
-              Duration
+        <div className="bg-[#1a1a1a] border border-[#F5E7C6]/5 p-5 rounded-xl shadow-inner group hover:border-[#FA8112]/20 transition-all duration-500">
+          <div className="flex items-center gap-2 mb-2">
+            <Timer size={14} className="text-[#FA8112]/60" />
+            <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#FAF3E1]/20">
+              Temporal_Cycle
             </p>
           </div>
-          <p className="text-lg font-black text-[#FAF3E1] italic leading-none">
-            {duration || 0}{" "}
-            <span className="text-[10px] not-italic opacity-40">HRS</span>
+          <p className="text-2xl font-bold text-[#FAF3E1] tabular-nums tracking-tighter">
+            {duration || 0}
+            <span className="text-[10px] font-mono opacity-20 ml-2 uppercase tracking-widest">
+              Hrs
+            </span>
           </p>
         </div>
       </div>
 
-      {/* 2. Buffer Info Chip */}
-      <div className="bg-[#FA8112]/5 p-4 rounded-2xl border border-[#FA8112]/10 flex gap-4 text-[10px] text-[#FA8112]/80 font-bold leading-relaxed">
-        <Info size={18} className="shrink-0 opacity-60" />
-        <p>
-          A <span className="text-[#FA8112] font-black">30-minute buffer</span>{" "}
-          is automatically applied to ensure your spot is vacant and sanitized
-          upon arrival.
-        </p>
+      {/* 2. SYSTEM BUFFER ADVISORY */}
+      <div className="bg-[#FA8112]/5 p-5 rounded-xl border border-[#FA8112]/10 flex gap-4 relative overflow-hidden group">
+        <div className="absolute top-0 left-0 w-1 h-full bg-[#FA8112]/40" />
+        <Info size={18} className="shrink-0 text-[#FA8112] opacity-60 mt-0.5" />
+        <div className="space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#FA8112]">
+            Buffer_Protocol_Active
+          </p>
+          <p className="text-[11px] text-[#FAF3E1]/40 font-medium leading-relaxed">
+            A <span className="text-[#FA8112] font-bold">30-minute buffer</span>{" "}
+            is auto-injected to ensure node vacancy and sanitization sequence
+            completion.
+          </p>
+        </div>
       </div>
 
-      {/* 3. High-Contrast Price Ledger */}
-      <div className="pt-6 border-t border-[#F5E7C6]/5">
-        <div className="flex justify-between items-end">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-[9px] font-black text-[#FAF3E1]/20 uppercase tracking-[0.2em] italic">
-              <Banknote size={12} /> Final Amount
+      {/* 3. SETTLEMENT MANIFEST */}
+      <div className="pt-8 border-t border-[#F5E7C6]/5 relative">
+        <div className="flex justify-between items-end gap-6 relative z-10">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="h-1.5 w-1.5 rounded-full bg-[#FA8112] animate-pulse shadow-[0_0_8px_#FA8112]" />
+              <p className="text-[10px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.4em]">
+                Settlement_Total
+              </p>
             </div>
-            <h2 className="text-4xl font-black text-[#FAF3E1] tracking-tighter italic leading-none">
-              ₹{total?.toFixed(2)}
+            <h2 className="text-5xl font-bold text-[#FAF3E1] tracking-tighter tabular-nums leading-none">
+              ₹{total?.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
             </h2>
           </div>
 
-          <div className="text-right pb-1">
-            <p className="text-[9px] font-black text-[#FAF3E1]/20 uppercase tracking-widest mb-1">
-              Base Tariff
+          <div className="text-right space-y-2">
+            <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.3em]">
+              Unit_Tariff_Rate
             </p>
-            <div className="px-3 py-1 bg-[#FAF3E1]/5 border border-[#F5E7C6]/10 rounded-lg">
-              <span className="text-xs font-black text-[#FA8112] italic">
+            <div className="px-4 py-2 bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-lg inline-block">
+              <span className="text-sm font-bold text-[#FA8112] tabular-nums">
                 ₹{parking?.basePrice || 0}
-                <span className="text-[10px] not-italic opacity-40 ml-1">
-                  /HR
+                <span className="text-[10px] font-mono opacity-20 ml-2 uppercase">
+                  /hr
                 </span>
               </span>
             </div>
           </div>
         </div>
+
+        {/* HUD Decoration */}
+        <div className="absolute -bottom-4 right-0 opacity-[0.03] pointer-events-none">
+          <Terminal size={80} strokeWidth={1} />
+        </div>
       </div>
 
-      {/* Decorative Security Seal */}
-      <div className="flex items-center justify-center pt-2">
-        <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.3em] text-[#FAF3E1]/10">
-          <ShieldCheck size={12} /> Encrypted Transaction Channel
+      {/* 4. SECURITY HANDSHAKE */}
+      <div className="flex flex-col items-center gap-3 pt-4">
+        <div className="flex items-center gap-4 text-[#FAF3E1]/10">
+          <span className="h-px w-10 bg-current" />
+          <ShieldCheck size={14} />
+          <span className="h-px w-10 bg-current" />
         </div>
+        <p className="text-[8px] font-bold uppercase tracking-[0.6em] text-[#FAF3E1]/10">
+          End-To-End_Node_Encryption_Finalized
+        </p>
       </div>
     </div>
   );

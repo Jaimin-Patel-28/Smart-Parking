@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  ShieldCheck,
-  RefreshCcw,
-  ArrowLeft,
-  Loader2,
-  MailCheck,
-} from "lucide-react";
+import { ShieldCheck, RefreshCcw, ArrowLeft, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import authService from "../Services/authService";
 
@@ -16,16 +10,17 @@ const VerifyOTP = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(30); // Get email and flow from navigation state
 
   const email = location.state?.email;
-  const flow = location.state?.flow || "register";
+  const flow = location.state?.flow || "register"; // default to register
+  // Security: If no email is found, redirect back to register or login
 
   useEffect(() => {
     if (!email) {
       navigate(flow === "reset" ? "/auth/login" : "/auth/register");
     }
-  }, [email, navigate, flow]);
+  }, [email, navigate, flow]); // Resend Timer logic
 
   useEffect(() => {
     let interval = null;
@@ -47,11 +42,11 @@ const VerifyOTP = () => {
       if (flow === "reset") {
         navigate("/auth/reset-password", { state: { email } });
       } else {
-        toast.success("Identity verified. Access granted.");
+        toast.success("Account verified successfully!");
         navigate("/auth/login");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid security code");
+      toast.error(err.response?.data?.message || "Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -61,112 +56,127 @@ const VerifyOTP = () => {
     setResending(true);
     try {
       await authService.resendOTP(email);
-      setTimer(60);
-      toast.success("New verification code dispatched.");
+      setTimer(60); // Reset timer to 60 seconds
+      toast.success("A new OTP has been sent to your email.");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Dispatch failed");
+      toast.error(err.response?.data?.message || "Failed to resend OTP");
     } finally {
       setResending(false);
     }
   };
 
   return (
-    <div className="flex min-h-[85vh] flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 animate-in fade-in duration-500">
+    <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
+           {" "}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* 1. BACK NAVIGATION */}
+               {" "}
         <button
           onClick={() =>
             navigate(
               flow === "reset" ? "/auth/forgot-password" : "/auth/register",
             )
           }
-          className="group mb-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#FAF3E1]/20 hover:text-[#FA8112] transition-all"
+          className="mb-6 flex items-center gap-2 text-sm text-[#FAF3E1]/40 hover:text-[#FA8112] transition-colors"
         >
-          <ArrowLeft
-            size={14}
-            className="transition-transform group-hover:-translate-x-1"
-          />
-          Modify {flow === "reset" ? "Request" : "Details"}
+                    <ArrowLeft size={16} /> Back to{" "}
+          {flow === "reset" ? "Forgot Password" : "Register"}       {" "}
         </button>
-
-        {/* 2. MAIN CARD */}
-        <div className="rounded-xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] p-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute -right-6 -top-6 text-[#FAF3E1]/[0.02] rotate-12">
-            <MailCheck size={140} />
-          </div>
-
-          <div className="relative z-10">
-            <div className="mb-10 text-center">
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#FA8112]/10 border border-[#FA8112]/20 text-[#FA8112]">
-                <ShieldCheck size={30} strokeWidth={1.5} />
-              </div>
-              <h2 className="text-2xl font-bold tracking-tight text-[#FAF3E1]">
-                {flow === "reset" ? "Verify Reset" : "Email Security"}
-              </h2>
-              <div className="mt-2 space-y-1">
-                <p className="text-sm text-[#FAF3E1]/40 leading-relaxed">
-                  We've dispatched a 6-digit code to:
-                </p>
-                <p className="text-sm font-semibold text-[#FA8112]/80">
-                  {email}
-                </p>
-              </div>
+               {" "}
+        <div className="rounded-2xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] p-8 backdrop-blur-sm">
+                   {" "}
+          <div className="mb-8 flex flex-col items-center text-center">
+                       {" "}
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#FA8112]/10 text-[#FA8112]">
+                            <ShieldCheck size={32} />           {" "}
             </div>
-
-            <form onSubmit={handleVerify} className="space-y-8">
-              {/* OTP INPUT: Refined tracking and background */}
-              <div className="relative group">
-                <input
-                  type="text"
-                  maxLength="6"
-                  autoFocus
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                  className="w-full bg-[#222222] rounded-lg border border-[#F5E7C6]/10 py-4 text-center text-3xl font-bold tracking-[0.6em] text-[#FA8112] placeholder:text-[#FAF3E1]/5 focus:border-[#FA8112]/50 outline-none transition-all"
-                  placeholder="000000"
-                />
-              </div>
-
-              <button
-                disabled={loading || otp.length !== 6}
-                className="flex w-full h-12 items-center justify-center gap-2 rounded-lg bg-[#FA8112] font-bold text-[11px] uppercase tracking-widest text-[#222222] transition-all hover:opacity-95 active:scale-[0.98] disabled:opacity-30 shadow-lg shadow-[#FA8112]/10"
-              >
-                {loading ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : flow === "reset" ? (
-                  "Authorize Reset"
-                ) : (
-                  "Verify Identity"
-                )}
-              </button>
-            </form>
-
-            {/* 3. RESEND ACTION */}
-            <div className="mt-10 text-center border-t border-[#F5E7C6]/5 pt-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#FAF3E1]/20 mb-3">
-                No code received?
-              </p>
-              <button
-                onClick={handleResend}
-                disabled={timer > 0 || resending}
-                className="inline-flex items-center gap-2 text-xs font-bold text-[#FA8112]/60 hover:text-[#FA8112] disabled:text-[#FAF3E1]/10 transition-colors"
-              >
-                {resending ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <>
-                    <RefreshCcw
-                      size={14}
-                      className={timer === 0 ? "animate-pulse" : ""}
-                    />
-                    {timer > 0 ? `Retry in ${timer}s` : "Resend Security Code"}
-                  </>
-                )}
-              </button>
-            </div>
+                       {" "}
+            <h2 className="text-2xl font-bold text-[#FAF3E1]">
+                           {" "}
+              {flow === "reset" ? "Verify Reset Code" : "Check your email"}     
+                   {" "}
+            </h2>
+                       {" "}
+            <p className="mt-2 text-sm text-[#FAF3E1]/60">
+                           {" "}
+              {flow === "reset"
+                ? "Enter the 6-digit code sent to your email to reset your password."
+                : "We've sent a 6-digit verification code to"}
+                           {" "}
+              {flow === "register" && (
+                <>
+                                    <br />                 {" "}
+                  <span className="font-semibold text-[#FAF3E1]">{email}</span> 
+                               {" "}
+                </>
+              )}
+                         {" "}
+            </p>
+                     {" "}
           </div>
+                   {" "}
+          <form onSubmit={handleVerify} className="space-y-6">
+                       {" "}
+            <div className="flex justify-center">
+                           {" "}
+              <input
+                type="text"
+                maxLength="6"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                className="w-full bg-transparent text-center text-4xl font-bold tracking-[0.75rem] text-[#FA8112] placeholder:text-[#FAF3E1]/10 focus:outline-none"
+                placeholder="000000"
+                autoFocus
+              />
+                         {" "}
+            </div>
+                       {" "}
+            <button
+              disabled={loading || otp.length !== 6}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FA8112] py-4 font-bold text-[#222222] transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+            >
+                           {" "}
+              {loading ? (
+                <Loader2 className="animate-spin" />
+              ) : flow === "reset" ? (
+                "Verify & Reset"
+              ) : (
+                "Verify Account"
+              )}
+                         {" "}
+            </button>
+                     {" "}
+          </form>
+                   {" "}
+          <div className="mt-8 text-center">
+                       {" "}
+            <p className="text-sm text-[#FAF3E1]/60">
+                            Didn't receive the code?            {" "}
+            </p>
+                       {" "}
+            <button
+              onClick={handleResend}
+              disabled={timer > 0 || resending}
+              className="mt-2 flex items-center justify-center gap-2 w-full text-sm font-semibold text-[#FA8112] disabled:text-[#FAF3E1]/20"
+            >
+                           {" "}
+              {resending ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <>
+                                    <RefreshCcw size={16} />                 {" "}
+                  {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}           
+                     {" "}
+                </>
+              )}
+                         {" "}
+            </button>
+                     {" "}
+          </div>
+                 {" "}
         </div>
+             {" "}
       </div>
+         {" "}
     </div>
   );
 };

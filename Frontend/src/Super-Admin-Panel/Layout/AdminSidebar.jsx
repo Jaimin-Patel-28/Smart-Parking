@@ -9,7 +9,6 @@ import {
   BarChart3,
   Activity,
   LifeBuoy,
-  Settings,
   X,
   ShieldCheck,
   Terminal,
@@ -142,20 +141,6 @@ const AdminSidebar = ({ closeMobileMenu }) => {
             </div>
           </div>
         ))}
-
-        {/* Separator for Settings */}
-        <div className="mt-4 pt-4 border-t border-[#F5E7C6]/5">
-          <NavLink
-            to="/super-admin/settings"
-            className={navLinkStyles}
-            onClick={closeMobileMenu}
-          >
-            <Settings size={18} className="shrink-0" />
-            <span className="text-[11px] font-bold uppercase tracking-widest">
-              Global Settings
-            </span>
-          </NavLink>
-        </div>
       </nav>
 
       {/* 3. SYSTEM FOOTER: Technical Info */}

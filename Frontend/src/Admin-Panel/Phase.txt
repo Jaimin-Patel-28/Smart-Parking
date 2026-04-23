@@ -80,7 +80,6 @@ Goal: complete missing navigation pages already exposed in UI.
 
 Support page (incident/ticket logging).
 Admin Profile page.
-Admin Settings page (basic operational preferences).
 Exit criteria:
 
 No route redirects caused by missing pages.

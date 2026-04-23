@@ -3,10 +3,12 @@ import {
   Calendar,
   Clock,
   X,
-  Save,
   AlertTriangle,
   ChevronRight,
   Timer,
+  Terminal,
+  Activity,
+  ShieldAlert,
 } from "lucide-react";
 import { format, differenceInHours } from "date-fns";
 import ConfirmDialog from "../../../app/Components/ConfirmDialog";
@@ -39,7 +41,7 @@ const EditForm = ({ booking, onEdit, onCancel, onClose, disabled }) => {
       });
       onClose();
     } catch (err) {
-      console.error("Edit failed:", err);
+      console.error("Registry_Update_Failure:", err);
     } finally {
       setLoading(false);
     }
@@ -56,41 +58,43 @@ const EditForm = ({ booking, onEdit, onCancel, onClose, disabled }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-[#222222]/80 animate-in fade-in duration-300">
-      <div className="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-[#F5E7C6]/10 bg-[#1a1a1a] shadow-2xl">
-        {/* Top Branding Strip */}
-        <div className="h-2 w-full bg-gradient-to-r from-[#FA8112] to-[#ff9d42]" />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-[#222222]/90 animate-in fade-in duration-500">
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-[#F5E7C6]/5 bg-[#1a1a1a] shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        {/* 1. TOP HARDWARE ACCENT */}
+        <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#FA8112] to-transparent opacity-50" />
 
-        <div className="p-8">
+        <div className="p-10">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="space-y-1">
-              <h3 className="text-2xl font-black text-[#FAF3E1] italic uppercase tracking-tighter flex items-center gap-3">
-                <Calendar className="text-[#FA8112]" size={24} />
-                Modify Pass
+          <div className="flex items-start justify-between mb-10 px-1">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 text-[#FA8112]">
+                <Terminal size={14} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em]">
+                  Registry_Editor
+                </span>
+              </div>
+              <h3 className="text-2xl font-bold text-[#FAF3E1] uppercase tracking-tight">
+                Modify <span className="text-[#FA8112]">Pass</span>
               </h3>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FAF3E1]/20">
-                Reschedule your reservation
-              </p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-[#FAF3E1]/5 text-[#FAF3E1]/40 hover:text-[#FA8112] transition-all"
+              className="p-2 rounded-lg bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-[#FA8112] hover:border-[#FA8112]/20 transition-all"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
-          {/* Time Inputs */}
-          <div className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-[#FA8112] ml-1">
-                Arrival Time
+          {/* 2. TEMPORAL PARAMETERS */}
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <label className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#FA8112]/60 ml-1">
+                Registry_Arrival
               </label>
-              <div className="relative">
+              <div className="relative group">
                 <Clock
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20"
-                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/10 group-focus-within:text-[#FA8112] transition-colors"
+                  size={16}
                 />
                 <input
                   type="datetime-local"
@@ -98,72 +102,79 @@ const EditForm = ({ booking, onEdit, onCancel, onClose, disabled }) => {
                     startTime ? format(startTime, "yyyy-MM-dd'T'HH:mm") : ""
                   }
                   onChange={(e) => setStartTime(new Date(e.target.value))}
-                  className="w-full bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-2xl py-4 pl-12 pr-4 text-[#FAF3E1] font-bold text-sm focus:outline-none focus:border-[#FA8112] transition-all"
+                  className="w-full bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-lg py-3.5 pl-12 pr-4 text-[#FAF3E1] font-mono text-sm focus:outline-none focus:border-[#FA8112]/40 transition-all [color-scheme:dark]"
                   disabled={loading || disabled}
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-[#FA8112] ml-1">
-                Departure Time
+            <div className="space-y-3">
+              <label className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#FA8112]/60 ml-1">
+                Registry_Departure
               </label>
-              <div className="relative">
+              <div className="relative group">
                 <Timer
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20"
-                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FAF3E1]/10 group-focus-within:text-[#FA8112] transition-colors"
+                  size={16}
                 />
                 <input
                   type="datetime-local"
                   value={endTime ? format(endTime, "yyyy-MM-dd'T'HH:mm") : ""}
                   onChange={(e) => setEndTime(new Date(e.target.value))}
-                  className="w-full bg-[#FAF3E1]/[0.03] border border-[#F5E7C6]/10 rounded-2xl py-4 pl-12 pr-4 text-[#FAF3E1] font-bold text-sm focus:outline-none focus:border-[#FA8112] transition-all"
+                  className="w-full bg-[#1a1a1a] border border-[#F5E7C6]/5 rounded-lg py-3.5 pl-12 pr-4 text-[#FAF3E1] font-mono text-sm focus:outline-none focus:border-[#FA8112]/40 transition-all [color-scheme:dark]"
                   disabled={loading || disabled}
                 />
               </div>
             </div>
 
-            {/* Duration Preview Box */}
-            <div className="bg-[#FA8112]/5 border border-[#FA8112]/10 rounded-2xl p-4 flex items-center justify-between">
-              <span className="text-xs font-black text-[#FA8112] uppercase tracking-tighter">
-                New Total Duration
-              </span>
-              <span className="text-xl font-black text-[#FAF3E1] italic">
+            {/* 3. DURATION TELEMETRY */}
+            <div className="bg-[#FA8112]/5 border border-[#FA8112]/10 rounded-lg p-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Activity size={14} className="text-[#FA8112] animate-pulse" />
+                <span className="text-[10px] font-bold text-[#FAF3E1]/40 uppercase tracking-widest">
+                  Updated_Duration
+                </span>
+              </div>
+              <span className="text-xl font-bold text-[#FAF3E1] tabular-nums">
                 {duration}{" "}
-                <small className="text-[10px] uppercase not-italic opacity-40">
-                  Hours
+                <small className="text-[9px] uppercase font-bold opacity-20 ml-1 tracking-widest">
+                  Hrs
                 </small>
               </span>
             </div>
 
-            {/* Actions */}
-            <div className="space-y-3 pt-4">
+            {/* 4. ACTIONS CONSOLE */}
+            <div className="space-y-4 pt-6">
               <button
                 onClick={handleSubmit}
                 disabled={loading || disabled || !startTime || !endTime}
-                className="w-full flex items-center justify-center gap-3 bg-[#FA8112] py-4 rounded-2xl text-xs font-black uppercase tracking-widest text-[#222222] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#FA8112]/20 disabled:opacity-30"
+                className="w-full flex items-center justify-center gap-3 bg-[#FA8112] py-4 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] text-[#222222] hover:bg-[#FAF3E1] transition-all disabled:opacity-20 shadow-2xl active:scale-[0.98]"
               >
                 {loading ? (
-                  "Processing..."
+                  <Activity size={16} className="animate-spin" />
                 ) : (
                   <>
-                    Apply Changes <ChevronRight size={16} />
+                    Commit_Update <ChevronRight size={14} strokeWidth={3} />
                   </>
                 )}
               </button>
 
-              <div className="h-px w-full bg-[#F5E7C6]/5 my-2" />
+              <div className="relative py-2 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-[#F5E7C6]/5" />
+                </div>
+                <span className="relative px-4 text-[8px] font-bold text-[#FAF3E1]/10 uppercase tracking-[0.5em]">
+                  Critical_Control
+                </span>
+              </div>
 
               <button
                 onClick={handleCancelClick}
                 disabled={loading || disabled}
-                className="group w-full flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest text-red-500/40 hover:text-red-500 transition-all"
+                className="group w-full flex items-center justify-center gap-3 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-500/40 hover:text-rose-400 transition-all"
               >
-                <AlertTriangle
-                  size={14}
-                  className="group-hover:animate-pulse"
-                />
-                Terminate Booking
+                <ShieldAlert size={14} className="group-hover:animate-pulse" />
+                Abort_Registry_Sequence
               </button>
             </div>
           </div>
@@ -172,9 +183,9 @@ const EditForm = ({ booking, onEdit, onCancel, onClose, disabled }) => {
 
       <ConfirmDialog
         open={showCancelConfirm}
-        title="Cancel Booking"
-        message="Are you sure? This will release your parking spot immediately."
-        confirmLabel="Cancel Booking"
+        title="Protocol_Abort_Sequence"
+        message="Authorize immediate release of allocated spatial node? This action is finalized upon confirmation."
+        confirmLabel="Confirm_Abort"
         intent="danger"
         onConfirm={confirmCancelBooking}
         onCancel={() => setShowCancelConfirm(false)}

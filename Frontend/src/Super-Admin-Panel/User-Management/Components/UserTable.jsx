@@ -1,92 +1,112 @@
 import React from "react";
-import { Eye, Trash2, ShieldCheck, User as UserIcon } from "lucide-react";
+import {
+  Eye,
+  Trash2,
+  ShieldCheck,
+  User as UserIcon,
+  Fingerprint,
+  Mail,
+  Phone,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserStatusToggle from "./UserStatusToggle";
 
 const UserTable = ({ users, onToggleStatus, onDelete, processingId }) => {
   const navigate = useNavigate();
 
-  // Theme Variables:
-  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
+  // Theme: BG #222222 | Accent #FA8112 | Border #F5E7C6/5
 
   return (
-    <div className="overflow-x-auto bg-[#222222]">
-      <table className="w-full text-left border-separate border-spacing-y-3">
+    <div className="overflow-x-auto custom-scrollbar bg-[#222222]">
+      <table className="w-full text-left border-separate border-spacing-y-1.5 px-1">
         <thead>
-          <tr className="text-[#FAF3E1]/30 text-[10px] uppercase tracking-[0.2em] font-black px-4">
-            <th className="py-4 px-6">Profile</th>
-            <th className="py-4 px-6">Contact</th>
-            <th className="py-4 px-6">Bookings</th>
-            <th className="py-4 px-6">Role</th>
-            <th className="py-4 px-6">Status</th>
-            <th className="py-4 px-6 text-right">Actions</th>
+          <tr className="text-[#FAF3E1]/20 text-[9px] uppercase font-bold tracking-[0.4em]">
+            <th className="py-5 px-8">Entity Profile</th>
+            <th className="py-5 px-6">Contact Registry</th>
+            <th className="py-5 px-6">Utilization</th>
+            <th className="py-5 px-6">Access Level</th>
+            <th className="py-5 px-6">Node Status</th>
+            <th className="py-5 px-8 text-right">Operations</th>
           </tr>
         </thead>
-        <tbody>
+
+        <tbody className="space-y-2">
           {users.map((user) => (
             <tr
               key={user._id}
-              className="bg-[#FAF3E1]/2 hover:bg-[#FAF3E1]/4 transition-all duration-300 group border border-[#F5E7C6]/10 shadow-sm"
+              className="group bg-[#FAF3E1]/[0.01] hover:bg-[#FAF3E1]/[0.03] transition-all duration-500 border-y border-[#F5E7C6]/5"
             >
-              {/* Profile Section */}
-              <td className="py-5 px-6 rounded-l-3xl">
+              {/* 1. Entity Profile */}
+              <td className="py-6 px-8 rounded-l-lg border-l border-[#F5E7C6]/5">
                 <div className="flex items-center gap-4">
                   <div
-                    className={`h-10 w-10 rounded-xl flex items-center justify-center transition-colors border ${
+                    className={`h-10 w-10 rounded-lg flex items-center justify-center transition-all duration-500 border ${
                       user.role === "admin"
-                        ? "bg-[#FA8112]/20 text-[#FA8112] border-[#FA8112]/20"
-                        : "bg-[#FAF3E1]/5 text-[#FAF3E1]/40 border-[#F5E7C6]/5"
+                        ? "bg-[#FA8112]/10 text-[#FA8112] border-[#FA8112]/20 shadow-[0_0_15px_rgba(250,129,18,0.1)]"
+                        : "bg-[#FAF3E1]/[0.02] text-[#FAF3E1]/20 border-[#F5E7C6]/5 group-hover:border-[#FAF3E1]/10"
                     }`}
                   >
                     {user.role === "admin" ? (
-                      <ShieldCheck size={20} />
+                      <ShieldCheck size={18} strokeWidth={1.5} />
                     ) : (
-                      <UserIcon size={20} />
+                      <UserIcon size={18} strokeWidth={1.5} />
                     )}
                   </div>
-                  <div>
-                    <p className="font-black text-[#FAF3E1] text-sm tracking-tight">
+                  <div className="space-y-1">
+                    <p className="font-bold text-[#FAF3E1] text-sm tracking-tight leading-none">
                       {user.fullName || user.name}
                     </p>
-                    <p className="text-[10px] text-[#FAF3E1]/20 font-mono tracking-widest mt-0.5">
-                      UID: {String(user._id).slice(-6).toUpperCase()}
-                    </p>
+                    <div className="flex items-center gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
+                      <Fingerprint size={10} className="text-[#FA8112]" />
+                      <p className="text-[10px] text-[#FAF3E1] font-mono tracking-widest uppercase">
+                        UID-{String(user._id).slice(-6).toUpperCase()}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </td>
 
-              {/* Contact Information */}
-              <td className="py-5 px-6">
-                <p className="text-sm font-bold text-[#FAF3E1]/80">
-                  {user.email}
-                </p>
-                <p className="text-[10px] font-black text-[#FAF3E1]/30 uppercase tracking-tighter mt-1">
-                  {user.mobile || user.phone || "No Registry"}
-                </p>
+              {/* 2. Contact Registry */}
+              <td className="py-6 px-6">
+                <div className="flex flex-col space-y-1">
+                  <div className="flex items-center gap-2 text-[12px] font-medium text-[#FAF3E1]/80">
+                    <Mail size={12} className="text-[#FA8112]/40" />
+                    {user.email}
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
+                    <Phone size={10} />
+                    {user.mobile || user.phone || "UNREGISTERED"}
+                  </div>
+                </div>
               </td>
 
-              {/* Bookings Count */}
-              <td className="py-5 px-6">
-                <span className="bg-[#FA8112]/10 text-[#FA8112] px-3 py-1.5 rounded-lg text-[10px] font-black border border-[#FA8112]/20 uppercase tracking-widest shadow-[0_0_10px_rgba(250,129,18,0.05)]">
-                  {user.totalBookings} Active Slots
-                </span>
+              {/* 3. Utilization (Bookings) */}
+              <td className="py-6 px-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 group-hover:border-[#FA8112]/20 transition-colors">
+                  <span className="text-sm font-bold text-[#FAF3E1] tabular-nums">
+                    {user.totalBookings}
+                  </span>
+                  <span className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
+                    Units
+                  </span>
+                </div>
               </td>
 
-              {/* User Role */}
-              <td className="py-5 px-6">
+              {/* 4. Access Level */}
+              <td className="py-6 px-6">
                 <span
-                  className={`text-[9px] font-black uppercase tracking-[0.2em] ${
+                  className={`text-[10px] font-bold uppercase tracking-[0.3em] ${
                     user.role === "admin"
                       ? "text-[#FA8112]"
-                      : "text-[#FAF3E1]/30"
+                      : "text-[#FAF3E1]/10 group-hover:text-[#FAF3E1]/30"
                   }`}
                 >
-                  {user.role}
+                  {user.role === "admin" ? "Privileged" : "Standard"}
                 </span>
               </td>
 
-              {/* User Status */}
-              <td className="py-5 px-6">
+              {/* 5. Node Status */}
+              <td className="py-6 px-6">
                 <UserStatusToggle
                   status={user.status}
                   processing={processingId === user._id}
@@ -94,20 +114,22 @@ const UserTable = ({ users, onToggleStatus, onDelete, processingId }) => {
                 />
               </td>
 
-              {/* Action Buttons */}
-              <td className="py-5 px-6 text-right rounded-r-3xl">
-                <div className="flex items-center justify-end gap-1">
+              {/* 6. Operations */}
+              <td className="py-6 px-8 text-right rounded-r-lg border-r border-[#F5E7C6]/5">
+                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button
                     onClick={() => navigate(`/super-admin/users/${user._id}`)}
-                    className="p-2.5 bg-[#FAF3E1]/5 hover:bg-[#FA8112] text-[#FAF3E1]/20 hover:text-[#222222] rounded-xl transition-all border border-[#F5E7C6]/5"
+                    className="p-2 rounded-md bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-[#FA8112] hover:border-[#FA8112]/20 transition-all"
+                    title="Inspect Profile"
                   >
-                    <Eye size={18} />
+                    <Eye size={14} />
                   </button>
                   <button
                     onClick={() => onDelete(user._id)}
-                    className="p-2.5 bg-[#FAF3E1]/5 hover:bg-rose-500/20 text-[#FAF3E1]/20 hover:text-rose-400 rounded-xl transition-all border border-[#F5E7C6]/5"
+                    className="p-2 rounded-md bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5 text-[#FAF3E1]/20 hover:text-rose-500 hover:border-rose-500/20 transition-all"
+                    title="Purge Identity"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </td>

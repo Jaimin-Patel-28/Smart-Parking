@@ -28,7 +28,6 @@ import TransactionHistory from "../../Super-Admin-Panel/Wallet & Transactions/Pa
 import TransactionDetails from "../../Super-Admin-Panel/Wallet & Transactions/Pages/TransactionDetails";
 import Support from "../../Super-Admin-Panel/Support-Management/Pages/Support";
 import Reports from "../../Super-Admin-Panel/Reports/pages/Reports";
-import Settings from "../../Super-Admin-Panel/Settings/Pages/Settings";
 import Notifications from "../../Super-Admin-Panel/Notifications/Pages/Notifications";
 import AuditTrail from "../../Super-Admin-Panel/Audit-Trail/Pages/AuditTrail";
 
@@ -71,7 +70,6 @@ const AdminRoutes = () => {
         <Route path="notifications" element={<Notifications />} />
         <Route path="audit-trail" element={<AuditTrail />} />
         <Route path="support" element={<Support />} />
-        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

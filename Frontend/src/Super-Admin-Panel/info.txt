@@ -140,14 +140,6 @@ src/
 │   │   │   └── services/
 │   │   │       └── supportService.js
 │   │
-│   │   ├── settings/
-│   │   │   ├── pages/
-│   │   │   │   ├── PricingSettings.jsx
-│   │   │   │   └── SystemSettings.jsx
-│   │   │   │
-│   │   │   └── services/
-│   │   │       └── settingsService.js
-│   │
 │   │   └── admin-profile/
 │   │       ├── pages/
 │   │       │   ├── AdminProfile.jsx

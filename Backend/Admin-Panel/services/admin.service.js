@@ -1,7 +1,7 @@
 const User = require("../../Authentication/models/User");
-const AdminSettings = require("../models/AdminSettings");
 const GateActivity = require("../models/GateActivity");
 const Booking = require("../../Super-Admin-Panel/models/Booking");
+const mongoose = require("mongoose");
 
 // ✅ Get admin profile
 exports.getAdminProfile = async (admin) => {
@@ -50,60 +50,6 @@ exports.updateAdminProfile = async (admin, updates) => {
   }
 };
 
-// ✅ Get admin settings
-exports.getAdminSettings = async (admin) => {
-  try {
-    let settings = await AdminSettings.findOne({
-      admin: admin.id,
-      parking: admin.parking,
-    });
-
-    // Create default settings if not exists
-    if (!settings) {
-      settings = await AdminSettings.create({
-        admin: admin.id,
-        parking: admin.parking,
-      });
-    }
-
-    return {
-      success: true,
-      data: settings,
-    };
-  } catch (err) {
-    throw new Error(err.message || "Failed to fetch admin settings");
-  }
-};
-
-// ✅ Update admin settings
-exports.updateAdminSettings = async (admin, updates) => {
-  try {
-    const settings = await AdminSettings.findOneAndUpdate(
-      {
-        admin: admin.id,
-        parking: admin.parking,
-      },
-      {
-        ...updates,
-        lastModified: admin.id,
-      },
-      {
-        new: true,
-        upsert: true,
-        runValidators: true,
-      },
-    );
-
-    return {
-      success: true,
-      data: settings,
-      message: "Settings updated successfully",
-    };
-  } catch (err) {
-    throw new Error(err.message || "Failed to update admin settings");
-  }
-};
-
 // ✅ Get shift metrics (KPIs)
 exports.getShiftMetrics = async (admin, timeRange = "today") => {
   try {
@@ -134,14 +80,24 @@ exports.getShiftMetrics = async (admin, timeRange = "today") => {
         startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
-    // Get gate activities for the admin's parking
+    const adminId = admin?._id || admin?.id;
+    const adminObjectId = mongoose.Types.ObjectId.isValid(adminId)
+      ? new mongoose.Types.ObjectId(adminId)
+      : null;
+
+    if (!adminObjectId) {
+      throw new Error("Invalid admin identifier");
+    }
+
+    const baseMatch = {
+      admin: adminObjectId,
+      createdAt: { $gte: startDate, $lte: now },
+    };
+
+    // Get gate activities for this admin in selected period
     const activities = await GateActivity.aggregate([
       {
-        $match: {
-          admin: admin._id || admin.id,
-          parking: admin.parking,
-          createdAt: { $gte: startDate, $lte: now },
-        },
+        $match: baseMatch,
       },
       {
         $group: {
@@ -165,9 +121,7 @@ exports.getShiftMetrics = async (admin, timeRange = "today") => {
     const exceptions = await GateActivity.aggregate([
       {
         $match: {
-          admin: admin._id || admin.id,
-          parking: admin.parking,
-          createdAt: { $gte: startDate, $lte: now },
+          ...baseMatch,
           isOverride: true,
         },
       },
@@ -217,9 +171,7 @@ exports.getShiftMetrics = async (admin, timeRange = "today") => {
     const timeMetrics = await GateActivity.aggregate([
       {
         $match: {
-          admin: admin._id || admin.id,
-          parking: admin.parking,
-          createdAt: { $gte: startDate, $lte: now },
+          ...baseMatch,
           action: { $in: ["entry", "exit"] },
           processingTimeMs: { $type: "number" },
         },

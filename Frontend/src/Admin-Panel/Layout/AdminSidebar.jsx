@@ -17,7 +17,6 @@ import {
   BarChart2,
   User,
   LifeBuoy,
-  Settings,
   X,
 } from "lucide-react";
 
@@ -132,11 +131,6 @@ const AdminSidebar = ({ closeMobileMenu }) => {
       icon: <LifeBuoy size={18} />,
     },
     { name: "Profile", path: `${basePath}/profile`, icon: <User size={18} /> },
-    {
-      name: "Settings",
-      path: `${basePath}/settings`,
-      icon: <Settings size={18} />,
-    },
   ];
 
   return (
@@ -173,7 +167,7 @@ const AdminSidebar = ({ closeMobileMenu }) => {
             </span>
             <span className="text-[13px] tracking-wide">{item.name}</span>
             {item.badge > 0 && (
-              <span className="ml-auto min-w-[18px] h-[18px] px-1 rounded-md bg-[#FA8112] text-[#222222] text-[9px] font-bold flex items-center justify-center">
+              <span className="ml-auto min-w-4.5 h-4.5 px-1 rounded-md bg-[#FA8112] text-[#222222] text-[9px] font-bold flex items-center justify-center">
                 {item.badge > 99 ? "99+" : item.badge}
               </span>
             )}

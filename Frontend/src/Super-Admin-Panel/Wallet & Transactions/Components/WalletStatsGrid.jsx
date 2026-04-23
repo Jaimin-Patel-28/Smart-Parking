@@ -1,18 +1,23 @@
 import React from "react";
-import { IndianRupee, RotateCcw, Users, Activity } from "lucide-react";
+import {
+  IndianRupee,
+  RotateCcw,
+  Users,
+  Activity,
+  Zap,
+  Terminal,
+} from "lucide-react";
 
 const WalletStatsGrid = ({ stats, loading }) => {
-  // Theme Variables:
-  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
+  // Theme: BG #222222 | Accent #FA8112 | Border #F5E7C6/5
 
-  // Skeleton Loader for stats
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="h-40 bg-[#FAF3E1]/[0.03] animate-pulse rounded-[2.5rem] border border-[#F5E7C6]/5"
+            className="h-44 bg-[#FAF3E1]/[0.01] animate-pulse rounded-xl border border-[#F5E7C6]/5"
           />
         ))}
       </div>
@@ -21,83 +26,94 @@ const WalletStatsGrid = ({ stats, loading }) => {
 
   const cards = [
     {
-      title: "Total Revenue",
+      title: "Revenue Asset",
       value: `₹${stats?.totalRevenue?.toLocaleString() || 0}`,
-      icon: <IndianRupee size={22} />,
+      icon: <IndianRupee size={20} />,
       color: "text-[#FA8112]",
-      bg: "bg-[#FA8112]/10",
+      bg: "bg-[#FA8112]/5",
       border: "border-[#FA8112]/20",
-      trend: "Gross Income",
+      trend: "Gross_Settlement",
     },
     {
-      title: "Total Refunds",
+      title: "Issued Refunds",
       value: `₹${stats?.totalRefunds?.toLocaleString() || 0}`,
-      icon: <RotateCcw size={22} />,
+      icon: <RotateCcw size={20} />,
       color: "text-amber-400",
-      bg: "bg-amber-400/10",
+      bg: "bg-amber-400/5",
       border: "border-amber-400/20",
-      trend: "Credits Issued",
+      trend: "Credit_Reversal",
     },
     {
-      title: "Total Users",
+      title: "Registry Base",
       value: stats?.totalUsers || 0,
-      icon: <Users size={22} />,
+      icon: <Users size={20} />,
       color: "text-[#FAF3E1]",
-      bg: "bg-[#FAF3E1]/10",
+      bg: "bg-[#FAF3E1]/5",
       border: "border-[#F5E7C6]/10",
-      trend: "Active Wallets",
+      trend: "Active_Nodes",
     },
     {
-      title: "System Transactions",
+      title: "Sequence Logs",
       value: stats?.totalTransactions || 0,
-      icon: <Activity size={22} />,
+      icon: <Activity size={20} />,
       color: "text-cyan-400",
-      bg: "bg-cyan-400/10",
+      bg: "bg-cyan-400/5",
       border: "border-cyan-400/20",
-      trend: "Total Logs",
+      trend: "Total_Sequences",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
       {cards.map((card, index) => (
         <div
           key={index}
-          className="bg-[#FAF3E1]/[0.02] p-8 rounded-[2.5rem] border border-[#F5E7C6]/10 shadow-sm hover:bg-[#FAF3E1]/[0.04] transition-all duration-300 group relative overflow-hidden"
+          className="bg-[#FAF3E1]/[0.01] p-6 md:p-8 rounded-xl border border-[#F5E7C6]/5 shadow-2xl hover:bg-[#FAF3E1]/[0.02] transition-all duration-500 group relative overflow-hidden"
         >
-          {/* Subtle Accent Glow */}
-          <div
-            className={`absolute -right-4 -top-4 w-16 h-16 blur-2xl opacity-20 rounded-full ${card.bg}`}
-          />
+          {/* ARCHITECTURAL UNDERLAY */}
+          <div className="absolute -right-6 -top-6 text-[#FAF3E1]/[0.02] group-hover:text-[#FA8112]/[0.03] transition-colors duration-700">
+            <Terminal size={140} strokeWidth={1} />
+          </div>
 
-          <div className="flex justify-between items-start mb-6">
+          <div className="flex justify-between items-start mb-8 relative z-10">
             <div
-              className={`p-4 rounded-2xl border transition-all duration-300 group-hover:scale-110 shadow-lg ${card.bg} ${card.color} ${card.border}`}
+              className={`p-3.5 rounded-lg border transition-all duration-500 group-hover:scale-105 shadow-[0_0_15px_rgba(0,0,0,0.2)] ${card.bg} ${card.color} ${card.border}`}
             >
               {card.icon}
             </div>
-            <div className="flex items-center gap-2 px-3 py-1 bg-[#FAF3E1]/[0.05] rounded-full border border-[#F5E7C6]/5">
-              <div className="h-1.5 w-1.5 rounded-full bg-[#FA8112] animate-pulse" />
-              <span className="text-[9px] font-black text-[#FAF3E1]/30 uppercase tracking-[0.2em]">
+
+            {/* SIGNAL BADGE */}
+            <div className="flex items-center gap-2 px-3 py-1 bg-[#1a1a1a] rounded-md border border-[#F5E7C6]/5">
+              <div className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FA8112] opacity-40" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FA8112]" />
+              </div>
+              <span className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.3em]">
                 Live
               </span>
             </div>
           </div>
 
-          <div className="relative z-10">
-            <h3 className="text-4xl font-black text-[#FAF3E1] tracking-tighter">
+          <div className="relative z-10 space-y-1">
+            <h3 className="text-4xl font-bold text-[#FAF3E1] tracking-tighter tabular-nums">
               {card.value}
             </h3>
-            <div className="flex items-center gap-2 mt-2">
-              <p className="text-[10px] font-black text-[#FAF3E1]/40 uppercase tracking-widest">
+
+            <div className="flex items-center gap-3 pt-2">
+              <p className="text-[10px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.3em]">
                 {card.title}
               </p>
-              <span className="h-1 w-1 rounded-full bg-[#FA8112]/40" />
-              <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-tighter">
+              <div className="h-px w-4 bg-[#F5E7C6]/10" />
+              <p className="text-[9px] font-mono font-bold text-[#FA8112]/60 uppercase tracking-tighter">
                 {card.trend}
               </p>
             </div>
           </div>
+
+          {/* DECORATIVE BOTTOM ACCENT */}
+          <div
+            className={`absolute bottom-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-700 opacity-40 ${card.color.replace("text", "bg")}`}
+          />
         </div>
       ))}
     </div>

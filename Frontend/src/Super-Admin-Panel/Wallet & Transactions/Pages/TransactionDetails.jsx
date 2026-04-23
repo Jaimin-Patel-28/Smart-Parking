@@ -10,6 +10,10 @@ import {
   CreditCard,
   User,
   Clock,
+  Fingerprint,
+  Activity,
+  ShieldCheck,
+  Terminal,
 } from "lucide-react";
 
 const TransactionDetails = () => {
@@ -18,154 +22,179 @@ const TransactionDetails = () => {
   const [tx, setTx] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Theme Variables:
-  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112 | Border: #F5E7C6/10
+  // Theme: BG #222222 | Accent #FA8112 | Border #F5E7C6/5
 
   useEffect(() => {
     transactionService
       .getTransactionById(id)
       .then((res) => setTx(res.data.data))
-      .catch((err) => console.error(err))
+      .catch((err) => console.error("Registry Sync Err:", err))
       .finally(() => setLoading(false));
   }, [id]);
 
   if (loading)
     return (
-      <div className="p-20 text-center flex flex-col items-center justify-center gap-4">
-        <div className="h-10 w-10 border-4 border-[#FA8112] border-t-transparent rounded-full animate-spin" />
-        <p className="font-black text-[#FAF3E1]/20 uppercase tracking-[0.3em] text-[10px]">
-          Decrypting Ledger Entry...
+      <div className="h-[60vh] flex flex-col items-center justify-center gap-6">
+        <div className="relative">
+          <Activity
+            size={40}
+            className="animate-spin text-[#FA8112]/40"
+            strokeWidth={1}
+          />
+          <div className="absolute inset-0 border border-[#FA8112]/10 rounded-full animate-ping" />
+        </div>
+        <p className="font-bold text-[#FAF3E1]/10 uppercase tracking-[0.5em] text-[9px]">
+          Decrypting Ledger Sequence...
         </p>
       </div>
     );
 
   if (!tx)
     return (
-      <div className="p-20 text-center flex flex-col items-center justify-center gap-4">
-        <div className="bg-rose-500/10 p-6 rounded-full text-rose-500">
-          <Receipt size={48} />
+      <div className="h-[60vh] flex flex-col items-center justify-center gap-6">
+        <div className="p-6 rounded-xl bg-rose-500/5 border border-rose-500/20 text-rose-500">
+          <ShieldCheck size={48} strokeWidth={1} />
         </div>
-        <h2 className="text-xl font-black text-[#FAF3E1] uppercase tracking-tighter">
-          Transaction <span className="text-rose-500">Not Found</span>
+        <h2 className="text-xl font-bold text-[#FAF3E1] uppercase tracking-tight">
+          Sequence <span className="text-rose-500">Not Identified</span>
         </h2>
       </div>
     );
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 pb-10 animate-in fade-in duration-500">
-      {/* Back Button */}
+    <div className="max-w-4xl mx-auto space-y-10 pb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* 1. COMMAND HEADER */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-[#FAF3E1]/40 hover:text-[#FA8112] font-black uppercase tracking-widest text-[10px] transition-all group"
+        className="group flex items-center gap-3 text-[#FAF3E1]/20 hover:text-[#FA8112] font-bold uppercase tracking-[0.3em] text-[10px] transition-all"
       >
         <ChevronLeft
-          size={18}
+          size={16}
           className="group-hover:-translate-x-1 transition-transform"
         />
-        Back to Terminal Ledger
+        Transaction Ledger
       </button>
 
-      <div className="bg-[#FAF3E1]/[0.02] rounded-[3rem] border border-[#F5E7C6]/10 shadow-2xl overflow-hidden relative">
-        {/* Receipt Header Style */}
-        <div className="p-12 bg-[#FAF3E1]/[0.03] border-b border-dashed border-[#F5E7C6]/10 text-center relative">
-          {/* Punch Hole Visuals */}
-          <div className="absolute -bottom-4 -left-4 h-8 w-8 bg-[#222222] rounded-full border border-[#F5E7C6]/10" />
-          <div className="absolute -bottom-4 -right-4 h-8 w-8 bg-[#222222] rounded-full border border-[#F5E7C6]/10" />
-
-          <div className="h-20 w-20 bg-[#FA8112] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-[#FA8112]/20 rotate-3">
-            <Receipt size={36} className="text-[#222222]" />
+      <div className="bg-[#FAF3E1]/[0.01] rounded-xl border border-[#F5E7C6]/5 shadow-2xl overflow-hidden relative">
+        {/* 2. MANIFEST HEADER */}
+        <div className="p-10 md:p-12 bg-[#FAF3E1]/[0.01] border-b border-[#F5E7C6]/5 text-center relative group">
+          <div className="absolute -top-10 -right-10 text-[#FA8112]/[0.02] group-hover:text-[#FA8112]/[0.04] transition-colors duration-700">
+            <Fingerprint size={200} strokeWidth={1} />
           </div>
-          <h2 className="text-3xl font-black text-[#FAF3E1] tracking-tighter uppercase">
-            Payment <span className="text-[#FA8112]">Manifest</span>
+
+          <div className="h-20 w-20 bg-[#FA8112]/5 border border-[#FA8112]/20 rounded-xl flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(250,129,18,0.1)]">
+            <Receipt size={36} className="text-[#FA8112]" strokeWidth={1.5} />
+          </div>
+
+          <h2 className="text-3xl font-bold text-[#FAF3E1] tracking-tight uppercase">
+            Settlement <span className="text-[#FA8112]">Manifest</span>
           </h2>
-          <p className="text-[10px] font-mono text-[#FAF3E1]/20 mt-3 uppercase tracking-[0.3em]">
-            Reference Sequence: {tx._id}
-          </p>
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <span className="h-px w-8 bg-[#F5E7C6]/10" />
+            <p className="text-[10px] font-mono font-bold text-[#FAF3E1]/20 uppercase tracking-[0.4em]">
+              REF_ID: {tx._id.toUpperCase()}
+            </p>
+            <span className="h-px w-8 bg-[#F5E7C6]/10" />
+          </div>
         </div>
 
-        {/* Amount Display */}
-        <div className="p-12 text-center">
-          <p className="text-[10px] font-black text-[#FAF3E1]/20 uppercase tracking-[0.2em] mb-4">
-            Settlement total
+        {/* 3. ASSET VALUATION */}
+        <div className="p-12 text-center bg-[#1a1a1a]/30">
+          <p className="text-[10px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.3em] mb-6">
+            Net Settlement Asset
           </p>
           <h1
-            className={`text-6xl font-black tracking-tighter ${tx.type === "credit" ? "text-cyan-400" : "text-[#FAF3E1]"}`}
+            className={`text-7xl font-bold tracking-tighter tabular-nums ${tx.type === "credit" ? "text-emerald-400" : "text-[#FAF3E1]"}`}
           >
             {tx.type === "credit" ? "+" : "-"}₹{tx.amount.toLocaleString()}
           </h1>
-          <div className="mt-6 inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/5">
-            <div
-              className={`h-2 w-2 rounded-full ${tx.status === "success" ? "bg-cyan-400 animate-pulse" : "bg-rose-500"}`}
-            />
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#FAF3E1]/60">
-              LOG STATUS:{" "}
+
+          <div className="mt-8 inline-flex items-center gap-3 px-6 py-2 rounded-lg bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/5">
+            <div className="relative flex h-2 w-2">
+              {tx.status === "success" && (
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-40" />
+              )}
+              <span
+                className={`relative inline-flex rounded-full h-2 w-2 ${tx.status === "success" ? "bg-emerald-500" : "bg-rose-500"}`}
+              />
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FAF3E1]/40">
+              LOG_STATUS:{" "}
               <span
                 className={
-                  tx.status === "success" ? "text-cyan-400" : "text-rose-500"
+                  tx.status === "success"
+                    ? "text-emerald-400/80"
+                    : "text-rose-500/80"
                 }
               >
-                {tx.status}
+                {tx.status.toUpperCase()}
               </span>
             </p>
           </div>
         </div>
 
-        {/* Data Grid */}
-        <div className="px-12 pb-12 space-y-10">
-          <div className="grid grid-cols-2 gap-12 border-t border-[#F5E7C6]/5 pt-10">
-            <div className="space-y-1">
-              <label className="text-[10px] font-black text-[#FAF3E1]/20 uppercase tracking-widest flex items-center gap-2">
-                <User size={12} className="text-[#FA8112]" /> Entity Handle
+        {/* 4. TELEMETRY GRID */}
+        <div className="p-10 md:p-12 space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-4">
+            <div className="space-y-4">
+              <label className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.4em] flex items-center gap-2">
+                <User size={12} className="text-[#FA8112]/60" /> Registry
+                Subject
               </label>
-              <p className="font-black text-[#FAF3E1] text-lg tracking-tight">
-                {tx.user?.fullName || "System Admin"}
-              </p>
-              <p className="text-xs text-[#FAF3E1]/30 font-medium">
-                {tx.user?.email}
-              </p>
+              <div className="space-y-1">
+                <p className="font-bold text-[#FAF3E1] text-lg tracking-tight">
+                  {tx.user?.fullName || "SYSTEM_DAEMON"}
+                </p>
+                <p className="text-[11px] font-mono text-[#FAF3E1]/30 italic uppercase">
+                  {tx.user?.email}
+                </p>
+              </div>
             </div>
-            <div className="space-y-1 text-right md:text-left">
-              <label className="text-[10px] font-black text-[#FAF3E1]/20 uppercase tracking-widest flex items-center gap-2 md:justify-start justify-end">
-                <Clock size={12} className="text-[#FA8112]" /> Timestamp
+
+            <div className="space-y-4">
+              <label className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-[0.4em] flex items-center gap-2">
+                <Clock size={12} className="text-[#FA8112]/60" /> Sequence Stamp
               </label>
-              <p className="font-black text-[#FAF3E1] text-lg tracking-tight">
-                {new Date(tx.createdAt).toLocaleDateString()}
-              </p>
-              <p className="text-xs text-[#FAF3E1]/30 font-medium">
-                {new Date(tx.createdAt).toLocaleTimeString()}
-              </p>
+              <div className="space-y-1">
+                <p className="font-bold text-[#FAF3E1] text-lg tracking-tight tabular-nums">
+                  {new Date(tx.createdAt).toLocaleDateString()}
+                </p>
+                <p className="text-[11px] font-mono text-[#FAF3E1]/30 uppercase">
+                  {new Date(tx.createdAt).toLocaleTimeString([], {
+                    hour12: false,
+                  })}{" "}
+                  UTC_SEQUENCE
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="p-8 bg-[#FAF3E1]/[0.03] rounded-[2.5rem] border border-[#F5E7C6]/5 space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 rounded-xl text-[#FA8112]">
-                <CreditCard size={20} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#F5E7C6]/5">
+            <div className="p-6 bg-[#1a1a1a] rounded-lg border border-[#F5E7C6]/5 flex items-center gap-5">
+              <div className="p-3 bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded text-[#FA8112]">
+                <CreditCard size={18} strokeWidth={1.5} />
               </div>
-              <div>
-                <p className="text-[10px] font-black text-[#FAF3E1]/20 uppercase tracking-widest">
+              <div className="space-y-1">
+                <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
                   Description
                 </p>
-                <p className="text-sm font-black text-[#FAF3E1]">
-                  {tx.description || "Automated Billing Cycle"}
+                <p className="text-[13px] font-bold text-[#FAF3E1]/80 uppercase">
+                  {tx.description || "Automated_Billing_Protocol"}
                 </p>
               </div>
             </div>
 
             {tx.booking && (
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-[#FAF3E1]/[0.05] border border-[#F5E7C6]/10 rounded-xl text-[#FA8112]">
-                  <MapPin size={20} />
+              <div className="p-6 bg-[#1a1a1a] rounded-lg border border-[#F5E7C6]/5 flex items-center gap-5">
+                <div className="p-3 bg-[#FAF3E1]/[0.02] border border-[#F5E7C6]/10 rounded text-[#FA8112]">
+                  <MapPin size={18} strokeWidth={1.5} />
                 </div>
-                <div>
-                  <p className="text-[10px] font-black text-[#FAF3E1]/20 uppercase tracking-widest">
+                <div className="space-y-1">
+                  <p className="text-[9px] font-bold text-[#FAF3E1]/20 uppercase tracking-widest">
                     Asset Location
                   </p>
-                  <p className="text-sm font-black text-[#FAF3E1]">
+                  <p className="text-[13px] font-bold text-[#FAF3E1]/80 uppercase">
                     {tx.booking.parking?.name}
-                  </p>
-                  <p className="text-[10px] text-[#FAF3E1]/30 uppercase tracking-[0.2em] mt-0.5">
-                    {tx.booking.parking?.location}
                   </p>
                 </div>
               </div>
@@ -173,16 +202,20 @@ const TransactionDetails = () => {
           </div>
         </div>
 
-        {/* Action Footer */}
-        <div className="p-10 bg-[#FAF3E1]/[0.05] border-t border-[#F5E7C6]/5 flex flex-wrap justify-between items-center gap-4">
-          <p className="text-[9px] font-black text-[#FAF3E1]/20 uppercase tracking-[0.4em]">
-            Digital Signature Verified
-          </p>
+        {/* 5. OPERATIONAL FOOTER */}
+        <div className="p-10 bg-[#FAF3E1]/[0.01] border-t border-[#F5E7C6]/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <ShieldCheck size={14} className="text-[#FA8112]/40" />
+            <p className="text-[9px] font-bold text-[#FAF3E1]/10 uppercase tracking-[0.5em]">
+              Authenticated_Checksum_Verified
+            </p>
+          </div>
+
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-3 px-8 py-3.5 bg-[#FA8112] text-[#222222] rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-[#FAF3E1] transition-all active:scale-95 shadow-xl shadow-[#FA8112]/10"
+            className="flex items-center gap-3 px-10 py-3 bg-[#FA8112] text-[#222222] rounded-lg font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-[#FAF3E1] transition-all active:scale-[0.98] shadow-2xl shadow-[#FA8112]/10"
           >
-            <Printer size={18} /> Output Manifest
+            <Terminal size={14} strokeWidth={2.5} /> Output_Manifest
           </button>
         </div>
       </div>

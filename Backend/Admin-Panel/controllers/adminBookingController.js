@@ -216,32 +216,6 @@ exports.updateAdminProfile = async (req, res) => {
   }
 };
 
-// ✅ Phase 4 - Get admin settings
-exports.getAdminSettings = async (req, res) => {
-  try {
-    const data = await adminService.getAdminSettings(req.user);
-    res.json(data);
-  } catch (err) {
-    res.status(err.status || 400).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
-// ✅ Phase 4 - Update admin settings
-exports.updateAdminSettings = async (req, res) => {
-  try {
-    const data = await adminService.updateAdminSettings(req.user, req.body);
-    res.json(data);
-  } catch (err) {
-    res.status(err.status || 400).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
 // ✅ Phase 5 - Get shift metrics (KPIs)
 exports.getShiftMetrics = async (req, res) => {
   try {

@@ -11,7 +11,6 @@ import ExitDesk from "../../Admin-Panel/Gate-Operations/Pages/ExitDesk";
 import Exceptions from "../../Admin-Panel/Gate-Operations/Pages/Exceptions";
 import Profile from "../../Admin-Panel/Pages/Profile";
 import Support from "../../Admin-Panel/Pages/Support";
-import Settings from "../../Admin-Panel/Pages/Settings";
 import ShiftSummary from "../../Admin-Panel/Shift-Summary/Pages/ShiftSummary";
 
 const StaffAdminRoutes = () => {
@@ -35,7 +34,6 @@ const StaffAdminRoutes = () => {
         <Route path="shift-summary" element={<ShiftSummary />} />
         <Route path="profile" element={<Profile />} />
         <Route path="support" element={<Support />} />
-        <Route path="settings" element={<Settings />} />
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
