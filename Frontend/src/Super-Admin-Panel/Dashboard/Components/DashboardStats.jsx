@@ -1,58 +1,78 @@
 import React from "react";
 import StatsCard from "./StatsCard";
-import { Car, Users, IndianRupee, CheckCircle } from "lucide-react";
+import { Car, Users, IndianRupee, CheckCircle, Activity } from "lucide-react";
 
-// Destructure 'data' from props, default to empty object to prevent errors
 const DashboardStats = ({ data = {} }) => {
-  // Theme Variables Applied via StatsCard:
-  // Background: #222222 | Text: #FAF3E1 | Accent: #FA8112
+  // Theme: BG #222222 | Text #FAF3E1 | Accent #FA8112
 
   const stats = [
     {
-      title: "Total Revenue",
-      // Formatting the value from your API logic
+      label: "Revenue Stream",
       value: data.totalRevenue
         ? `₹${data.totalRevenue.toLocaleString()}`
         : "₹0",
-      icon: IndianRupee, // Using IndianRupee for currency consistency
-      trend: data.revenueTrend || "0",
-      isUp: (data.revenueTrend || 0) >= 0,
-      // We pass a consistent color key, StatsCard handles the #FA8112 mapping
-      color: "bg-[#FA8112]",
+      icon: IndianRupee,
+      trend: `${data.revenueTrend || 0}%`,
+      subtext: "Gross earnings this period",
+      color: "#FA8112",
     },
     {
-      title: "Active Users",
+      label: "Network Users",
       value: data.activeUsers?.toLocaleString() || "0",
       icon: Users,
-      trend: data.usersTrend || "0",
-      isUp: (data.usersTrend || 0) >= 0,
-      color: "bg-[#FA8112]",
+      trend: `${data.usersTrend || 0}%`,
+      subtext: "Live active accounts",
+      color: "#FA8112",
     },
     {
-      title: "Parking Slots",
-      // Occupied / Total
-      value: `${data.occupiedSlots || 0}/${data.totalSlots || 0}`,
+      label: "Slot Occupancy",
+      // Refined the display for better clarity in the Super Admin view
+      value: `${data.occupiedSlots || 0} / ${data.totalSlots || 0}`,
       icon: Car,
-      trend: data.occupancyRate || "0",
-      isUp: false, // Occupancy rising is a warning in parking context
-      color: "bg-[#FA8112]",
+      trend: `${data.occupancyRate || 0}%`,
+      subtext: "Current bay utilization",
+      // Using a secondary color for occupancy warning if high
+      color: (data.occupancyRate || 0) > 85 ? "#ef4444" : "#FA8112",
     },
     {
-      title: "Completed",
+      label: "Success Rate",
       value: data.completedBookings?.toLocaleString() || "0",
       icon: CheckCircle,
-      trend: data.completionTrend || "0",
-      isUp: (data.completionTrend || 0) >= 0,
-      color: "bg-[#FA8112]",
+      trend: `${data.completionTrend || 0}%`,
+      subtext: "Completed transactions",
+      color: "#FA8112",
     },
   ];
 
   return (
-    // Grid container remains responsive, spacing adjusted for [2rem] rounded cards
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-      {stats.map((s, i) => (
-        <StatsCard key={i} {...s} />
-      ))}
+    <div className="space-y-6">
+      {/* 1. SECTION META: Gives context to the stats grid */}
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-2">
+          <Activity size={14} className="text-[#FA8112]" />
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FAF3E1]/30">
+            Real-time Metrics
+          </h2>
+        </div>
+        <p className="text-[9px] font-bold text-[#FAF3E1]/10 uppercase tracking-widest">
+          Node: System_Admin_Main
+        </p>
+      </div>
+
+      {/* 2. STATS GRID: Adjusted gaps for the sharper xl-rounded cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+        {stats.map((s, i) => (
+          <StatsCard
+            key={i}
+            label={s.label}
+            value={s.value}
+            icon={s.icon}
+            trend={s.trend}
+            subtext={s.subtext}
+            color={s.color}
+          />
+        ))}
+      </div>
     </div>
   );
 };
