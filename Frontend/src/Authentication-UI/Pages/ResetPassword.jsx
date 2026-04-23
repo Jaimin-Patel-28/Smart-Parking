@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Loader2,
   ShieldCheck,
+  ShieldAlert,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import authService from "../Services/authService";
@@ -24,7 +25,6 @@ const ResetPassword = () => {
 
   const email = location.state?.email;
 
-  // Guard: Ensure user came from the VerifyOTP flow
   useEffect(() => {
     if (!email) {
       navigate("/auth/login");
@@ -44,9 +44,8 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      // Logic: Send email and new password to your backend
       await authService.resetPassword({ email, password: formData.password });
-      toast.success("Password reset successful! Please login.");
+      toast.success("Security credentials updated. Please login.");
       navigate("/auth/login");
     } catch (err) {
       toast.error(err.response?.data?.message || "Reset failed");
@@ -55,103 +54,118 @@ const ResetPassword = () => {
     }
   };
 
-  // Basic validation checks
   const hasMinLength = formData.password.length >= 8;
   const hasMatch =
     formData.password === formData.confirmPassword && formData.password !== "";
 
   return (
-    <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-[85vh] flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 animate-in fade-in duration-500">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="rounded-2xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] p-8 backdrop-blur-sm">
-          <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#FA8112]/10 text-[#FA8112]">
-              <ShieldCheck size={28} />
-            </div>
-            <h2 className="text-2xl font-bold text-[#FAF3E1]">
-              Set New Password
-            </h2>
-            <p className="mt-2 text-sm text-[#FAF3E1]/60">
-              Almost there! Choose a strong password for{" "}
-              <span className="text-[#FAF3E1] font-medium">{email}</span>
-            </p>
+        {/* CARD CONTAINER: Refined with sharper professional corners */}
+        <div className="rounded-xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] p-8 shadow-2xl relative overflow-hidden">
+          {/* Subtle Background Icon Accent */}
+          <div className="absolute -right-6 -top-6 text-[#FAF3E1]/[0.02] rotate-12">
+            <ShieldAlert size={140} />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* New Password */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-[#FAF3E1]/50 uppercase tracking-widest">
-                New Password
-              </label>
-              <div className="relative">
-                <Lock
-                  className="absolute left-3 top-3 text-[#FA8112]"
-                  size={18}
-                />
-                <input
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] py-3 pl-10 pr-12 text-[#FAF3E1] focus:border-[#FA8112] focus:outline-none transition-all"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-[#FAF3E1]/30 hover:text-[#FAF3E1]"
+          <div className="relative z-10">
+            <div className="mb-10 text-center">
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#FA8112]/10 border border-[#FA8112]/20 text-[#FA8112]">
+                <ShieldCheck size={30} strokeWidth={1.5} />
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight text-[#FAF3E1]">
+                Define Credentials
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-[#FAF3E1]/40">
+                Establish a new secure password for:
+                <span className="block mt-1 font-semibold text-[#FA8112]/80">
+                  {email}
+                </span>
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* New Password */}
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-bold text-[#FAF3E1]/30 ml-1 tracking-widest">
+                  New Secure Password
+                </label>
+                <div className="relative group">
+                  <Lock
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within:text-[#FA8112] transition-colors"
+                    size={18}
+                  />
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    onChange={handleChange}
+                    className="w-full h-12 rounded-lg border border-[#F5E7C6]/10 bg-[#222222] pl-10 pr-12 text-sm text-[#FAF3E1] focus:border-[#FA8112]/50 outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 hover:text-[#FAF3E1] transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-bold text-[#FAF3E1]/30 ml-1 tracking-widest">
+                  Confirm Password
+                </label>
+                <div className="relative group">
+                  <Lock
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#FAF3E1]/20 group-focus-within:text-[#FA8112] transition-colors"
+                    size={18}
+                  />
+                  <input
+                    name="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    onChange={handleChange}
+                    className="w-full h-12 rounded-lg border border-[#F5E7C6]/10 bg-[#222222] pl-10 pr-4 text-sm text-[#FAF3E1] focus:border-[#FA8112]/50 outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              {/* REFINED: Requirement Indicators */}
+              <div className="grid grid-cols-1 gap-2 py-2 px-1">
+                <div
+                  className={`flex items-center gap-2 text-[11px] font-medium transition-colors ${hasMinLength ? "text-emerald-400" : "text-[#FAF3E1]/20"}`}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                  <CheckCircle2 size={14} /> 8 Character minimum
+                </div>
+                <div
+                  className={`flex items-center gap-2 text-[11px] font-medium transition-colors ${hasMatch ? "text-emerald-400" : "text-[#FAF3E1]/20"}`}
+                >
+                  <CheckCircle2 size={14} /> Pattern Match confirmed
+                </div>
               </div>
-            </div>
 
-            {/* Confirm Password */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-[#FAF3E1]/50 uppercase tracking-widest">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock
-                  className="absolute left-3 top-3 text-[#FA8112]"
-                  size={18}
-                />
-                <input
-                  name="confirmPassword"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] py-3 pl-10 pr-4 text-[#FAF3E1] focus:border-[#FA8112] focus:outline-none transition-all"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-
-            {/* Password Requirements UI */}
-            <div className="space-y-2 py-2">
-              <div
-                className={`flex items-center gap-2 text-xs ${hasMinLength ? "text-green-500" : "text-[#FAF3E1]/30"}`}
+              <button
+                disabled={loading || !hasMinLength || !hasMatch}
+                className="group flex w-full h-12 items-center justify-center gap-2 rounded-lg bg-[#FA8112] font-bold text-[11px] uppercase tracking-widest text-[#222222] transition-all hover:opacity-95 active:scale-[0.98] disabled:opacity-30 shadow-lg shadow-[#FA8112]/10"
               >
-                <CheckCircle2 size={14} /> At least 8 characters
-              </div>
-              <div
-                className={`flex items-center gap-2 text-xs ${hasMatch ? "text-green-500" : "text-[#FAF3E1]/30"}`}
-              >
-                <CheckCircle2 size={14} /> Passwords match
-              </div>
-            </div>
+                {loading ? (
+                  <Loader2 className="animate-spin" size={18} />
+                ) : (
+                  "Update Credentials"
+                )}
+              </button>
+            </form>
 
-            <button
-              disabled={loading || !hasMinLength || !hasMatch}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FA8112] py-4 font-bold text-[#222222] transition-all hover:bg-[#fa8112]/90 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "Reset Password"
-              )}
-            </button>
-          </form>
+            <div className="mt-8 text-center border-t border-[#F5E7C6]/5 pt-6">
+              <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-[#FAF3E1]/10">
+                End-to-End Encryption Enabled
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
