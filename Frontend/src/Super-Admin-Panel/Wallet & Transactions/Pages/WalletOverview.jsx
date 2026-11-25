@@ -16,6 +16,7 @@ import {
   Globe,
   Calendar,
 } from "lucide-react";
+import { createPdfTheme } from "../../../common/pdf/pdfTheme";
 
 const WalletOverview = () => {
   const { stats, topUsers, parkingRevenue, loading, refresh } =
@@ -77,39 +78,63 @@ const WalletOverview = () => {
 
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const pdf = createPdfTheme(doc, {
+        title: "SMART PARK FINANCE HUB",
+        subtitle: "Wallet Transaction Manifest",
+        generatedAt: new Date().toLocaleString("en-IN"),
+      });
 
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.text("WALLET HUB TRANSACTION MANIFEST", 14, 16);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.text(`Period: ${startDate} to ${endDate}`, 14, 23);
-      doc.text(`Records: ${selectedTransactions.length}`, 14, 29);
+      const totalAmount = selectedTransactions.reduce(
+        (sum, tx) => sum + Number(tx?.amount || 0),
+        0,
+      );
 
-      let y = 38;
+      pdf.addMeta([
+        { label: "Period", value: `${startDate} to ${endDate}` },
+        { label: "Total Records", value: selectedTransactions.length },
+        { label: "Total Volume", value: `INR ${totalAmount.toFixed(2)}` },
+      ]);
+
+      pdf.addSpacer(3);
+      pdf.addSection("Transaction Ledger");
+      pdf.addSpacer(2);
+      pdf.addTableHeader([
+        { label: "#", x: 0 },
+        { label: "Date", x: 10 },
+        { label: "Type", x: 45 },
+        { label: "Status", x: 65 },
+        { label: "Amount", x: 85 },
+        { label: "User", x: 107 },
+        { label: "Ref", x: 137 },
+      ]);
+
       selectedTransactions.forEach((tx, index) => {
-        if (y > 280) {
-          doc.addPage();
-          y = 14;
-        }
-
         const createdAt = tx?.createdAt
           ? new Date(tx.createdAt).toLocaleString("en-IN")
           : "N/A";
-        const type = (tx?.type || "na").toUpperCase();
-        const status = (tx?.status || "na").toUpperCase();
-        const amount = Number(tx?.amount || 0).toLocaleString("en-IN");
+        const type = String(tx?.type || "na").toUpperCase();
+        const status = String(tx?.status || "na").toUpperCase();
+        const amount = `INR ${Number(tx?.amount || 0).toFixed(2)}`;
         const userLabel = tx?.user?.fullName || tx?.user?.email || "Unknown";
+        const reference = tx?.paymentId || tx?._id || "-";
 
-        doc.text(
-          `${index + 1}. ${createdAt} | ${type} | ${status} | INR ${amount} | ${userLabel}`,
-          14,
-          y,
+        pdf.addColoredTableRow(
+          [
+            { x: 0, width: 8, value: index + 1 },
+            { x: 10, width: 35, value: createdAt },
+            { x: 45, width: 20, value: type },
+            { x: 65, width: 20, value: status },
+            { x: 85, width: 22, value: amount, isAmount: true },
+            { x: 107, width: 30, value: userLabel },
+            { x: 137, width: 37, value: reference },
+          ],
+          type === "CREDIT" ? "credit" : "debit",
+          8,
         );
-        y += 6;
       });
 
-      doc.save(`wallet-hub-transactions-${startDate}-to-${endDate}.pdf`);
+      pdf.addSpacer(2);
+      pdf.save(`wallet-hub-transactions-${startDate}-to-${endDate}.pdf`);
       toast.success("Transaction manifest exported");
     } catch (error) {
       toast.error("Failed to export transactions");

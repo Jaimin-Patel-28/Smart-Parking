@@ -19,6 +19,7 @@ import { format } from "date-fns";
 import useBookingDetails from "../Hooks/useBookingDetails";
 import ExtendForm from "../Components/ExtendForm";
 import EditForm from "../Components/EditForm";
+import { createPdfTheme } from "../../../common/pdf/pdfTheme";
 
 const BookingDetails = () => {
   const { id } = useParams();
@@ -62,12 +63,87 @@ const BookingDetails = () => {
     if (!booking) return;
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const pdf = createPdfTheme(doc, {
+      title: "SMART PARK BOOKING MANIFEST",
+      subtitle: "Detailed User Booking Pass",
+      generatedAt: format(new Date(), "dd MMM yyyy, HH:mm"),
+    });
 
-    // PDF generation remains functional but stylized for the engine persona
-    doc.setFont("courier", "bold");
-    doc.text("SMART_PARK_SYSTEM_MANIFEST", 14, 18);
-    // ... (rest of PDF logic remains same but using courier font for terminal feel)
-    doc.save(`manifest-${booking._id.slice(-6)}.pdf`);
+    // Quick meta summary
+    pdf.addMeta([
+      { label: "Booking Code", value: booking.bookingCode || "N/A" },
+      {
+        label: "Status",
+        value: `${String(booking.status || "N/A").toUpperCase()} • ${String(booking.paymentStatus || "N/A").toUpperCase()}`,
+      },
+      {
+        label: "Total Amount",
+        value: `INR ${Number(booking.totalAmount || 0).toFixed(2)}`,
+      },
+    ]);
+
+    pdf.addSpacer(2);
+
+    // Booking Details
+    pdf.addSection("Booking Details");
+    pdf.addKeyValue("Booking Code", booking.bookingCode || "N/A");
+    pdf.addKeyValue("Booking ID", booking._id || "N/A");
+    pdf.addKeyValue("Status", String(booking.status || "N/A").toUpperCase());
+    pdf.addKeyValue(
+      "Payment Status",
+      String(booking.paymentStatus || "N/A").toUpperCase(),
+    );
+    pdf.addKeyValue(
+      "Total Amount",
+      `INR ${Number(booking.totalAmount || 0).toFixed(2)}`,
+    );
+
+    pdf.addSpacer(3);
+
+    // Parking & Allocation
+    pdf.addSection("Parking Location & Slot Allocation");
+    pdf.addKeyValue("Parking Name", booking.parking?.name || "N/A");
+    pdf.addKeyValue(
+      "Address",
+      booking.parking?.location || booking.parking?.address || "N/A",
+    );
+    pdf.addKeyValue("Slot Allocated", booking.slot?.label || "N/A");
+
+    pdf.addSpacer(3);
+
+    // Vehicle Information
+    pdf.addSection("Vehicle Details");
+    pdf.addKeyValue("Vehicle Number", booking.vehicleNumber || "N/A");
+
+    pdf.addSpacer(3);
+
+    // Time Allocation
+    pdf.addSection("Time & Duration");
+    pdf.addKeyValue(
+      "Start Time",
+      booking.startTime
+        ? format(new Date(booking.startTime), "dd MMM yyyy, HH:mm")
+        : "N/A",
+    );
+    pdf.addKeyValue(
+      "End Time",
+      booking.endTime
+        ? format(new Date(booking.endTime), "dd MMM yyyy, HH:mm")
+        : "N/A",
+    );
+    pdf.addKeyValue(
+      "Booking Created",
+      booking.createdAt
+        ? format(new Date(booking.createdAt), "dd MMM yyyy, HH:mm")
+        : "N/A",
+    );
+
+    pdf.addSpacer(5);
+    pdf.addParagraph(
+      "This is an official booking confirmation. Please keep this document safe as proof of parking reservation. For assistance, contact support.",
+    );
+
+    pdf.save(`manifest-${booking._id?.slice(-6) || "entry-pass"}.pdf`);
   };
 
   if (loading)

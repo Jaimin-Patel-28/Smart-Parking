@@ -67,9 +67,7 @@ const VerifyOTP = () => {
 
   return (
     <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
-           {" "}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-               {" "}
         <button
           onClick={() =>
             navigate(
@@ -78,46 +76,31 @@ const VerifyOTP = () => {
           }
           className="mb-6 flex items-center gap-2 text-sm text-[#FAF3E1]/40 hover:text-[#FA8112] transition-colors"
         >
-                    <ArrowLeft size={16} /> Back to{" "}
-          {flow === "reset" ? "Forgot Password" : "Register"}       {" "}
+          <ArrowLeft size={16} /> Back to
+          {flow === "reset" ? "Forgot Password" : "Register"}
         </button>
-               {" "}
         <div className="rounded-2xl border border-[#F5E7C6]/10 bg-[#FAF3E1]/[0.02] p-8 backdrop-blur-sm">
-                   {" "}
           <div className="mb-8 flex flex-col items-center text-center">
-                       {" "}
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#FA8112]/10 text-[#FA8112]">
-                            <ShieldCheck size={32} />           {" "}
+              <ShieldCheck size={32} />
             </div>
-                       {" "}
             <h2 className="text-2xl font-bold text-[#FAF3E1]">
-                           {" "}
               {flow === "reset" ? "Verify Reset Code" : "Check your email"}     
-                   {" "}
             </h2>
-                       {" "}
             <p className="mt-2 text-sm text-[#FAF3E1]/60">
-                           {" "}
               {flow === "reset"
                 ? "Enter the 6-digit code sent to your email to reset your password."
                 : "We've sent a 6-digit verification code to"}
-                           {" "}
               {flow === "register" && (
                 <>
-                                    <br />                 {" "}
+                  <br />
                   <span className="font-semibold text-[#FAF3E1]">{email}</span> 
-                               {" "}
                 </>
               )}
-                         {" "}
             </p>
-                     {" "}
           </div>
-                   {" "}
           <form onSubmit={handleVerify} className="space-y-6">
-                       {" "}
             <div className="flex justify-center">
-                           {" "}
               <input
                 type="text"
                 maxLength="6"
@@ -127,14 +110,11 @@ const VerifyOTP = () => {
                 placeholder="000000"
                 autoFocus
               />
-                         {" "}
             </div>
-                       {" "}
             <button
               disabled={loading || otp.length !== 6}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FA8112] py-4 font-bold text-[#222222] transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
             >
-                           {" "}
               {loading ? (
                 <Loader2 className="animate-spin" />
               ) : flow === "reset" ? (
@@ -142,41 +122,29 @@ const VerifyOTP = () => {
               ) : (
                 "Verify Account"
               )}
-                         {" "}
             </button>
-                     {" "}
           </form>
-                   {" "}
           <div className="mt-8 text-center">
-                       {" "}
             <p className="text-sm text-[#FAF3E1]/60">
-                            Didn't receive the code?            {" "}
+              Didn't receive the code?
             </p>
-                       {" "}
             <button
               onClick={handleResend}
               disabled={timer > 0 || resending}
               className="mt-2 flex items-center justify-center gap-2 w-full text-sm font-semibold text-[#FA8112] disabled:text-[#FAF3E1]/20"
             >
-                           {" "}
               {resending ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
                 <>
-                                    <RefreshCcw size={16} />                 {" "}
+                  <RefreshCcw size={16} />
                   {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}           
-                     {" "}
                 </>
               )}
-                         {" "}
             </button>
-                     {" "}
           </div>
-                 {" "}
         </div>
-             {" "}
       </div>
-         {" "}
     </div>
   );
 };

@@ -17,6 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Authentication-UI/Context/AuthContext";
 import toast from "react-hot-toast";
+import { createPdfTheme } from "../../../common/pdf/pdfTheme";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,42 +33,83 @@ const Dashboard = () => {
   const handleExportDashboardPDF = async () => {
     try {
       const { jsPDF } = await import("jspdf");
-      const doc = new jsPDF();
-      let y = 20;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const pdf = createPdfTheme(doc, {
+        title: isStaffAdmin
+          ? "SMART PARK STAFF ADMIN REPORT"
+          : "SMART PARK SUPER ADMIN REPORT",
+        subtitle: "Operational KPI Snapshot",
+        generatedAt: new Date().toLocaleString("en-IN"),
+      });
 
-      // PDF Styling - Professional Header
-      doc.setFillColor(34, 34, 34);
-      doc.rect(0, 0, 210, 40, "F");
-      doc.setTextColor(250, 129, 18);
-      doc.setFontSize(22);
-      doc.text("SMART PARK", 14, 25);
+      pdf.addMeta([
+        {
+          label: "Report Scope",
+          value: isStaffAdmin ? "Staff Admin" : "Super Admin",
+        },
+        {
+          label: "Revenue",
+          value: `INR ${Number(stats?.totalRevenue || 0).toLocaleString("en-IN")}`,
+        },
+        { label: "Active Users", value: stats?.activeUsers || 0 },
+        {
+          label: "Occupancy",
+          value: `${stats?.occupiedSlots || 0}/${stats?.totalSlots || 0}`,
+        },
+      ]);
 
-      doc.setTextColor(250, 243, 225);
-      doc.setFontSize(10);
-      doc.text("OPERATIONAL SYSTEM SNAPSHOT", 14, 32);
-
-      y = 50;
-      doc.setTextColor(34, 34, 34);
-      doc.setFontSize(14);
-      doc.text("Key Performance Indicators", 14, y);
-
-      y += 10;
-      doc.setFontSize(10);
-      doc.text(
-        `Revenue: INR ${Number(stats?.totalRevenue || 0).toLocaleString()}`,
-        14,
-        y,
+      pdf.addSpacer(3);
+      pdf.addSection("Core Performance Indicators");
+      pdf.addSpacer(1);
+      pdf.addKeyValue("Total Revenue", `INR ${Number(stats?.totalRevenue || 0).toLocaleString("en-IN")}`);
+      pdf.addKeyValue("Total Bookings", stats?.totalBookings || 0);
+      pdf.addKeyValue("Completed Bookings", stats?.completedBookings || 0);
+      pdf.addKeyValue("Cancelled Bookings", stats?.cancelledBookings || 0);
+      pdf.addKeyValue("Total Users", stats?.totalUsers || 0);
+      pdf.addKeyValue("Active Users", stats?.activeUsers || 0);
+      pdf.addKeyValue("Total Slots", stats?.totalSlots || 0);
+      pdf.addKeyValue("Occupied Slots", stats?.occupiedSlots || 0);
+      pdf.addKeyValue(
+        "Occupancy Rate",
+        stats?.totalSlots
+          ? `${Math.round((Number(stats.occupiedSlots || 0) / Number(stats.totalSlots || 1)) * 100)}%`
+          : "0%",
       );
-      doc.text(`Active Users: ${stats?.activeUsers || 0}`, 80, y);
-      doc.text(
-        `Occupancy: ${stats?.occupiedSlots || 0}/${stats?.totalSlots || 0}`,
-        140,
-        y,
-      );
 
-      doc.save(
-        `smart-park-report-${new Date().toISOString().slice(0, 10)}.pdf`,
-      );
+      pdf.addSpacer(3);
+      pdf.addSection("Recent Booking Signals");
+      pdf.addSpacer(2);
+      if (Array.isArray(bookings) && bookings.length) {
+        pdf.addTableHeader([
+          { label: "Code", x: 0 },
+          { label: "Vehicle", x: 30 },
+          { label: "Status", x: 65 },
+          { label: "Amount", x: 90 },
+          { label: "Start", x: 115 },
+        ]);
+
+        bookings.slice(0, 18).forEach((item) => {
+          const status = String(item?.status || "N/A").toUpperCase();
+          const amount = `INR ${Number(item?.totalAmount || 0).toFixed(2)}`;
+          const startTime = item?.startTime
+            ? new Date(item.startTime).toLocaleString("en-IN")
+            : "N/A";
+
+          pdf.addTableRow([
+            { x: 0, width: 30, value: item?.bookingCode || item?._id || "-" },
+            { x: 30, width: 35, value: item?.vehicleNumber || "-" },
+            { x: 65, width: 25, value: status },
+            { x: 90, width: 25, value: amount },
+            { x: 115, width: 59, value: startTime },
+          ]);
+        });
+      } else {
+        pdf.addSpacer(2);
+        pdf.addParagraph("No recent booking records available.");
+      }
+
+      pdf.addSpacer(3);
+      pdf.save(`smart-park-report-${new Date().toISOString().slice(0, 10)}.pdf`);
       toast.success("Operational Report Generated");
     } catch (exportError) {
       toast.error("PDF Engine Failure");

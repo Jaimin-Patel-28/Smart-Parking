@@ -13,6 +13,7 @@ import useWallet from "../Hooks/useWallet";
 import WalletSummaryCard from "../Components/WalletSummaryCard";
 import TransactionList from "../Components/TransactionList";
 import TopUpModal from "../Components/TopUpModal";
+import { createPdfTheme } from "../../../common/pdf/pdfTheme";
 
 const Wallet = () => {
   const {
@@ -63,10 +64,64 @@ const Wallet = () => {
 
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF({ unit: "mm", format: "a4" });
-    doc.setFont("courier", "bold");
-    doc.text("SMART_PARK_LEDGER_REPORT", 14, 16);
-    // ... (PDF logic remains stable, internal text updated to System persona)
-    doc.save(`ledger-${startDate}-to-${endDate}.pdf`);
+    const pdf = createPdfTheme(doc, {
+      title: "SMART PARK WALLET LEDGER",
+      subtitle: "User Ledger Transaction Report",
+      generatedAt: format(new Date(), "dd MMM yyyy, HH:mm"),
+    });
+
+    const totalAmount = filteredTransactions.reduce(
+      (sum, tx) => sum + Number(tx?.amount || 0),
+      0,
+    );
+
+    pdf.addMeta([
+      { label: "Period", value: `${startDate} to ${endDate}` },
+      { label: "Total Records", value: filteredTransactions.length },
+      { label: "Total Amount", value: `INR ${totalAmount.toFixed(2)}` },
+    ]);
+
+    pdf.addSpacer(3);
+    pdf.addSection("Transaction Timeline");
+    pdf.addSpacer(2);
+    pdf.addTableHeader([
+      { label: "#", x: 0 },
+      { label: "Date", x: 10 },
+      { label: "Type", x: 45 },
+      { label: "Status", x: 70 },
+      { label: "Amount", x: 95 },
+      { label: "Details", x: 120 },
+    ]);
+
+    filteredTransactions.forEach((transaction, index) => {
+      const createdAt = transaction?.createdAt
+        ? format(new Date(transaction.createdAt), "dd MMM yy, HH:mm")
+        : "N/A";
+      const type = String(transaction?.type || "N/A").toUpperCase();
+      const status = String(transaction?.status || "N/A").toUpperCase();
+      const amount = `INR ${Number(transaction?.amount || 0).toFixed(2)}`;
+      const details =
+        transaction?.description ||
+        transaction?.note ||
+        transaction?.reference ||
+        "NO_DESCRIPTION";
+
+      pdf.addColoredTableRow(
+        [
+          { x: 0, width: 8, value: index + 1 },
+          { x: 10, width: 35, value: createdAt },
+          { x: 45, width: 25, value: type },
+          { x: 70, width: 25, value: status },
+          { x: 95, width: 25, value: amount, isAmount: true },
+          { x: 120, width: 54, value: details },
+        ],
+        type === "CREDIT" ? "credit" : "debit",
+        8,
+      );
+    });
+
+    pdf.addSpacer(2);
+    pdf.save(`ledger-${startDate}-to-${endDate}.pdf`);
     toast.success("Manifest_Exported");
   };
 

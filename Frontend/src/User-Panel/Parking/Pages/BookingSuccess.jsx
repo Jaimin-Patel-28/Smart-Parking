@@ -13,6 +13,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { format } from "date-fns";
+import { createPdfTheme } from "../../../common/pdf/pdfTheme";
 
 const BookingSuccess = () => {
   const location = useLocation();
@@ -31,10 +32,56 @@ const BookingSuccess = () => {
     if (!booking) return;
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF({ unit: "mm", format: "a4" });
-    doc.setFont("courier", "bold");
-    doc.text("SMART_PARK_SYSTEM_MANIFEST", 14, 18);
-    // ... (PDF generation remains stable but uses terminal-style courier font)
-    doc.save(`manifest-${booking.bookingCode}.pdf`);
+    const pdf = createPdfTheme(doc, {
+      title: "SMART PARK ENTRY PASS",
+      subtitle: "Booking Confirmation Manifest",
+      generatedAt: format(new Date(), "dd MMM yyyy, HH:mm"),
+    });
+
+    pdf.addMeta([
+      { label: "Booking Code", value: booking.bookingCode || "N/A" },
+      {
+        label: "Status",
+        value: String(booking.status || "CONFIRMED").toUpperCase(),
+      },
+      {
+        label: "Settlement",
+        value: `INR ${Number(booking.totalAmount || 0).toFixed(2)}`,
+      },
+    ]);
+
+    pdf.addSpacer(3);
+
+    pdf.addSection("Permit Summary");
+    pdf.addKeyValue("Booking Code", booking.bookingCode || "N/A");
+    pdf.addKeyValue("Vehicle", booking.vehicleNumber || "N/A");
+    pdf.addKeyValue("Slot", booking.slot?.label || "N/A");
+
+    pdf.addSpacer(3);
+
+    pdf.addSection("Parking Site Details");
+    pdf.addKeyValue("Parking Name", booking.parking?.name || "N/A");
+    pdf.addKeyValue(
+      "Location",
+      booking.parking?.location || booking.parking?.address || "N/A",
+    );
+
+    pdf.addSpacer(3);
+
+    pdf.addSection("Time & Settlement");
+    pdf.addKeyValue(
+      "Start",
+      start ? format(start, "dd MMM yyyy, HH:mm") : "N/A",
+    );
+    pdf.addKeyValue("End", end ? format(end, "dd MMM yyyy, HH:mm") : "N/A");
+    pdf.addKeyValue("Duration Hours", durationHours || "N/A");
+    pdf.addKeyValue(
+      "Settlement",
+      `INR ${Number(booking.totalAmount || 0).toFixed(2)}`,
+    );
+
+    pdf.addSpacer(3);
+    pdf.save(`manifest-${booking.bookingCode}.pdf`);
   };
 
   if (!booking) {
